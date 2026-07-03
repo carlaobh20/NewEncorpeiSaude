@@ -1,0 +1,3 @@
+# Jejum
+
+Cronômetro e histórico.
