@@ -1,0 +1,27 @@
+type P = { className?: string }
+const S = (p: P, path: React.ReactNode, fill = false) => (
+  <svg viewBox="0 0 24 24" className={p.className} fill={fill ? 'currentColor' : 'none'}
+    stroke={fill ? 'none' : 'currentColor'} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">{path}</svg>
+)
+export const Water = (p: P) => S(p, <path d="M12 3s6 6.5 6 11a6 6 0 1 1-12 0c0-4.5 6-11 6-11Z" />)
+export const Dumbbell = (p: P) => S(p, <><path d="M6.5 6.5v11M17.5 6.5v11M4 9v6M20 9v6M6.5 12h11" /></>)
+export const Moon = (p: P) => S(p, <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" />)
+export const Flame = (p: P) => S(p, <path d="M12 3c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-1.3.5-2.3 1-3 .2 1 .8 1.6 1.5 1.8C9.8 8 10 5.5 12 3Z" />)
+export const Protein = (p: P) => S(p, <><path d="M15.5 3.5a5 5 0 0 1 5 5c0 4-4 6-6.5 8.5S9 22 6.5 19.5 3.5 12 6 9.5 11.5 3.5 15.5 3.5Z" /><path d="M9 11l4 4" /></>)
+export const Scale = (p: P) => S(p, <><rect x="3" y="3" width="18" height="18" rx="5" /><path d="M12 7v3M9.5 9.5 12 7l2.5 2.5" /></>)
+export const Fork = (p: P) => S(p, <><path d="M7 3v7a2 2 0 0 0 2 2v9M7 3v4M9 3v4M15 3c-1.5 1-2 3-2 5s1 3 3 3v9" /></>)
+export const Pill = (p: P) => S(p, <><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)" /><path d="M9 9l6 6" /></>)
+export const Shoe = (p: P) => S(p, <path d="M3 16v-4l4-2 3 3 6 1 5 2v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z" />)
+export const Bed = (p: P) => S(p, <><path d="M3 18v-6h13a4 4 0 0 1 4 4v2M3 12V7M3 18v-2M20 18v-2M7 12v-2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2" /></>)
+export const Camera = (p: P) => S(p, <><rect x="3" y="7" width="18" height="13" rx="3" /><circle cx="12" cy="13.5" r="3.2" /><path d="M8 7l1.5-2h5L16 7" /></>)
+export const Bell = (p: P) => S(p, <path d="M18 9a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6M10.5 20a2 2 0 0 0 3 0" />)
+export const Plus = (p: P) => S(p, <path d="M12 5v14M5 12h14" />)
+export const HomeI = (p: P) => S(p, <path d="M3 11l9-7 9 7M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9" />)
+export const Clock = (p: P) => S(p, <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>)
+export const Grid = (p: P) => S(p, <><rect x="4" y="4" width="6" height="6" rx="1.5" /><rect x="14" y="4" width="6" height="6" rx="1.5" /><rect x="4" y="14" width="6" height="6" rx="1.5" /><rect x="14" y="14" width="6" height="6" rx="1.5" /></>)
+export const Sparkle = (p: P) => S(p, <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" />)
+export const Sliders = (p: P) => S(p, <><path d="M4 7h10M18 7h2M4 17h6M14 17h6" /><circle cx="15" cy="7" r="2" /><circle cx="11" cy="17" r="2" /></>)
+export const Chevron = (p: P) => S(p, <path d="M9 6l6 6-6 6" />)
+export const Check = (p: P) => S(p, <path d="M5 12l5 5L20 6" />)
+export const Info = (p: P) => S(p, <><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" /></>)
+export const ArrowUp = (p: P) => S(p, <path d="M12 19V5M6 11l6-6 6 6" />)
