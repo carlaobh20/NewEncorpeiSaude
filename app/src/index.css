@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 600px at 80% -10%, rgba(52,224,161,0.10), transparent 60%),
+    radial-gradient(900px 500px at -10% 10%, rgba(56,189,248,0.08), transparent 55%),
+    #070c12;
+  color: #e6edf3;
+  -webkit-font-smoothing: antialiased;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(24,38,54,0.75), rgba(11,19,28,0.75));
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+}
+.card:hover { border-color: rgba(52,224,161,0.25); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none; } }
+.fade-up { animation: fadeUp .5s ease both; }
