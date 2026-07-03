@@ -1,16 +1,10 @@
-// ─────────────────────────────────────────────────────────────
-// Supabase — PRONTO PARA PLUGAR (hoje o app roda com dados locais)
-// ─────────────────────────────────────────────────────────────
-// 1. Crie um projeto em https://supabase.com
-// 2. Rode o SQL em app/supabase/schema.sql
-// 3. Preencha app/.env com VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY
-// 4. `npm i @supabase/supabase-js` e descomente o bloco abaixo.
-//
-// import { createClient } from '@supabase/supabase-js'
-// const url = import.meta.env.VITE_SUPABASE_URL as string
-// const anon = import.meta.env.VITE_SUPABASE_ANON_KEY as string
-// export const supabase = createClient(url, anon)
+import { createClient } from '@supabase/supabase-js'
 
-export const supabaseReady =
-  Boolean(import.meta.env.VITE_SUPABASE_URL) &&
-  Boolean(import.meta.env.VITE_SUPABASE_ANON_KEY)
+const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
+const anon = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
+
+export const supabaseReady = Boolean(url && anon)
+
+// Cliente único. Se as env vars não estiverem setadas, supabaseReady = false
+// e o app mostra um aviso em vez de quebrar.
+export const supabase = createClient(url ?? 'http://localhost', anon ?? 'anon')

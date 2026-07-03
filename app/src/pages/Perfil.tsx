@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom'
 import ScreenHeader from '../components/ScreenHeader'
 import { Card } from '../components/home/Sections'
 import { profile } from '../lib/homeData'
+import { useAuth } from '../lib/auth'
+import { supabaseReady } from '../lib/supabase'
 
 const rows = [
   { label: 'Meu nutricionista', value: 'Dr. Marcelo · hoje', to: '/coach' },
@@ -13,6 +15,7 @@ const rows = [
 
 export default function Perfil() {
   const nav = useNavigate()
+  const { user, signOut } = useAuth()
   return (
     <div className="max-w-md mx-auto px-4 pb-28">
       <ScreenHeader title="Perfil" />
@@ -20,7 +23,7 @@ export default function Perfil() {
         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-sky-400 flex items-center justify-center text-white text-2xl font-bold">C</div>
         <div>
           <div className="text-xl font-bold text-slate-900">{profile.name}</div>
-          <div className="text-slate-500 text-sm">Evoluiu {profile.evolution30d}% nos últimos 30 dias</div>
+          <div className="text-slate-500 text-sm">{user?.email ?? `Evoluiu ${profile.evolution30d}% nos últimos 30 dias`}</div>
         </div>
       </div>
       <Card className="p-2">
@@ -35,6 +38,9 @@ export default function Perfil() {
           ))}
         </div>
       </Card>
+      {supabaseReady && user && (
+        <button onClick={() => signOut()} className="w-full mt-4 bg-white border border-[#ECEEF3] text-rose-600 font-semibold py-3 rounded-2xl active:scale-[0.98] transition">Sair da conta</button>
+      )}
     </div>
   )
 }

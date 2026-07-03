@@ -1,5 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../lib/auth'
+import { supabaseReady } from '../lib/supabase'
+import { getProfileName } from '../lib/db'
 import { Bell } from '../components/home/Icons'
 import { HealthScoreCard, QuickActions, PlanToday, Timeline, CoachCard } from '../components/home/Sections'
 import Confetti from '../components/Confetti'
@@ -20,6 +23,13 @@ const greet = () => { const h = new Date().getHours(); return h < 12 ? 'Bom dia'
 
 export default function Home() {
   const nav = useNavigate()
+  const { user } = useAuth()
+  const [name, setName] = useState(profile.name)
+  useEffect(() => {
+    if (supabaseReady && user) {
+      getProfileName(user.id).then((n) => setName(n || user.email?.split('@')[0] || 'você'))
+    }
+  }, [user])
   const [plan, setPlan] = useState<PlanItem[]>(initialPlan)
   const [fire, setFire] = useState(0)
 
@@ -54,7 +64,7 @@ export default function Home() {
       </header>
 
       <div className="mt-5">
-        <h1 className="text-[26px] font-bold text-slate-900 tracking-tight">{greet()}, {profile.name}! <span className="align-middle">👋</span></h1>
+        <h1 className="text-[26px] font-bold text-slate-900 tracking-tight">{greet()}, {name}! <span className="align-middle">👋</span></h1>
         <p className="text-slate-400 mt-0.5">{weekday()}</p>
       </div>
 

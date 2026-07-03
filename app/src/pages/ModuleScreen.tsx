@@ -1,22 +1,49 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
 import ScreenHeader from '../components/ScreenHeader'
 import { Card } from '../components/home/Sections'
 import { iconMap } from '../components/home/ica'
 import { tones } from '../lib/homeData'
 import { modules, type Slug } from '../lib/modules'
-import { Chevron } from '../components/home/Icons'
+import { useAuth } from '../lib/auth'
+import { supabaseReady } from '../lib/supabase'
+import { listWeights, saveWeight, type WeightRow } from '../lib/db'
 
 export default function ModuleScreen() {
   const { slug } = useParams<{ slug: string }>()
   const cfg = slug ? modules[slug as Slug] : undefined
+  const { user } = useAuth()
   const [flash, setFlash] = useState<string | null>(null)
   const [val, setVal] = useState('')
+  const [weights, setWeights] = useState<WeightRow[] | null>(null)
+  const live = cfg?.slug === 'peso' && supabaseReady && !!user
+
+  useEffect(() => {
+    if (live && user) listWeights(user.id).then(setWeights).catch(() => setWeights([]))
+  }, [live, user])
+
   if (!cfg) return <Navigate to="/" replace />
   const Icon = iconMap[cfg.icon]
   const t = tones[cfg.tone]
+  const toast = (m: string) => { setFlash(m); setTimeout(() => setFlash(null), 1800) }
 
-  const toast = (m: string) => { setFlash(m); setTimeout(() => setFlash(null), 1600) }
+  const savePeso = async () => {
+    const kg = parseFloat(val.replace(',', '.'))
+    if (!kg || !user) return
+    const date = new Date().toISOString().slice(0, 10)
+    try {
+      await saveWeight(user.id, date, +kg.toFixed(1))
+      setVal(''); toast(`Peso salvo: ${kg.toFixed(1)} kg`)
+      listWeights(user.id).then(setWeights).catch(() => {})
+    } catch (e: any) { console.error('saveWeight error', e); toast('Erro: ' + (e?.message || e?.error_description || 'falha ao salvar')) }
+  }
+
+  const latest = weights && weights.length ? weights[weights.length - 1].kg : null
+  const heroValue = live ? (latest != null ? String(latest) : '—') : cfg.hero
+
+  const history = live
+    ? (weights ? [...weights].reverse().map((w) => ({ label: w.date, value: `${w.kg} kg` })) : [])
+    : cfg.history
 
   return (
     <div className="max-w-md mx-auto px-4 pb-28">
@@ -28,22 +55,24 @@ export default function ModuleScreen() {
           </span>
           <div>
             <div className="flex items-end gap-1">
-              <span className="text-4xl font-bold text-slate-900 tracking-tight">{cfg.hero}</span>
+              <span className="text-4xl font-bold text-slate-900 tracking-tight">{heroValue}</span>
               <span className="text-slate-400 font-medium mb-1">{cfg.unit}</span>
             </div>
-            <div className="text-slate-500 text-sm">{cfg.heroSub}</div>
+            <div className="text-slate-500 text-sm">{live ? (latest != null ? 'último registro' : 'sem registros ainda') : cfg.heroSub}</div>
           </div>
         </div>
         <div className={`mt-4 text-sm font-medium ${t.fg}`}>{cfg.goalLabel}</div>
+        {live && <div className="mt-1 text-xs text-emerald-600">● dados reais (Supabase)</div>}
       </Card>
 
       <h3 className="text-slate-900 font-semibold mt-6 mb-3 px-1">Registrar</h3>
-      {cfg.quickAdd.length === 1 && cfg.quickAdd[0].value === 'input' ? (
+      {(live || (cfg.quickAdd.length === 1 && cfg.quickAdd[0].value === 'input')) ? (
         <div className="flex gap-2">
           <input value={val} onChange={(e) => setVal(e.target.value)} inputMode="decimal"
+            onKeyDown={(e) => e.key === 'Enter' && live && savePeso()}
             placeholder={`Novo valor (${cfg.unit})`}
             className="flex-1 bg-white border border-[#ECEEF3] rounded-2xl px-4 py-3 text-slate-900 outline-none focus:border-emerald-400" />
-          <button onClick={() => { if (val) { toast(`Registrado: ${val} ${cfg.unit}`); setVal('') } }}
+          <button onClick={() => live ? savePeso() : (val && (toast(`Registrado: ${val} ${cfg.unit}`), setVal('')))}
             className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-5 rounded-2xl transition">Salvar</button>
         </div>
       ) : (
@@ -59,17 +88,23 @@ export default function ModuleScreen() {
 
       <h3 className="text-slate-900 font-semibold mt-6 mb-3 px-1">Histórico</h3>
       <Card className="p-2">
-        <div className="divide-y divide-[#F2F4F8]">
-          {cfg.history.map((h, i) => (
-            <div key={i} className="flex items-center justify-between px-3 py-3">
-              <span className="text-slate-500 text-sm">{h.label}</span>
-              <div className="flex items-center gap-3">
-                <span className="font-semibold text-slate-900">{h.value}</span>
-                {h.sub && <span className="text-xs text-slate-400 w-14 text-right">{h.sub}</span>}
+        {live && weights === null ? (
+          <div className="px-4 py-6 text-center text-slate-400 text-sm">Carregando…</div>
+        ) : history.length === 0 ? (
+          <div className="px-4 py-6 text-center text-slate-400 text-sm">Nenhum registro ainda. Adicione o primeiro acima.</div>
+        ) : (
+          <div className="divide-y divide-[#F2F4F8]">
+            {history.map((h, i) => (
+              <div key={i} className="flex items-center justify-between px-3 py-3">
+                <span className="text-slate-500 text-sm">{h.label}</span>
+                <div className="flex items-center gap-3">
+                  <span className="font-semibold text-slate-900">{h.value}</span>
+                  {(h as any).sub && <span className="text-xs text-slate-400 w-14 text-right">{(h as any).sub}</span>}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </Card>
 
       <div className="mt-4 rounded-[22px] p-4 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
