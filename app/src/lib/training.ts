@@ -120,3 +120,23 @@ export async function fetchTrainingStats(userId: string): Promise<TrainingStats>
     freqDays: daysSet.size, last,
   }
 }
+
+export type Progress = { exercise: string; pr: number; lastLoad: number; suggested: number }
+export async function computeProgression(userId: string): Promise<{ list: Progress[]; lastByExercise: Record<string, number> }> {
+  const { data: sess } = await supabase.from('training_sessions').select('id,finished_at').eq('user_id', userId).not('finished_at', 'is', null).order('finished_at', { ascending: false })
+  if (!sess?.length) return { list: [], lastByExercise: {} }
+  const order: Record<string, number> = {}; sess.forEach((s, i) => { order[s.id] = i })
+  const { data: sets } = await supabase.from('session_sets').select('session_id,exercise_name,load').in('session_id', sess.map((s) => s.id))
+  const pr: Record<string, number> = {}, lastLoad: Record<string, number> = {}, lastRank: Record<string, number> = {}
+  ;(sets || []).forEach((st) => {
+    const name = st.exercise_name as string, l = Number(st.load || 0), rank = order[st.session_id]
+    if (l > (pr[name] ?? 0)) pr[name] = l
+    if (lastRank[name] === undefined || rank < lastRank[name]) { lastRank[name] = rank; lastLoad[name] = l }
+    else if (rank === lastRank[name] && l > lastLoad[name]) lastLoad[name] = l
+  })
+  const list = Object.keys(pr).map((name) => ({
+    exercise: name, pr: pr[name], lastLoad: lastLoad[name] || 0,
+    suggested: Math.round(((lastLoad[name] || 0) * 1.025) * 2) / 2,
+  })).sort((a, b) => b.pr - a.pr)
+  return { list, lastByExercise: lastLoad }
+}

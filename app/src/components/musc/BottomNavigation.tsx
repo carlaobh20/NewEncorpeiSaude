@@ -13,15 +13,15 @@ export default function BottomNavigation() {
   const nav = useNavigate()
   return (
     <div className="fixed bottom-0 inset-x-0 z-20 pointer-events-none">
-      <div className="max-w-[440px] mx-auto px-6 pb-4 pointer-events-auto">
+      <div className="max-w-[440px] mx-auto px-6 pointer-events-auto" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
         <div className="relative flex items-center h-[70px] px-2"
           style={{ background: '#fff', border: `1px solid ${T.border}`, borderRadius: 28, boxShadow: '0 10px 30px rgba(15,23,42,0.12)' }}>
           <div className="flex-1 flex justify-around">
-            {left.map((i) => <Item key={i.key} i={i} onClick={() => nav(i.key === 'ex' ? '/musculacao/lista' : '/musculacao')} />)}
+            {left.map((i) => <Item key={i.key} i={i} onClick={() => nav(i.key === 'ex' ? '/musculacao/exercicios' : '/musculacao')} />)}
           </div>
           <div className="w-16 shrink-0" />
           <div className="flex-1 flex justify-around">
-            {right.map((i) => <Item key={i.key} i={i} onClick={() => nav('/musculacao')} />)}
+            {right.map((i) => <Item key={i.key} i={i} onClick={() => nav(i.key === 'stats' ? '/musculacao/estatisticas' : '/perfil')} />)}
           </div>
           <button onClick={() => nav('/musculacao/novo')} aria-label="Adicionar treino"
             className="absolute left-1/2 -translate-x-1/2 -top-6 w-15 h-15 rounded-full flex items-center justify-center text-white active:scale-90 transition"

@@ -20,6 +20,8 @@ import Grupos from './pages/musc/Grupos'
 import Avaliacoes from './pages/musc/Avaliacoes'
 import Estatisticas from './pages/musc/Estatisticas'
 import Fotos from './pages/musc/Fotos'
+import Progressao from './pages/musc/Progressao'
+import Alimentacao from './pages/Alimentacao'
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -41,6 +43,7 @@ export default function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/m/alimentacao" element={<Alimentacao />} />
         <Route path="/m/:slug" element={<ModuleScreen />} />
         <Route path="/registrar" element={<Registrar />} />
         <Route path="/timeline" element={<TimelinePage />} />
@@ -56,6 +59,7 @@ export default function App() {
         <Route path="/musculacao/avaliacoes" element={<Avaliacoes />} />
         <Route path="/musculacao/fotos" element={<Fotos />} />
         <Route path="/musculacao/estatisticas" element={<Estatisticas />} />
+        <Route path="/musculacao/progressao" element={<Progressao />} />
         <Route path="/musculacao/novo" element={<NovoTreino />} />
         <Route path="/musculacao/treino/:key" element={<TreinoExecucao />} />
         <Route path="*" element={<Navigate to="/" replace />} />

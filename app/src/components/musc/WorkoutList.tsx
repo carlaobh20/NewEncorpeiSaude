@@ -10,7 +10,7 @@ export default function WorkoutList() {
     <div style={{ ...cardStyle, padding: 16 }}>
       <div className="flex justify-between items-center mb-3">
         <h3 className="font-semibold text-[14px]" style={{ color: T.text }}>Meus treinos</h3>
-        <button className="text-[13px] font-medium" style={{ color: T.green }}>Ver calendário</button>
+        <button onClick={() => nav("/musculacao/historico")} className="text-[13px] font-medium" style={{ color: T.green }}>Ver calendário</button>
       </div>
 
       {loading ? (

@@ -1,20 +1,24 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { HomeI, Clock, Plus, Sparkle, Grid } from './Icons'
+import { HomeI, Plus, Sparkle, Grid } from './Icons'
+
+const Dumbbell = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M4 9v6M20 9v6M6.5 12h11" /></svg>
+)
 
 export default function BottomBar() {
   const nav = useNavigate()
   const { pathname } = useLocation()
   const items = [
     { key: 'home', label: 'Início', Icon: HomeI, to: '/' },
-    { key: 'timeline', label: 'Timeline', Icon: Clock, to: '/timeline' },
-    { key: 'ia', label: 'IA Coach', Icon: Sparkle, to: '/coach' },
-    { key: 'mais', label: 'Mais', Icon: Grid, to: '/perfil' },
+    { key: 'treino', label: 'Treino', Icon: Dumbbell, to: '/musculacao' },
+    { key: 'coach', label: 'IA Coach', Icon: Sparkle, to: '/coach' },
+    { key: 'perfil', label: 'Perfil', Icon: Grid, to: '/perfil' },
   ]
   const active = (to: string) => to === '/' ? pathname === '/' : pathname.startsWith(to)
   return (
     <div className="fixed bottom-0 inset-x-0 z-20 pointer-events-none">
-      <div className="max-w-md mx-auto px-4 pb-3 pointer-events-auto">
-        <div className="relative bg-white/90 backdrop-blur-xl border border-[#ECEEF3] rounded-[26px] shadow-[0_8px_30px_-8px_rgba(16,24,40,0.15)] h-16 flex items-center justify-around px-2">
+      <div className="max-w-md mx-auto px-4 pointer-events-auto" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))', paddingTop: 0 }}>
+        <div className="relative bg-white/90 backdrop-blur-xl border border-[#EDF2F7] rounded-[26px] shadow-[0_8px_30px_-8px_rgba(15,23,42,0.15)] h-16 mt-3 flex items-center justify-around px-2">
           {items.slice(0, 2).map(({ key, label, Icon, to }) => (
             <button key={key} onClick={() => nav(to)} className={`flex flex-col items-center gap-0.5 w-16 transition ${active(to) ? 'text-emerald-600' : 'text-slate-400'}`}>
               <Icon className="w-6 h-6" /><span className="text-[10px] font-medium">{label}</span>

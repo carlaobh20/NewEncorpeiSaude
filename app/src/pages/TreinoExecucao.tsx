@@ -4,7 +4,7 @@ import Confetti from '../components/Confetti'
 import { workouts as staticWorkouts, type SplitKey } from '../lib/musculacao'
 import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
-import { fetchRoutines, saveSession } from '../lib/training'
+import { fetchRoutines, saveSession, computeProgression } from '../lib/training'
 
 type Set = { load: number; reps: number; rpe: number; done: boolean }
 type Ex = { name: string; muscle: string; rest: number; targetReps: string; sets: Set[] }
@@ -36,9 +36,11 @@ export default function TreinoExecucao() {
           const r = rs.find((x) => x.id === key)
           if (r && alive) {
             setName(r.name); setRoutineId(r.id)
+            let lastByExercise: Record<string, number> = {}
+            try { lastByExercise = (await computeProgression(user.id)).lastByExercise } catch { /* ok */ }
             setEx(r.exercises.map((e) => ({
               name: e.name, muscle: e.muscle, rest: e.rest_sec, targetReps: e.target_reps,
-              sets: Array.from({ length: e.target_sets }, () => ({ load: 0, reps: firstNum(e.target_reps), rpe: 8, done: false })),
+              sets: Array.from({ length: e.target_sets }, () => ({ load: lastByExercise[e.name] || 0, reps: firstNum(e.target_reps), rpe: 8, done: false })),
             })))
             return
           }

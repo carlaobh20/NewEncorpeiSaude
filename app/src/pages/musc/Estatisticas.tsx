@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import ScreenHeader from '../../components/ScreenHeader'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import { supabaseReady } from '../../lib/supabase'
 import { fetchTrainingStats, type TrainingStats } from '../../lib/training'
@@ -10,6 +11,7 @@ const card = { background: '#fff', borderRadius: 20, border: '1px solid #EDF2F7'
 
 export default function Estatisticas() {
   const { user } = useAuth()
+  const nav = useNavigate()
   const [stats, setStats] = useState<TrainingStats | null>(null)
   const [sessions, setSessions] = useState<SessionRow[]>([])
   useEffect(() => { if (user && supabaseReady) { fetchTrainingStats(user.id).then(setStats).catch(() => {}); fetchSessions(user.id).then(setSessions).catch(() => {}) } }, [user])
@@ -19,6 +21,7 @@ export default function Estatisticas() {
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
       <div className="max-w-[440px] mx-auto px-4 pb-24">
         <ScreenHeader title="Estatísticas" />
+        <button onClick={() => nav('/musculacao/progressao')} className="w-full mb-3 py-3 rounded-2xl font-semibold text-white" style={{ background: '#16C784' }}>Ver progressão de carga (PR) →</button>
         <div className="grid grid-cols-2 gap-3 mb-3">
           {[['Volume 30d', `${(stats?.volumeTotal ?? 0).toLocaleString('pt-BR')} kg`], ['Treinos 30d', String(stats?.sessions ?? 0)], ['Carga média', `${stats?.avgLoad ?? 0} kg`], ['Recorde', `${stats?.maxLoad ?? 0} kg`]].map(([l, v]) => (
             <div key={l} style={card} className="p-4"><div className="text-[11px]" style={{ color: T.sub }}>{l}</div><div className="text-[18px] font-bold" style={{ color: T.text }}>{v}</div></div>

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
-import { getProfileName } from '../lib/db'
+import { getProfileName, getWater } from '../lib/db'
+import { getSleep, todayNutrition, todayISO } from '../lib/health'
 import { Bell } from '../components/home/Icons'
 import { HealthScoreCard, QuickActions, PlanToday, Timeline, CoachCard } from '../components/home/Sections'
 import Confetti from '../components/Confetti'
@@ -30,6 +31,23 @@ export default function Home() {
       getProfileName(user.id).then((n) => setName(n || user.email?.split('@')[0] || 'você'))
     }
   }, [user])
+  const [waterMl, setWaterMl] = useState<number | null>(null)
+  const [sleepH, setSleepH] = useState<number | null>(null)
+  const [nutri, setNutri] = useState<{ calories: number; protein: number } | null>(null)
+  useEffect(() => {
+    if (!supabaseReady || !user) return
+    const d = todayISO()
+    getWater(user.id, d).then(setWaterMl).catch(() => {})
+    getSleep(user.id, d).then(setSleepH).catch(() => {})
+    todayNutrition(user.id, d).then(setNutri).catch(() => {})
+  }, [user])
+  const metrics = dayMetrics.map((m) => {
+    if (m.key === 'water' && waterMl != null) return { ...m, value: (waterMl / 1000).toFixed(1), goal: '3L' }
+    if (m.key === 'sleep' && sleepH != null) return { ...m, value: sleepH ? `${sleepH}h` : '—' }
+    if (m.key === 'cal' && nutri) return { ...m, value: String(nutri.calories), goal: '2.200' }
+    if (m.key === 'protein' && nutri) return { ...m, value: String(nutri.protein), goal: '150g' }
+    return m
+  })
   const [plan, setPlan] = useState<PlanItem[]>(initialPlan)
   const [fire, setFire] = useState(0)
 
@@ -42,7 +60,7 @@ export default function Home() {
     }))
 
   const render: Record<string, JSX.Element> = {
-    score: <HealthScoreCard score={profile.score} delta={profile.scoreDelta} metrics={dayMetrics}
+    score: <HealthScoreCard score={profile.score} delta={profile.scoreDelta} metrics={metrics}
       onMetric={(k) => nav(k === 'workout' ? '/musculacao' : `/m/${metricRoute[k] ?? 'peso'}`)} onInsights={() => nav('/insights')} />,
     quick: <QuickActions actions={quickActions} onPick={(k) => nav(actionRoute[k] ?? '/registrar')} />,
     plan: <PlanToday items={plan} onToggle={togglePlan} onSeeAll={() => nav('/plano')} />,

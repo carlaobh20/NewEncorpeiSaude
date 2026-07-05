@@ -22,3 +22,20 @@ export async function saveWeight(userId: string, date: string, kg: number) {
     { user_id: userId, date, kg }, { onConflict: 'user_id,date' })
   if (error) throw error
 }
+
+export type WaterDay = { date: string; ml: number }
+export async function getWater(userId: string, date: string): Promise<number> {
+  const { data } = await supabase.from('water_logs').select('ml').eq('user_id', userId).eq('date', date).maybeSingle()
+  return data?.ml ?? 0
+}
+export async function addWater(userId: string, date: string, deltaMl: number): Promise<number> {
+  const cur = await getWater(userId, date)
+  const next = Math.max(0, cur + deltaMl)
+  const { error } = await supabase.from('water_logs').upsert({ user_id: userId, date, ml: next }, { onConflict: 'user_id,date' })
+  if (error) throw error
+  return next
+}
+export async function listWater(userId: string): Promise<WaterDay[]> {
+  const { data } = await supabase.from('water_logs').select('date,ml').eq('user_id', userId).order('date', { ascending: false }).limit(14)
+  return (data as WaterDay[]) || []
+}
