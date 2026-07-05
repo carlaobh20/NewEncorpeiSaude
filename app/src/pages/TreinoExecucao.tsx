@@ -161,23 +161,28 @@ export default function TreinoExecucao() {
             <Thumb />
             <div className="flex-1 min-w-0"><div className="text-[15px] font-semibold truncate">{cur.name}</div><div className="text-[12px]" style={{ color: L.sub }}>{cur.muscle} · alvo {cur.sets.length}x{cur.targetReps}</div></div>
           </div>
-          <div className="mt-3 rounded-xl overflow-hidden" style={{ border: `1px solid ${L.border}` }}>
-            <div className="grid grid-cols-[36px_1fr_1fr_44px_44px] text-[10px] py-2 px-1" style={{ color: L.sub, background: L.track }}>
-              <span className="text-center">SÉRIE</span><span className="text-center">CARGA</span><span className="text-center">REPS</span><span className="text-center">RPE</span><span className="text-center">OK</span>
-            </div>
+          <div className="mt-2 mb-1 flex items-center justify-between px-1 text-[11px]" style={{ color: L.sub }}>
+            <span>Série</span><span>Carga · Reps · marque quando fizer</span>
+          </div>
+          <div className="space-y-2">
             {cur.sets.map((s, i) => {
               const isNext = i === nextSetIdx
               return (
-                <div key={i} className="grid grid-cols-[36px_1fr_1fr_44px_44px] items-center py-1.5 px-1 text-[13px]" style={{ borderTop: `1px solid ${L.border}`, background: s.done ? '#F3FCF7' : '#fff' }}>
-                  <span className="text-center font-semibold" style={{ color: isNext ? L.green : L.text }}>{isNext ? '▶' : ''}{i + 1}</span>
-                  <input value={s.load || ''} onChange={(e) => setField(i, 'load', e.target.value)} inputMode="numeric" placeholder="kg"
-                    className="mx-1 bg-white border rounded-lg py-1.5 text-center outline-none focus:border-emerald-400" style={{ borderColor: L.border }} />
-                  <input value={s.reps || ''} onChange={(e) => setField(i, 'reps', e.target.value)} inputMode="numeric"
-                    className="mx-1 bg-white border rounded-lg py-1.5 text-center outline-none focus:border-emerald-400" style={{ borderColor: L.border }} />
-                  <span className="text-center" style={{ color: L.sub }}>{s.rpe}</span>
-                  <button onClick={() => toggleSet(i)} className="flex justify-center">
-                    <span className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: s.done ? L.green : 'transparent', border: s.done ? 'none' : `1.5px solid #CBD5E1` }}>
-                      {s.done && <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round"><path d="M5 12l5 5L20 6" /></svg>}
+                <div key={i} className="flex items-center gap-2 rounded-2xl px-2 py-2" style={{ background: s.done ? '#F3FCF7' : '#fff', border: `1px solid ${isNext ? L.greenHi : L.border}` }}>
+                  <span className="w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold shrink-0" style={{ background: s.done ? L.green : '#F1F5F9', color: s.done ? '#fff' : L.sub }}>{i + 1}</span>
+                  <div className="flex-1 flex items-center gap-1 min-w-0">
+                    <input value={s.load || ''} onChange={(e) => setField(i, 'load', e.target.value)} inputMode="numeric" placeholder="0"
+                      className="w-full bg-white border rounded-xl py-2 text-center text-[15px] outline-none focus:border-emerald-400" style={{ borderColor: L.border }} />
+                    <span className="text-[11px] shrink-0" style={{ color: L.sub }}>kg</span>
+                  </div>
+                  <div className="flex-1 flex items-center gap-1 min-w-0">
+                    <input value={s.reps || ''} onChange={(e) => setField(i, 'reps', e.target.value)} inputMode="numeric" placeholder="0"
+                      className="w-full bg-white border rounded-xl py-2 text-center text-[15px] outline-none focus:border-emerald-400" style={{ borderColor: L.border }} />
+                    <span className="text-[11px] shrink-0" style={{ color: L.sub }}>reps</span>
+                  </div>
+                  <button onClick={() => toggleSet(i)} aria-label="Marcar série" className="shrink-0">
+                    <span className="w-9 h-9 rounded-full flex items-center justify-center" style={{ background: s.done ? L.green : 'transparent', border: s.done ? 'none' : `1.5px solid #CBD5E1` }}>
+                      {s.done && <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round"><path d="M5 12l5 5L20 6" /></svg>}
                     </span>
                   </button>
                 </div>

@@ -140,3 +140,9 @@ export async function computeProgression(userId: string): Promise<{ list: Progre
   })).sort((a, b) => b.pr - a.pr)
   return { list, lastByExercise: lastLoad }
 }
+
+export async function deleteRoutine(userId: string, id: string) {
+  await supabase.from('routine_exercises').delete().eq('routine_id', id).eq('user_id', userId)
+  const { error } = await supabase.from('routines').delete().eq('id', id).eq('user_id', userId)
+  if (error) throw error
+}

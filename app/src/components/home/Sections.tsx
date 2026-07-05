@@ -15,24 +15,16 @@ export function Card({ children, className = '' }: { children: React.ReactNode; 
   )
 }
 
-function ScoreRing({ value }: { value: number }) {
-  const r = 78, c = 2 * Math.PI * r, off = c - (value / 100) * c
+function ScoreRing({ value, size = 92 }: { value: number; size?: number }) {
+  const stroke = 9, r = (size - stroke) / 2, c = 2 * Math.PI * r, off = c - (value / 100) * c
   return (
-    <div className="relative shrink-0" style={{ width: 168, height: 168 }}>
-      <svg width="168" height="168" viewBox="0 0 168 168">
-        <defs>
-          <linearGradient id="scoreG" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#34d399" /><stop offset="100%" stopColor="#059669" />
-          </linearGradient>
-        </defs>
-        <circle cx="84" cy="84" r={r} fill="none" stroke="#EEF1F5" strokeWidth="13" />
-        <circle cx="84" cy="84" r={r} fill="none" stroke="url(#scoreG)" strokeWidth="13" strokeLinecap="round"
-          strokeDasharray={c} strokeDashoffset={off} transform="rotate(-90 84 84)"
-          style={{ transition: 'stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1)' }} />
+    <div className="relative shrink-0" style={{ width: size, height: size }}>
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+        <defs><linearGradient id="scoreG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor="#34d399" /><stop offset="100%" stopColor="#059669" /></linearGradient></defs>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#EEF1F5" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="url(#scoreG)" strokeWidth={stroke} strokeLinecap="round" strokeDasharray={c} strokeDashoffset={off} transform={`rotate(-90 ${size / 2} ${size / 2})`} style={{ transition: 'stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1)' }} />
       </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span style={{ fontFamily: 'Georgia, serif' }} className="text-emerald-500 text-6xl leading-none lowercase">e</span>
-      </div>
+      <div className="absolute inset-0 flex items-center justify-center"><span className="text-2xl font-bold text-slate-900">{value}</span></div>
     </div>
   )
 }
@@ -40,40 +32,22 @@ function ScoreRing({ value }: { value: number }) {
 export function HealthScoreCard({ score, delta, metrics, onMetric, onInsights }:
   { score: number; delta: number; metrics: DayMetric[]; onMetric: (k: string) => void; onInsights: () => void }) {
   return (
-    <Card className="p-6">
-      <div className="flex flex-col sm:flex-row items-center gap-5">
-        <div className="flex-1 w-full">
-          <div className="flex items-center gap-1.5 text-slate-500 text-sm font-medium">
-            Health Score <Info className="w-4 h-4 text-slate-300" />
-          </div>
-          <div className="flex items-end gap-1 mt-1">
-            <span className="text-6xl font-bold tracking-tight text-slate-900">{score}</span>
-            <span className="text-slate-400 text-lg font-medium mb-2">/100</span>
-          </div>
-          <div className="text-emerald-600 text-lg font-semibold -mt-1">Excelente</div>
-          <div className="flex items-center gap-1 text-slate-500 text-sm mt-1">
-            <ArrowUp className="w-3.5 h-3.5 text-emerald-500" /> {delta} pts vs. ontem
-          </div>
-        </div>
+    <Card className="p-5">
+      <div className="flex items-center gap-4">
         <ScoreRing value={score} />
-        <div className="flex-1 w-full text-center sm:text-left">
-          <div className="text-xl font-semibold text-slate-900 leading-snug">Você está<br />no caminho certo!</div>
-          <p className="text-slate-500 text-sm mt-1.5">Sua consistência está acima da média.</p>
-          <button onClick={onInsights} className="mt-3 inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-600 font-semibold text-sm px-4 py-2 rounded-xl hover:bg-emerald-100 active:scale-95 transition">
-            Ver insights <Chevron className="w-4 h-4" />
-          </button>
+        <div className="flex-1 min-w-0">
+          <div className="text-slate-500 text-xs font-medium">Health Score</div>
+          <div className="text-emerald-600 text-lg font-bold leading-tight">Excelente</div>
+          <div className="flex items-center gap-1 text-slate-400 text-xs mt-0.5"><ArrowUp className="w-3 h-3 text-emerald-500" /> {delta} pts vs. ontem</div>
         </div>
+        <button onClick={onInsights} className="text-emerald-600 text-sm font-semibold inline-flex items-center gap-0.5 shrink-0 active:scale-95 transition">Insights<Chevron className="w-4 h-4" /></button>
       </div>
-      <div className="mt-5 pt-4 border-t border-[#F0F2F6] grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div className="mt-4 pt-3 border-t border-[#F0F2F6] grid grid-cols-5 gap-1">
         {metrics.map((m) => (
-          <button key={m.key} onClick={() => onMetric(m.key)} className="flex items-start gap-2 text-left rounded-xl -m-1 p-1 hover:bg-slate-50 active:scale-95 transition">
-            <Ic name={m.icon} className={`w-5 h-5 mt-0.5 ${tones[m.tone].fg}`} />
-            <div>
-              <div className="text-slate-500 text-xs">{m.label}</div>
-              <div className={`text-sm font-semibold ${m.done ? 'text-emerald-600' : 'text-slate-900'}`}>
-                {m.value}{m.goal && <span className="text-slate-400 font-normal"> / {m.goal}</span>}
-              </div>
-            </div>
+          <button key={m.key} onClick={() => onMetric(m.key)} className="flex flex-col items-center gap-1 rounded-xl py-1 active:scale-95 transition">
+            <Ic name={m.icon} className={`w-4 h-4 ${tones[m.tone].fg}`} />
+            <div className="text-[9px] text-slate-400 leading-none text-center">{m.label}</div>
+            <div className={`text-[11px] font-semibold leading-none text-center ${m.done ? 'text-emerald-600' : 'text-slate-900'}`}>{m.value}</div>
           </button>
         ))}
       </div>
