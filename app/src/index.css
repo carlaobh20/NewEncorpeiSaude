@@ -5,7 +5,7 @@
 html, body, #root { height: 100%; }
 body {
   margin: 0;
-  background: #F7F8FC;
+  background: #F6F8FC;
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
 }

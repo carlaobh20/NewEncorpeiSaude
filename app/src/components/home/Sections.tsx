@@ -9,7 +9,7 @@ function Ic({ name, className }: { name: string; className?: string }) {
 
 export function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-white rounded-[22px] border border-[#ECEEF3] shadow-[0_1px_2px_rgba(16,24,40,0.04),0_10px_30px_-18px_rgba(16,24,40,0.18)] ${className}`}>
+    <div className={`bg-white rounded-[28px] border border-[#EDF2F7] shadow-[0_20px_50px_rgba(2,6,23,0.06),0_2px_8px_rgba(2,6,23,0.04)] ${className}`}>
       {children}
     </div>
   )

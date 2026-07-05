@@ -11,7 +11,7 @@ import {
 } from '../lib/homeData'
 
 const metricRoute: Record<string, string> = { water: 'agua', workout: 'treino', sleep: 'sono', cal: 'calorias', protein: 'proteina' }
-const actionRoute: Record<string, string> = { peso: '/m/peso', treino: '/m/treino', refeicao: '/m/alimentacao', agua: '/m/agua', sono: '/m/sono', mais: '/registrar' }
+const actionRoute: Record<string, string> = { peso: '/m/peso', treino: '/musculacao', refeicao: '/m/alimentacao', agua: '/m/agua', sono: '/m/sono', mais: '/registrar' }
 
 const weekday = () => {
   const d = new Date()
@@ -43,7 +43,7 @@ export default function Home() {
 
   const render: Record<string, JSX.Element> = {
     score: <HealthScoreCard score={profile.score} delta={profile.scoreDelta} metrics={dayMetrics}
-      onMetric={(k) => nav(`/m/${metricRoute[k] ?? 'peso'}`)} onInsights={() => nav('/insights')} />,
+      onMetric={(k) => nav(k === 'workout' ? '/musculacao' : `/m/${metricRoute[k] ?? 'peso'}`)} onInsights={() => nav('/insights')} />,
     quick: <QuickActions actions={quickActions} onPick={(k) => nav(actionRoute[k] ?? '/registrar')} />,
     plan: <PlanToday items={plan} onToggle={togglePlan} onSeeAll={() => nav('/plano')} />,
     timeline: <Timeline events={timeline} onSeeAll={() => nav('/timeline')} />,
@@ -58,7 +58,7 @@ export default function Home() {
           <span className="font-semibold text-slate-900 text-lg tracking-tight">encorpei</span>
         </button>
         <div className="flex items-center gap-3">
-          <button onClick={() => nav('/insights')} className="relative text-slate-500 active:scale-90 transition"><Bell className="w-6 h-6" /><span className="absolute top-0 right-0 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-[#F7F8FC]" /></button>
+          <button onClick={() => nav('/insights')} className="relative text-slate-500 active:scale-90 transition"><Bell className="w-6 h-6" /><span className="absolute top-0 right-0 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-[#F6F8FC]" /></button>
           <button onClick={() => nav('/perfil')} className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-sky-400 flex items-center justify-center text-white font-semibold text-sm active:scale-90 transition">C</button>
         </div>
       </header>

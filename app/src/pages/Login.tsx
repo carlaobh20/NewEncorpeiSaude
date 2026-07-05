@@ -30,7 +30,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6" style={{ background: '#F7F8FC' }}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-6" style={{ background: '#F6F8FC' }}>
       <div className="flex items-center gap-2 mb-8">
         <span style={{ fontFamily: 'Georgia,serif' }} className="text-emerald-500 text-3xl lowercase">e</span>
         <span className="font-semibold text-slate-900 text-2xl tracking-tight">encorpei</span>
@@ -48,13 +48,13 @@ export default function Login() {
 
         {mode === 'up' && (
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome"
-            className="w-full mb-3 bg-[#F7F8FC] border border-[#ECEEF3] rounded-xl px-4 py-3 outline-none focus:border-emerald-400" />
+            className="w-full mb-3 bg-[#F6F8FC] border border-[#ECEEF3] rounded-xl px-4 py-3 outline-none focus:border-emerald-400" />
         )}
         <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="E-mail"
-          className="w-full mb-3 bg-[#F7F8FC] border border-[#ECEEF3] rounded-xl px-4 py-3 outline-none focus:border-emerald-400" />
+          className="w-full mb-3 bg-[#F6F8FC] border border-[#ECEEF3] rounded-xl px-4 py-3 outline-none focus:border-emerald-400" />
         <input value={pass} onChange={(e) => setPass(e.target.value)} type="password" placeholder="Senha"
           onKeyDown={(e) => e.key === 'Enter' && submit()}
-          className="w-full mb-4 bg-[#F7F8FC] border border-[#ECEEF3] rounded-xl px-4 py-3 outline-none focus:border-emerald-400" />
+          className="w-full mb-4 bg-[#F6F8FC] border border-[#ECEEF3] rounded-xl px-4 py-3 outline-none focus:border-emerald-400" />
 
         {err && <div className="mb-3 text-sm text-rose-600">{err}</div>}
         {msg && <div className="mb-3 text-sm text-emerald-600">{msg}</div>}
