@@ -1,7 +1,7 @@
 import { supabase } from './supabase'
 import { program } from './programSeed'
 
-export type DBExercise = { id: string; name: string; muscle: string; target_sets: number; target_reps: string; rest_sec: number }
+export type DBExercise = { id: string; name: string; muscle: string; target_sets: number; target_reps: string; rest_sec: number; note?: string }
 export type DBRoutine = { id: string; key: string; name: string; focus: string; cardio_min: number; muscles: string[]; exercises: DBExercise[] }
 
 export async function fetchRoutines(userId: string): Promise<DBRoutine[]> {
@@ -38,7 +38,7 @@ async function doSeed(userId: string, name: string) {
     if (!ins) continue
     const rows = r.exercises.map((e, j) => ({
       user_id: userId, routine_id: ins.id, name: e.name, muscle: e.muscle,
-      target_sets: e.sets, target_reps: e.reps, rest_sec: e.rest, position: j,
+      target_sets: e.sets, target_reps: e.reps, rest_sec: e.rest, position: j, note: e.note ?? null,
     }))
     await supabase.from('routine_exercises').insert(rows)
   }

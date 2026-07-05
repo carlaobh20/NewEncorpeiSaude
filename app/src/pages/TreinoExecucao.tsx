@@ -7,7 +7,7 @@ import { supabaseReady } from '../lib/supabase'
 import { fetchRoutines, saveSession, computeProgression } from '../lib/training'
 
 type Set = { load: number; reps: number; rpe: number; done: boolean }
-type Ex = { name: string; muscle: string; rest: number; targetReps: string; sets: Set[] }
+type Ex = { name: string; muscle: string; rest: number; targetReps: string; note?: string; sets: Set[] }
 
 const L = { bg: '#F6F8FC', card: '#FFFFFF', border: '#E4E9F1', text: '#0F172A', sub: '#64748B', green: '#16C784', greenHi: '#22C55E', track: '#EDF2F7' }
 const shadow = '0 8px 24px rgba(15,23,42,0.08)'
@@ -26,6 +26,8 @@ export default function TreinoExecucao() {
   const [elapsed, setElapsed] = useState(0)
   const [fire, setFire] = useState(0)
   const [finished, setFinished] = useState(false)
+  const [foco, setFoco] = useState(false)
+  const TARGET = 45 * 60
 
   useEffect(() => {
     let alive = true
@@ -39,7 +41,7 @@ export default function TreinoExecucao() {
             let lastByExercise: Record<string, number> = {}
             try { lastByExercise = (await computeProgression(user.id)).lastByExercise } catch { /* ok */ }
             setEx(r.exercises.map((e) => ({
-              name: e.name, muscle: e.muscle, rest: e.rest_sec, targetReps: e.target_reps,
+              name: e.name, muscle: e.muscle, rest: e.rest_sec, targetReps: e.target_reps, note: e.note,
               sets: Array.from({ length: e.target_sets }, () => ({ load: lastByExercise[e.name] || 0, reps: firstNum(e.target_reps), rpe: 8, done: false })),
             })))
             return
@@ -49,7 +51,7 @@ export default function TreinoExecucao() {
       const s = staticWorkouts[key as SplitKey]
       if (s && alive) {
         setName(s.name)
-        setEx(s.exercises.map((e) => ({ name: e.name, muscle: e.group, rest: parseInt(e.rest) || 60, targetReps: String(e.sets[0]?.reps ?? 10),
+        setEx(s.exercises.map((e) => ({ name: e.name, muscle: e.group, rest: parseInt(e.rest) || 60, targetReps: String(e.sets[0]?.reps ?? 10), note: undefined,
           sets: e.sets.map((x) => ({ load: x.load, reps: x.reps, rpe: 8, done: false })) })))
       } else if (alive) setEx([])
     }
@@ -126,6 +128,42 @@ export default function TreinoExecucao() {
     </div>
   )
 
+  if (foco) {
+    const over = elapsed > TARGET
+    return (
+      <div style={{ background: L.bg, minHeight: '100vh', color: L.text }} className="flex flex-col">
+        <div className="flex items-center justify-between px-5 pt-4">
+          <button onClick={() => setFoco(false)} className="text-[13px] font-semibold" style={{ color: L.sub }}>✕ Sair do foco</button>
+          <div className="text-[14px] font-bold tabular-nums" style={{ color: over ? '#EF4444' : L.text }}>{fmt(elapsed)} / {fmt(TARGET)}</div>
+        </div>
+        <div className="h-1.5 mx-5 mt-2 rounded-full" style={{ background: L.track }}><div className="h-full rounded-full transition-all" style={{ width: `${Math.min(100, elapsed / TARGET * 100)}%`, background: over ? '#EF4444' : L.green }} /></div>
+        <div className="flex-1 flex flex-col items-center justify-center px-6 text-center">
+          <div className="text-[13px]" style={{ color: L.sub }}>Exercício {active + 1} de {ex.length}</div>
+          <h2 className="text-[26px] font-bold mt-1 leading-tight" style={{ color: L.text }}>{cur.name}</h2>
+          <div className="text-[13px] mt-1" style={{ color: L.sub }}>{cur.muscle} · alvo {cur.sets.length}x{cur.targetReps}</div>
+          {cur.note && <div className="mt-3 text-[13px] rounded-xl px-3 py-2 max-w-xs" style={{ background: '#FFF7ED', color: '#9A5B0E' }}>💡 {cur.note}</div>}
+          {rest != null && rest > 0 ? (
+            <div className="mt-8"><div className="text-[13px]" style={{ color: L.sub }}>Descanse</div><div className="text-[56px] font-bold tabular-nums" style={{ color: L.green }}>{fmt(rest)}</div><button onClick={() => setRest(null)} className="text-[13px] font-semibold" style={{ color: L.sub }}>Pular descanso</button></div>
+          ) : nextSetIdx >= 0 ? (
+            <>
+              <div className="mt-8 text-[13px] font-semibold" style={{ color: L.green }}>Série {nextSetIdx + 1} de {cur.sets.length}</div>
+              <div className="flex items-center justify-center gap-3 mt-3">
+                <div className="flex items-center gap-1"><input value={cur.sets[nextSetIdx].load || ''} onChange={(e) => setField(nextSetIdx, 'load', e.target.value)} inputMode="numeric" placeholder="0" className="w-24 bg-white border rounded-2xl py-3 text-center text-[22px] font-bold outline-none focus:border-emerald-400" style={{ borderColor: L.border }} /><span style={{ color: L.sub }}>kg</span></div>
+                <div className="flex items-center gap-1"><input value={cur.sets[nextSetIdx].reps || ''} onChange={(e) => setField(nextSetIdx, 'reps', e.target.value)} inputMode="numeric" placeholder="0" className="w-20 bg-white border rounded-2xl py-3 text-center text-[22px] font-bold outline-none focus:border-emerald-400" style={{ borderColor: L.border }} /><span style={{ color: L.sub }}>reps</span></div>
+              </div>
+              <button onClick={concluirSerie} className="mt-8 w-full max-w-xs py-4 rounded-2xl font-bold text-white text-[17px] active:scale-[0.98] transition" style={{ background: L.green }}>Concluir série {nextSetIdx + 1}</button>
+            </>
+          ) : active < ex.length - 1 ? (
+            <button onClick={() => setActive((a) => a + 1)} className="mt-8 w-full max-w-xs py-4 rounded-2xl font-bold text-white text-[17px]" style={{ background: L.green }}>Próximo exercício →</button>
+          ) : (
+            <button onClick={finalizar} className="mt-8 w-full max-w-xs py-4 rounded-2xl font-bold text-white text-[17px]" style={{ background: L.green }}>Finalizar treino</button>
+          )}
+        </div>
+        <div className="text-center pb-6 text-[12px]" style={{ color: L.sub }}>{over ? 'Passou dos 45 min — acelere o descanso.' : `Faltam ${fmt(TARGET - elapsed)} pra bater o tempo`}</div>
+      </div>
+    )
+  }
+
   return (
     <div style={{ background: L.bg, minHeight: '100vh', color: L.text }}>
       <div className="max-w-[460px] mx-auto px-5 pb-40">
@@ -153,7 +191,10 @@ export default function TreinoExecucao() {
           <div className="text-right"><div className="text-[20px] font-bold tabular-nums">{fmt(elapsed)}</div><div className="text-[11px]" style={{ color: L.sub }}>tempo</div></div>
         </div>
 
-        <div className="mt-5 mb-2 text-[12px] font-semibold tracking-wider" style={{ color: L.sub }}>EXERCÍCIOS</div>
+        <button onClick={() => setFoco(true)} className="w-full mt-4 py-3 rounded-2xl font-semibold text-white flex items-center justify-center gap-2 active:scale-[0.99] transition" style={{ background: 'linear-gradient(180deg,#14D890,#12C47C)' }}>
+          🎯 Modo foco — terminar em 45 min
+        </button>
+        <div className="mt-4 mb-2 text-[12px] font-semibold tracking-wider" style={{ color: L.sub }}>EXERCÍCIOS</div>
 
         <div className="rounded-2xl p-4 mb-3" style={{ background: '#F6FEFA', border: `1.5px solid ${L.greenHi}`, boxShadow: shadow }}>
           <div className="flex items-center gap-3">
