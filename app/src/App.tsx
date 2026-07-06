@@ -20,6 +20,7 @@ import Grupos from './pages/musc/Grupos'
 import Avaliacoes from './pages/musc/Avaliacoes'
 import Estatisticas from './pages/musc/Estatisticas'
 import Fotos from './pages/musc/Fotos'
+import Academia from './pages/musc/Academia'
 import Progressao from './pages/musc/Progressao'
 import Alimentacao from './pages/Alimentacao'
 import Peso from './pages/Peso'
@@ -61,6 +62,7 @@ export default function App() {
         <Route path="/musculacao/avaliacoes" element={<Avaliacoes />} />
         <Route path="/musculacao/fotos" element={<Fotos />} />
         <Route path="/musculacao/estatisticas" element={<Estatisticas />} />
+        <Route path="/musculacao/academia" element={<Academia />} />
         <Route path="/musculacao/progressao" element={<Progressao />} />
         <Route path="/musculacao/novo" element={<NovoTreino />} />
         <Route path="/musculacao/treino/:key" element={<TreinoExecucao />} />

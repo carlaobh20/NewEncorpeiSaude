@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import ScreenHeader from '../components/ScreenHeader'
 import { type UserExercise } from '../lib/workoutStore'
 import { useAuth } from '../lib/auth'
+import { useEffect } from 'react'
+import { listEquipment } from '../lib/health'
 import { supabaseReady } from '../lib/supabase'
 import { createRoutine } from '../lib/training'
 import { workoutsApi } from '../lib/workoutStore'
@@ -14,6 +16,8 @@ type Draft = Omit<UserExercise, 'id'>
 export default function NovoTreino() {
   const nav = useNavigate()
   const { user } = useAuth()
+  const [equip, setEquip] = useState<string[]>([])
+  useEffect(() => { if (user) listEquipment(user.id).then((e) => setEquip(e.map((x) => x.name))).catch(() => {}) }, [user])
   const [name, setName] = useState('Treino A')
   const [list, setList] = useState<Draft[]>([])
   const [ex, setEx] = useState<Draft>({ name: '', sets: 3, reps: 12, load: 20 })
@@ -57,8 +61,9 @@ export default function NovoTreino() {
 
         <div className="rounded-[24px] p-5 mb-4" style={{ background: '#fff', boxShadow: '0 6px 22px rgba(15,23,42,0.07)' }}>
           <div className="font-semibold mb-3" style={{ color: T.text }}>Adicionar exercício</div>
-          <input value={ex.name} onChange={(e) => setEx({ ...ex, name: e.target.value })} placeholder="Aparelho / exercício (ex: Supino reto)"
+          <input value={ex.name} onChange={(e) => setEx({ ...ex, name: e.target.value })} list="meus-aparelhos" placeholder="Aparelho / exercício (dos seus)"
             className="w-full bg-white border rounded-2xl px-4 py-3 outline-none focus:border-emerald-400 mb-3" style={{ borderColor: T.border }} />
+          <datalist id="meus-aparelhos">{equip.map((n) => <option key={n} value={n} />)}</datalist>
           <div className="flex gap-2">
             {field('Séries', ex.sets, (v) => setEx({ ...ex, sets: v }))}
             {field('Reps', ex.reps, (v) => setEx({ ...ex, reps: v }))}

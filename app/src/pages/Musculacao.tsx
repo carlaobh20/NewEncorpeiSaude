@@ -3,12 +3,24 @@ import WorkoutHeader from '../components/musc/WorkoutHeader'
 import WorkoutCard from '../components/musc/WorkoutCard'
 import { VolumeCard, FrequencyCard } from '../components/musc/FrequencyCard'
 import ChipsNav from '../components/musc/ChipsNav'
+import { useNavigate } from 'react-router-dom'
 import WorkoutList from '../components/musc/WorkoutList'
 import MusclesWorked from '../components/musc/MusclesWorked'
 import PerformanceCard from '../components/musc/PerformanceCard'
 import WorkoutStats from '../components/musc/WorkoutStats'
 import ExercisesCard from '../components/musc/ExercisesCard'
 import BottomNavigation from '../components/musc/BottomNavigation'
+
+function GymButton() {
+  const nav = useNavigate()
+  return (
+    <button onClick={() => nav('/musculacao/academia')} className="w-full flex items-center justify-between px-4 py-3 rounded-2xl active:scale-[0.99] transition"
+      style={{ background: '#fff', border: '1px solid #E4E9F1', boxShadow: '0 8px 24px rgba(2,6,23,0.06)' }}>
+      <span className="flex items-center gap-2 text-[14px] font-semibold" style={{ color: '#0F172A' }}>🏋️ Minha Academia</span>
+      <span className="text-[12px]" style={{ color: '#64748B' }}>configurar aparelhos ›</span>
+    </button>
+  )
+}
 
 export default function Musculacao() {
   return (
@@ -23,6 +35,7 @@ export default function Musculacao() {
               <FrequencyCard />
             </div>
             <ChipsNav />
+            <GymButton />
             <WorkoutList />
             <MusclesWorked />
             <PerformanceCard />

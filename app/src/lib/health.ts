@@ -30,3 +30,18 @@ export async function todayNutrition(userId: string, date: string): Promise<{ ca
   const meals = await listMeals(userId, date)
   return { calories: meals.reduce((a, m) => a + (m.calories || 0), 0), protein: meals.reduce((a, m) => a + (m.protein || 0), 0) }
 }
+
+// ---- Minha Academia (aparelhos) ----
+export type Equipment = { id: string; name: string }
+export async function listEquipment(userId: string): Promise<Equipment[]> {
+  const { data } = await supabase.from('gym_equipment').select('id,name').eq('user_id', userId).order('name')
+  return (data as Equipment[]) || []
+}
+export async function addEquipment(userId: string, name: string) {
+  const { error } = await supabase.from('gym_equipment').insert({ user_id: userId, name })
+  if (error) throw error
+}
+export async function removeEquipment(userId: string, id: string) {
+  const { error } = await supabase.from('gym_equipment').delete().eq('id', id).eq('user_id', userId)
+  if (error) throw error
+}
