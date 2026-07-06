@@ -45,3 +45,12 @@ export async function getProfile(userId: string): Promise<Profile> {
   const { data } = await supabase.from('profiles').select('name,height_cm,target_kg').eq('id', userId).maybeSingle()
   return data || {}
 }
+
+export async function deleteWeightById(userId: string, id: string) {
+  const { error } = await supabase.from('weights').delete().eq('id', id).eq('user_id', userId)
+  if (error) throw error
+}
+export async function setGoalWeight(userId: string, targetKg: number) {
+  const { error } = await supabase.from('profiles').upsert({ id: userId, target_kg: targetKg }, { onConflict: 'id' })
+  if (error) throw error
+}
