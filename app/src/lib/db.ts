@@ -39,3 +39,9 @@ export async function listWater(userId: string): Promise<WaterDay[]> {
   const { data } = await supabase.from('water_logs').select('date,ml').eq('user_id', userId).order('date', { ascending: false }).limit(14)
   return (data as WaterDay[]) || []
 }
+
+export type Profile = { name?: string; height_cm?: number; target_kg?: number }
+export async function getProfile(userId: string): Promise<Profile> {
+  const { data } = await supabase.from('profiles').select('name,height_cm,target_kg').eq('id', userId).maybeSingle()
+  return data || {}
+}

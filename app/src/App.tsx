@@ -22,6 +22,7 @@ import Estatisticas from './pages/musc/Estatisticas'
 import Fotos from './pages/musc/Fotos'
 import Progressao from './pages/musc/Progressao'
 import Alimentacao from './pages/Alimentacao'
+import Peso from './pages/Peso'
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -44,6 +45,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/m/alimentacao" element={<Alimentacao />} />
+        <Route path="/m/peso" element={<Peso />} />
         <Route path="/m/:slug" element={<ModuleScreen />} />
         <Route path="/registrar" element={<Registrar />} />
         <Route path="/timeline" element={<TimelinePage />} />
