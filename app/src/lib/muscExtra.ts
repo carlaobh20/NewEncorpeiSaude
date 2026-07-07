@@ -17,7 +17,7 @@ export async function fetchSessions(userId: string): Promise<SessionRow[]> {
   }))
 }
 
-export type Assessment = { id?: string; date: string; weight?: number; body_fat?: number; chest?: number; waist?: number; hip?: number; arm?: number; thigh?: number }
+export type Assessment = { id?: string; date: string; weight?: number; body_fat?: number; chest?: number; waist?: number; hip?: number; arm?: number; thigh?: number; neck?: number; shoulders?: number; abdomen?: number; arm_l?: number; forearm_r?: number; forearm_l?: number; thigh_l?: number; calf_r?: number; calf_l?: number; notes?: string }
 export async function fetchAssessments(userId: string): Promise<Assessment[]> {
   const { data } = await supabase.from('assessments').select('*').eq('user_id', userId).order('date')
   return (data as Assessment[]) || []
