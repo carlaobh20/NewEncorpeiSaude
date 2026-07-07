@@ -65,7 +65,7 @@ export default function Avaliacoes() {
   }
 
   return (
-    <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <div className="max-w-[440px] md:max-w-2xl mx-auto px-4 pb-24">
         <ScreenHeader title="Avaliações" />
 

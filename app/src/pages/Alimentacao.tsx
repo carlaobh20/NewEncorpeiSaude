@@ -221,7 +221,7 @@ export default function Alimentacao() {
   const r = 42, circ = 2 * Math.PI * r
 
   return (
-    <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-32">
         <ScreenHeader title="Nutrição" />
 

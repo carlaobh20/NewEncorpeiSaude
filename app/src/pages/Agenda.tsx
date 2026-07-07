@@ -142,7 +142,7 @@ export default function Agenda() {
   }, [view, ym, items])
 
   return (
-    <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <div className="max-w-md md:max-w-2xl mx-auto px-4 pt-6 pb-32">
         <header className="flex items-center justify-between">
           <h1 className="text-[26px] font-bold tracking-tight" style={{ color: T.text }}>Agenda</h1>

@@ -24,7 +24,7 @@ export default function Academia() {
   const del = async (id: string) => { if (user) { await removeEquipment(user.id, id); load() } }
 
   return (
-    <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <div className="max-w-[440px] md:max-w-2xl mx-auto px-4 pb-24">
         <ScreenHeader title="Minha Academia" />
         <p className="text-[13px] mb-4 px-1" style={{ color: T.sub }}>Cadastre os aparelhos que você tem. A IA sugere treinos, mas você monta fiel à sua academia.</p>

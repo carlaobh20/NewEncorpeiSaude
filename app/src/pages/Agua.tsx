@@ -53,7 +53,7 @@ export default function Agua() {
   const maxHist = Math.max(...hist.map((h) => h.ml), goal)
 
   return (
-    <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-28">
         <ScreenHeader title="Água" />
 

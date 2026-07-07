@@ -44,7 +44,7 @@ export default function App() {
   const { user, loading } = useAuth()
   const [showLogin, setShowLogin] = useState(false)
     const shell = (c: React.ReactNode) => (
-    <div className="min-h-screen" style={{ background: '#F6F8FC', fontFamily: '-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif' }}>{c}</div>
+    <div className="min-h-screen app-shell" style={{ background: '#F6F8FC', fontFamily: '-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif' }}>{c}</div>
   )
 
   if (supabaseReady && loading) return shell(

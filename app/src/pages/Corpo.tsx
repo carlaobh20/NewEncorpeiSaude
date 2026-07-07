@@ -102,7 +102,7 @@ export default function Corpo() {
   ]
 
   return (
-    <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <div className="max-w-md md:max-w-4xl mx-auto px-4 md:px-8 pt-6 md:pt-8 pb-28 md:pb-12">
         <header className="flex items-center justify-between">
           <h1 className="text-[26px] font-bold tracking-tight" style={{ color: T.text }}>Corpo</h1>

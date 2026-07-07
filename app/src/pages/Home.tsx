@@ -82,8 +82,8 @@ export default function Home() {
       </header>
 
       <div className="mt-5">
-        <h1 className="text-[26px] font-bold text-slate-900 tracking-tight">{greet()}, {name}! <span className="align-middle">👋</span></h1>
-        <p className="text-slate-400 mt-0.5">{weekday()}</p>
+        <h1 className="text-[26px] md:text-[38px] font-bold text-slate-900 tracking-tight">{greet()}, {name}! <span className="align-middle">👋</span></h1>
+        <p className="text-slate-400 mt-0.5 md:text-[15px]">{weekday()}</p>
       </div>
 
       <div className="mt-5 space-y-5 md:space-y-0 md:grid md:grid-cols-[1.15fr_0.85fr] md:gap-5 md:items-start">

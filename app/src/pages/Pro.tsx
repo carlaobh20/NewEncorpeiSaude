@@ -30,7 +30,7 @@ export default function Pro() {
   }
 
   return (
-    <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <div className="max-w-3xl mx-auto px-4 md:px-8 pb-28 pt-6">
         <div className="flex items-center gap-2">
           <button onClick={() => nav(-1)} className="w-9 h-9 rounded-full flex items-center justify-center bg-white active:scale-95 transition" style={{ border: '1px solid #E4E9F1' }}>

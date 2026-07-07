@@ -57,7 +57,7 @@ export default function Cardio() {
   const pct = Math.min(100, Math.round((week.minutes / OMS_GOAL_MIN) * 100))
 
   return (
-    <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-32">
         <ScreenHeader title="Cardio" />
 

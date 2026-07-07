@@ -109,7 +109,7 @@ export default function Painel() {
   const upcoming = consults.filter((c) => c.status === 'agendada' && new Date(c.scheduled_at) >= new Date())
 
   return (
-    <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <div className="max-w-6xl mx-auto px-4 md:px-8 pb-28 pt-6">
         {/* header */}
         <div className="flex items-center justify-between flex-wrap gap-3">

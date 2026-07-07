@@ -97,7 +97,7 @@ export default function Peso() {
   ]
 
   return (
-    <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
+    <div className="page-bg" style={{ minHeight: '100vh' }}>
       <div className="max-w-md md:max-w-2xl mx-auto px-4 pt-4 pb-28">
         <div className="flex items-center justify-between mb-4">
           <div><h1 className="text-[22px] font-bold" style={{ color: ink }}>Peso</h1><p className="text-[13px]" style={{ color: sub }}>Sua evolução, sua jornada.</p></div>
