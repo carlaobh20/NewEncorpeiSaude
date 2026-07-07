@@ -28,6 +28,7 @@ import Jejum from './pages/Jejum'
 import Suplementos from './pages/Suplementos'
 import Agenda from './pages/Agenda'
 import Corpo from './pages/Corpo'
+import Agua from './pages/Agua'
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -47,7 +48,10 @@ export default function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/m/alimentacao" element={<Alimentacao />} />
+        <Route path="/corpo/nutricao" element={<Alimentacao />} />
+        <Route path="/corpo/agua" element={<Agua />} />
+        <Route path="/m/alimentacao" element={<Navigate to="/corpo/nutricao" replace />} />
+        <Route path="/m/agua" element={<Navigate to="/corpo/agua" replace />} />
         <Route path="/m/peso" element={<Peso />} />
         <Route path="/corpo" element={<Corpo />} />
         <Route path="/corpo/jejum" element={<Jejum />} />

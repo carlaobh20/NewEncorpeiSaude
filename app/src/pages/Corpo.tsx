@@ -59,13 +59,13 @@ export default function Corpo() {
       sub: fast ? `em jejum · meta ${fast.target_hours}h` : 'nenhum jejum ativo',
     },
     {
-      key: 'nutricao', emoji: '🍽️', title: 'Nutrição', to: '/m/alimentacao', accent: '#F97316',
+      key: 'nutricao', emoji: '🍽️', title: 'Nutrição', to: '/corpo/nutricao', accent: '#F97316',
       desc: 'Refeições, calorias e macros',
       value: nutri ? `${nutri.calories}` : '—',
       sub: nutri ? `kcal hoje · ${nutri.protein}g proteína` : 'sem registros hoje',
     },
     {
-      key: 'agua', emoji: '💧', title: 'Água', to: '/m/agua', accent: '#3B82F6',
+      key: 'agua', emoji: '💧', title: 'Água', to: '/corpo/agua', accent: '#3B82F6',
       desc: 'Hidratação diária',
       value: waterMl != null ? `${(waterMl / 1000).toFixed(1)}L` : '—',
       sub: waterMl != null ? 'de 3L hoje' : 'sem registros hoje',
