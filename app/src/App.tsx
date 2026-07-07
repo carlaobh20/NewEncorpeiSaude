@@ -27,6 +27,7 @@ import Peso from './pages/Peso'
 import Jejum from './pages/Jejum'
 import Suplementos from './pages/Suplementos'
 import Agenda from './pages/Agenda'
+import Corpo from './pages/Corpo'
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -48,7 +49,9 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/m/alimentacao" element={<Alimentacao />} />
         <Route path="/m/peso" element={<Peso />} />
-        <Route path="/jejum" element={<Jejum />} />
+        <Route path="/corpo" element={<Corpo />} />
+        <Route path="/corpo/jejum" element={<Jejum />} />
+        <Route path="/jejum" element={<Navigate to="/corpo/jejum" replace />} />
         <Route path="/suplementos" element={<Suplementos />} />
         <Route path="/agenda" element={<Agenda />} />
         <Route path="/m/:slug" element={<ModuleScreen />} />

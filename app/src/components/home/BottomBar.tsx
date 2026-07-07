@@ -1,8 +1,14 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { HomeI, Plus, Sparkle, Grid } from './Icons'
+import { HomeI, Plus } from './Icons'
 
 const Dumbbell = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M4 9v6M20 9v6M6.5 12h11" /></svg>
+)
+const Body = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="5" r="2.5" /><path d="M12 7.5v6M7 10.5c3 1.4 7 1.4 10 0M12 13.5l-2.5 7M12 13.5l2.5 7" /></svg>
+)
+const Calendar = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="16" rx="3" /><path d="M8 3v4M16 3v4M3 10h18" /></svg>
 )
 
 const glass: React.CSSProperties = {
@@ -18,9 +24,9 @@ export default function BottomBar() {
   const { pathname } = useLocation()
   const items = [
     { key: 'home', label: 'Início', Icon: HomeI, to: '/' },
+    { key: 'corpo', label: 'Corpo', Icon: Body, to: '/corpo' },
+    { key: 'agenda', label: 'Agenda', Icon: Calendar, to: '/agenda' },
     { key: 'treino', label: 'Treino', Icon: Dumbbell, to: '/musculacao' },
-    { key: 'coach', label: 'IA Coach', Icon: Sparkle, to: '/coach' },
-    { key: 'perfil', label: 'Perfil', Icon: Grid, to: '/perfil' },
   ]
   const active = (to: string) => (to === '/' ? pathname === '/' : pathname.startsWith(to))
 
