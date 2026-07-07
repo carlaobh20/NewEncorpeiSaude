@@ -24,6 +24,9 @@ import Academia from './pages/musc/Academia'
 import Progressao from './pages/musc/Progressao'
 import Alimentacao from './pages/Alimentacao'
 import Peso from './pages/Peso'
+import Jejum from './pages/Jejum'
+import Suplementos from './pages/Suplementos'
+import Agenda from './pages/Agenda'
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -45,6 +48,9 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/m/alimentacao" element={<Alimentacao />} />
         <Route path="/m/peso" element={<Peso />} />
+        <Route path="/jejum" element={<Jejum />} />
+        <Route path="/suplementos" element={<Suplementos />} />
+        <Route path="/agenda" element={<Agenda />} />
         <Route path="/m/:slug" element={<ModuleScreen />} />
         <Route path="/registrar" element={<Registrar />} />
         <Route path="/timeline" element={<TimelinePage />} />

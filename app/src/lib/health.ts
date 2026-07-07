@@ -45,3 +45,23 @@ export async function removeEquipment(userId: string, id: string) {
   const { error } = await supabase.from('gym_equipment').delete().eq('id', id).eq('user_id', userId)
   if (error) throw error
 }
+
+// ---- Suplementos ----
+export type Supplement = { id: string; name: string; dose?: string; time_label?: string }
+export async function listSupplements(userId: string): Promise<Supplement[]> {
+  const { data } = await supabase.from('supplements').select('id,name,dose,time_label').eq('user_id', userId).order('created_at')
+  return (data as Supplement[]) || []
+}
+export async function addSupplement(userId: string, s: { name: string; dose?: string; time_label?: string }) {
+  const { error } = await supabase.from('supplements').insert({ ...s, user_id: userId }); if (error) throw error
+}
+export async function removeSupplement(userId: string, id: string) {
+  const { error } = await supabase.from('supplements').delete().eq('id', id).eq('user_id', userId); if (error) throw error
+}
+export async function takenToday(userId: string, date: string): Promise<Set<string>> {
+  const { data } = await supabase.from('supplement_logs').select('supplement_id,taken').eq('user_id', userId).eq('date', date)
+  return new Set((data || []).filter((r) => r.taken).map((r) => r.supplement_id))
+}
+export async function toggleTaken(userId: string, supplementId: string, date: string, taken: boolean) {
+  const { error } = await supabase.from('supplement_logs').upsert({ user_id: userId, supplement_id: supplementId, date, taken }, { onConflict: 'supplement_id,date' }); if (error) throw error
+}

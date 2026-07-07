@@ -12,6 +12,9 @@ const grid = [
   { label: 'Foto', icon: 'camera', tone: 'rose', to: '/m/peso' },
   { label: 'Medicamento', icon: 'pill', tone: 'amber', to: '/m/alimentacao' },
   { label: 'Exame', icon: 'grid', tone: 'slate', to: '/insights' },
+  { label: 'Jejum', icon: 'moon', tone: 'violet', to: '/jejum' },
+  { label: 'Suplementos', icon: 'pill', tone: 'amber', to: '/suplementos' },
+  { label: 'Agenda', icon: 'grid', tone: 'sky', to: '/agenda' },
 ]
 
 export default function Registrar() {
