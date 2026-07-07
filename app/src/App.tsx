@@ -29,6 +29,7 @@ import Suplementos from './pages/Suplementos'
 import Agenda from './pages/Agenda'
 import Corpo from './pages/Corpo'
 import Agua from './pages/Agua'
+import Sono from './pages/Sono'
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -56,7 +57,10 @@ export default function App() {
         <Route path="/corpo" element={<Corpo />} />
         <Route path="/corpo/jejum" element={<Jejum />} />
         <Route path="/jejum" element={<Navigate to="/corpo/jejum" replace />} />
-        <Route path="/suplementos" element={<Suplementos />} />
+        <Route path="/corpo/sono" element={<Sono />} />
+        <Route path="/corpo/suplementos" element={<Suplementos />} />
+        <Route path="/suplementos" element={<Navigate to="/corpo/suplementos" replace />} />
+        <Route path="/m/sono" element={<Navigate to="/corpo/sono" replace />} />
         <Route path="/agenda" element={<Agenda />} />
         <Route path="/m/:slug" element={<ModuleScreen />} />
         <Route path="/registrar" element={<Registrar />} />

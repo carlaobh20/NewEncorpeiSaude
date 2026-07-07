@@ -71,13 +71,13 @@ export default function Corpo() {
       sub: waterMl != null ? 'de 3L hoje' : 'sem registros hoje',
     },
     {
-      key: 'sono', emoji: '🌙', title: 'Sono', to: '/m/sono', accent: '#6366F1',
+      key: 'sono', emoji: '🌙', title: 'Sono', to: '/corpo/sono', accent: '#6366F1',
       desc: 'Horas e qualidade do sono',
       value: sleepH != null && sleepH > 0 ? `${sleepH}h` : '—',
       sub: sleepH != null && sleepH > 0 ? 'na última noite' : 'sem registro hoje',
     },
     {
-      key: 'suplementos', emoji: '💊', title: 'Suplementos', to: '/suplementos', accent: '#0E9F6E',
+      key: 'suplementos', emoji: '💊', title: 'Suplementos', to: '/corpo/suplementos', accent: '#0E9F6E',
       desc: 'Protocolo e adesão diária',
       value: supps && supps.total > 0 ? `${supps.taken}/${supps.total}` : '—',
       sub: supps && supps.total > 0 ? 'tomados hoje' : 'nenhum cadastrado',
