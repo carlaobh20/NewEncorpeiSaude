@@ -40,9 +40,9 @@ export async function listWater(userId: string): Promise<WaterDay[]> {
   return (data as WaterDay[]) || []
 }
 
-export type Profile = { name?: string; height_cm?: number; target_kg?: number }
+export type Profile = { name?: string; height_cm?: number; target_kg?: number; goal_date?: string | null }
 export async function getProfile(userId: string): Promise<Profile> {
-  const { data } = await supabase.from('profiles').select('name,height_cm,target_kg').eq('id', userId).maybeSingle()
+  const { data } = await supabase.from('profiles').select('name,height_cm,target_kg,goal_date').eq('id', userId).maybeSingle()
   return data || {}
 }
 
@@ -50,7 +50,9 @@ export async function deleteWeightById(userId: string, id: string) {
   const { error } = await supabase.from('weights').delete().eq('id', id).eq('user_id', userId)
   if (error) throw error
 }
-export async function setGoalWeight(userId: string, targetKg: number) {
-  const { error } = await supabase.from('profiles').upsert({ id: userId, target_kg: targetKg }, { onConflict: 'id' })
+export async function setGoalWeight(userId: string, targetKg: number, goalDate?: string | null) {
+  const payload: any = { id: userId, target_kg: targetKg }
+  if (goalDate !== undefined) payload.goal_date = goalDate || null
+  const { error } = await supabase.from('profiles').upsert(payload, { onConflict: 'id' })
   if (error) throw error
 }
