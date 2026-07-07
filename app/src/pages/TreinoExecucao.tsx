@@ -250,24 +250,24 @@ export default function TreinoExecucao() {
           const done = e.sets.length > 0 && e.sets.every((s) => s.done)
           return (
             <button key={i} onClick={() => setActive(i)} className="w-full flex items-center gap-3 rounded-2xl p-3 mb-2 text-left transition"
-              style={{ background: done ? '#ECFDF5' : L.card, border: `1.5px solid ${done ? L.green : 'transparent'}`, boxShadow: done ? 'none' : shadow }}>
+              style={{ background: done ? '#EFF6FF' : L.card, border: `1.5px solid ${done ? '#3B82F6' : 'transparent'}`, boxShadow: done ? 'none' : shadow }}>
               <span className="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold shrink-0 text-white"
-                style={{ background: done ? L.green : '#F1F5F9', color: done ? '#fff' : L.sub }}>
+                style={{ background: done ? '#3B82F6' : '#F1F5F9', color: done ? '#fff' : L.sub }}>
                 {done ? <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round"><path d="M5 12l5 5L20 6" /></svg> : i + 1}
               </span>
               <Thumb />
               <div className="flex-1 min-w-0">
-                <div className="text-[15px] font-semibold truncate" style={{ color: done ? '#0E9F6E' : L.text }}>{e.name}</div>
+                <div className="text-[15px] font-semibold truncate" style={{ color: done ? '#1D4ED8' : L.text }}>{e.name}</div>
                 <div className="text-[12px]" style={{ color: L.sub }}>{done ? 'Concluído ✓' : e.muscle}</div>
                 <div className="text-[11px]" style={{ color: L.sub }}>{e.sets.length} séries · {e.targetReps} reps · {e.rest}s</div>
               </div>
-              <span style={{ color: done ? L.green : '#CBD5E1' }}>{done ? '✓' : '›'}</span>
+              <span style={{ color: done ? '#3B82F6' : '#CBD5E1' }}>{done ? '✓' : '›'}</span>
             </button>
           )
         })}
       </div>
 
-      <div className="fixed bottom-0 inset-x-0" style={{ background: L.card, borderTop: `1px solid ${L.border}` }}>
+      <div className="fixed inset-x-0 z-10" style={{ background: L.card, borderTop: `1px solid ${L.border}`, bottom: 'calc(74px + env(safe-area-inset-bottom))' }}>
         <div className="max-w-[460px] mx-auto px-5 py-3 flex items-center justify-between">
           <Stat icon="⏱" v={fmt(elapsed)} l="tempo" />
           <Stat icon="🔥" v={`${Math.round(totals.volume / 200 + elapsed / 6)}`} l="kcal" />

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './lib/auth'
 import { supabaseReady } from './lib/supabase'
 import BottomBar from './components/home/BottomBar'
@@ -27,9 +27,7 @@ import Peso from './pages/Peso'
 
 export default function App() {
   const { user, loading } = useAuth()
-  const { pathname } = useLocation()
-  const hideBar = pathname.startsWith('/m/') || pathname === '/registrar' || pathname.startsWith('/musculacao')
-  const shell = (c: React.ReactNode) => (
+    const shell = (c: React.ReactNode) => (
     <div className="min-h-screen" style={{ background: '#F6F8FC', fontFamily: '-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif' }}>{c}</div>
   )
 
@@ -68,7 +66,7 @@ export default function App() {
         <Route path="/musculacao/treino/:key" element={<TreinoExecucao />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      {!hideBar && <BottomBar />}
+      <BottomBar />
     </>
   )
 }

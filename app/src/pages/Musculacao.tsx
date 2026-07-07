@@ -9,7 +9,6 @@ import MusclesWorked from '../components/musc/MusclesWorked'
 import PerformanceCard from '../components/musc/PerformanceCard'
 import WorkoutStats from '../components/musc/WorkoutStats'
 import ExercisesCard from '../components/musc/ExercisesCard'
-import BottomNavigation from '../components/musc/BottomNavigation'
 
 function GymButton() {
   const nav = useNavigate()
@@ -43,8 +42,7 @@ export default function Musculacao() {
             <ExercisesCard />
           </div>
         </div>
-        <BottomNavigation />
-      </div>
+        </div>
     </MuscProvider>
   )
 }

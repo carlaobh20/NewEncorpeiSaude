@@ -146,3 +146,19 @@ export async function deleteRoutine(userId: string, id: string) {
   const { error } = await supabase.from('routines').delete().eq('id', id).eq('user_id', userId)
   if (error) throw error
 }
+
+export type ExHistoryPoint = { date: string; load: number; reps: number }
+export async function fetchExerciseHistory(userId: string, name: string): Promise<ExHistoryPoint[]> {
+  const { data: sess } = await supabase.from('training_sessions').select('id,finished_at').eq('user_id', userId).not('finished_at', 'is', null)
+  if (!sess?.length) return []
+  const dateOf: Record<string, string> = {}; sess.forEach((s) => { dateOf[s.id] = s.finished_at as string })
+  const { data: sets } = await supabase.from('session_sets').select('session_id,exercise_name,load,reps').eq('user_id', userId).eq('exercise_name', name)
+  const best: Record<string, { load: number; reps: number }> = {}
+  ;(sets || []).forEach((st) => {
+    if (!dateOf[st.session_id]) return
+    const c = best[st.session_id] || { load: 0, reps: 0 }
+    if (Number(st.load) > c.load) { c.load = Number(st.load); c.reps = Number(st.reps) }
+    best[st.session_id] = c
+  })
+  return Object.entries(best).map(([sid, v]) => ({ date: dateOf[sid], load: v.load, reps: v.reps })).sort((a, b) => a.date.localeCompare(b.date))
+}
