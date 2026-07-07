@@ -4,6 +4,7 @@ import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
 import { listConsultations, addConsultation, setConsultationStatus, type Consultation } from '../lib/care'
 import CareChat from '../components/CareChat'
+import ShareCare from '../components/ShareCare'
 
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
 const card: React.CSSProperties = { background: 'linear-gradient(145deg,#FFFFFF,#F4F8FC)', borderRadius: 20, border: '1px solid rgba(6,182,212,0.18)', boxShadow: '0 8px 24px rgba(15,23,42,0.06)' }
@@ -44,6 +45,8 @@ export default function Consultas() {
 
         {/* chat primeiro: é o canal do dia a dia */}
         <CareChat as="paciente" height={340} />
+
+        <ShareCare />
 
         <div className="flex items-center justify-between mt-5 mb-2 px-1">
           <h3 className="font-semibold" style={{ color: T.text }}>Agendadas</h3>

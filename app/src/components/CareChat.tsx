@@ -6,27 +6,28 @@ import { listMessages, sendMessage, subscribeMessages, type CareMessage } from '
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
 
 /** Chat em tempo real. `as` define de que lado esta instância envia. */
-export default function CareChat({ as = 'paciente', height = 380 }: { as?: 'paciente' | 'profissional'; height?: number }) {
+export default function CareChat({ as = 'paciente', height = 380, userId }: { as?: 'paciente' | 'profissional'; height?: number; userId?: string }) {
   const { user } = useAuth()
+  const threadId = userId ?? user?.id
   const [msgs, setMsgs] = useState<CareMessage[]>([])
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
   const endRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!user || !supabaseReady) return
-    listMessages(user.id).then(setMsgs).catch(() => {})
-    const off = subscribeMessages(user.id, (m) => setMsgs((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m])))
+    if (!threadId || !supabaseReady) return
+    listMessages(threadId).then(setMsgs).catch(() => {})
+    const off = subscribeMessages(threadId, (m) => setMsgs((prev) => (prev.some((x) => x.id === m.id) ? prev : [...prev, m])))
     return off
-  }, [user])
+  }, [threadId])
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [msgs])
 
   const send = async () => {
     const t = text.trim()
-    if (!t || !user || busy) return
+    if (!t || !threadId || busy) return
     setBusy(true)
-    try { await sendMessage(user.id, as, t); setText('') } catch { /* noop */ } finally { setBusy(false) }
+    try { await sendMessage(threadId, as, t); setText('') } catch { /* noop */ } finally { setBusy(false) }
   }
 
   return (

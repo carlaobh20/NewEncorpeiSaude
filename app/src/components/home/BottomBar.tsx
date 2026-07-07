@@ -25,6 +25,7 @@ const MENU = [
   { emoji: '🧪', label: 'Exames', sub: 'Biomarcadores e evolução laboratorial', to: '/exames' },
   { emoji: '🩺', label: 'Painel Médico', sub: 'Visão completa para o profissional', to: '/painel' },
   { emoji: '📅', label: 'Consultas & Chat', sub: 'Agende e fale com médico ou personal', to: '/consultas' },
+  { emoji: '👥', label: 'Área do Profissional', sub: 'Para médico/personal: seus pacientes', to: '/pro' },
 ]
 
 export default function BottomBar() {

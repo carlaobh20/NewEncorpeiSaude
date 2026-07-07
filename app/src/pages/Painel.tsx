@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
 import { getProfileName, listWeights, getWater, type WeightRow } from '../lib/db'
@@ -13,6 +13,7 @@ import { listExams, resultStatus, type Exam } from '../lib/care'
 import { fetchAssessments, type Assessment } from '../lib/muscExtra'
 import { listConsultations, type Consultation } from '../lib/care'
 import CareChat from '../components/CareChat'
+import { canViewPatient } from '../lib/careLinks'
 
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
 const card: React.CSSProperties = { background: '#fff', borderRadius: 20, border: '1px solid #E4E9F1', boxShadow: '0 8px 24px rgba(2,6,23,0.06)' }
@@ -40,6 +41,14 @@ const PROF_LABEL: Record<string, string> = { medico: '🩺 Médico', personal: '
 export default function Painel() {
   const nav = useNavigate()
   const { user } = useAuth()
+  const [params] = useSearchParams()
+  const pParam = params.get('p')
+  const [viewId, setViewId] = useState<string | null>(null)
+  useEffect(() => {
+    if (!user) return
+    if (pParam && pParam !== user.id) canViewPatient(user.id, pParam).then((ok) => setViewId(ok ? pParam : user.id)).catch(() => setViewId(user.id))
+    else setViewId(user.id)
+  }, [user, pParam])
   const now = new Date()
 
   const [name, setName] = useState('')
@@ -58,24 +67,24 @@ export default function Painel() {
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
 
   const load = useCallback(() => {
-    if (!user || !supabaseReady) return
+    if (!user || !viewId || !supabaseReady) return
     const d = todayISO()
-    getProfileName(user.id).then((n) => setName(n || 'Paciente')).catch(() => {})
-    listWeights(user.id).then(setWeights).catch(() => {})
-    getWater(user.id, d).then(setWaterMl).catch(() => {})
-    getWaterGoal(user.id).then(setWaterGoal).catch(() => {})
-    listSleepFull(user.id, 7).then(setSleep).catch(() => {})
-    weekNutrition(user.id).then(setNutri).catch(() => {})
-    listFasts(user.id).then(setFasts).catch(() => {})
-    fetchTrainingStats(user.id).then(setTstats).catch(() => {})
-    fetchMonthActivity(user.id, now.getFullYear(), now.getMonth()).then(setMonth).catch(() => {})
-    listSupplements(user.id).then((l) => supplementWeekStats(user.id, l.length).then((w) => setSupp({ pct: w.pct }))).catch(() => {})
-    listExams(user.id).then(setExams).catch(() => {})
-    fetchAssessments(user.id).then(setAssess).catch(() => {})
-    listConsultations(user.id).then(setConsults).catch(() => {})
+    getProfileName(viewId).then((n) => setName(n || 'Paciente')).catch(() => {})
+    listWeights(viewId).then(setWeights).catch(() => {})
+    getWater(viewId, d).then(setWaterMl).catch(() => {})
+    getWaterGoal(viewId).then(setWaterGoal).catch(() => {})
+    listSleepFull(viewId, 7).then(setSleep).catch(() => {})
+    weekNutrition(viewId).then(setNutri).catch(() => {})
+    listFasts(viewId).then(setFasts).catch(() => {})
+    fetchTrainingStats(viewId).then(setTstats).catch(() => {})
+    fetchMonthActivity(viewId, now.getFullYear(), now.getMonth()).then(setMonth).catch(() => {})
+    listSupplements(viewId).then((l) => supplementWeekStats(viewId, l.length).then((w) => setSupp({ pct: w.pct }))).catch(() => {})
+    listExams(viewId).then(setExams).catch(() => {})
+    fetchAssessments(viewId).then(setAssess).catch(() => {})
+    listConsultations(viewId).then(setConsults).catch(() => {})
     setUpdatedAt(new Date())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
+  }, [user, viewId])
 
   useEffect(load, [load])
 
@@ -103,6 +112,7 @@ export default function Painel() {
                 <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke={T.text} strokeWidth={2} strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg>
               </button>
               <h1 className="text-[24px] font-bold" style={{ color: T.text }}>🩺 Painel do Profissional</h1>
+              {pParam && <span className="text-[10px] font-bold px-2 py-1 rounded-full" style={{ background: "rgba(18,201,138,0.12)", color: "#0E9F6E" }}>acesso vinculado</span>}
             </div>
             <p className="text-[13px] mt-1" style={{ color: T.sub }}>
               Paciente: <b style={{ color: T.text }}>{name}</b>
@@ -202,7 +212,7 @@ export default function Painel() {
         <div className="grid md:grid-cols-2 gap-3 mt-3 items-start">
           <div>
             <p className="text-[12px] font-bold mb-2 px-1" style={{ color: T.text }}>💬 Responder como profissional</p>
-            <CareChat as="profissional" height={420} />
+            <CareChat as="profissional" userId={viewId ?? undefined} height={420} />
           </div>
           <div style={{ ...card, background: '#0F172A', border: 'none' }} className="p-5 text-white">
             <div className="text-[14px] font-bold">ℹ️ Sobre este painel</div>

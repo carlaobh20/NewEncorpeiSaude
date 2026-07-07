@@ -33,6 +33,7 @@ import Sono from './pages/Sono'
 import Exames from './pages/Exames'
 import Painel from './pages/Painel'
 import Consultas from './pages/Consultas'
+import Pro from './pages/Pro'
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -61,6 +62,7 @@ export default function App() {
         <Route path="/exames" element={<Exames />} />
         <Route path="/painel" element={<Painel />} />
         <Route path="/consultas" element={<Consultas />} />
+        <Route path="/pro" element={<Pro />} />
         <Route path="/corpo/jejum" element={<Jejum />} />
         <Route path="/jejum" element={<Navigate to="/corpo/jejum" replace />} />
         <Route path="/corpo/sono" element={<Sono />} />
