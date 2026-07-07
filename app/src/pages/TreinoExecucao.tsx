@@ -96,10 +96,18 @@ export default function TreinoExecucao() {
     }) } : e))
   }
   const toggleSet = (setI: number) => setEx((prev) => prev!.map((e, i) => i === active ? { ...e, sets: e.sets.map((s, j) => j === setI ? { ...s, done: !s.done } : s) } : e))
+  const nextPendingAfter = (list: Ex[], from: number) => {
+    for (let i = from + 1; i < list.length; i++) if (list[i].sets.some((s) => !s.done)) return i
+    for (let i = 0; i < list.length; i++) if (i !== from && list[i].sets.some((s) => !s.done)) return i
+    return -1
+  }
   const concluirSerie = () => {
     if (nextSetIdx < 0) return
     toggleSet(nextSetIdx); setRest(cur.rest)
-    if (nextSetIdx === cur.sets.length - 1 && active < ex.length - 1) setTimeout(() => setActive((a) => a + 1), 400)
+    if (nextSetIdx === cur.sets.length - 1) {
+      const nx = nextPendingAfter(ex, active)
+      if (nx >= 0) setTimeout(() => setActive(nx), 400)
+    }
   }
 
   const finalizar = async () => {
@@ -201,7 +209,9 @@ export default function TreinoExecucao() {
         </button>
         <div className="mt-4 mb-2 text-[12px] font-semibold tracking-wider" style={{ color: L.sub }}>EXERCÍCIOS</div>
 
-        <div className="rounded-2xl p-4 mb-3" style={{ background: '#F6FEFA', border: `1.5px solid ${L.greenHi}`, boxShadow: shadow }}>
+        {ex.map((e, i) => {
+          if (i === active) return (
+        <div key={i} className="rounded-2xl p-4 mb-3" style={{ background: '#F6FEFA', border: `1.5px solid ${L.greenHi}`, boxShadow: shadow }}>
           <div className="flex items-center gap-3">
             <span className="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold shrink-0 text-white" style={{ background: L.green }}>{active + 1}</span>
             <Thumb />
@@ -244,24 +254,22 @@ export default function TreinoExecucao() {
             </button>
           </div>
         </div>
-
-        {ex.map((e, i) => {
-          if (i === active) return null
+          )
           const done = e.sets.length > 0 && e.sets.every((s) => s.done)
           return (
             <button key={i} onClick={() => setActive(i)} className="w-full flex items-center gap-3 rounded-2xl p-3 mb-2 text-left transition"
-              style={{ background: done ? '#EFF6FF' : L.card, border: `1.5px solid ${done ? '#3B82F6' : 'transparent'}`, boxShadow: done ? 'none' : shadow }}>
+              style={{ background: done ? '#ECFDF5' : L.card, border: `1.5px solid ${done ? '#16C784' : 'transparent'}`, boxShadow: done ? 'none' : shadow }}>
               <span className="w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold shrink-0 text-white"
-                style={{ background: done ? '#3B82F6' : '#F1F5F9', color: done ? '#fff' : L.sub }}>
+                style={{ background: done ? '#16C784' : '#F1F5F9', color: done ? '#fff' : L.sub }}>
                 {done ? <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round"><path d="M5 12l5 5L20 6" /></svg> : i + 1}
               </span>
               <Thumb />
               <div className="flex-1 min-w-0">
-                <div className="text-[15px] font-semibold truncate" style={{ color: done ? '#1D4ED8' : L.text }}>{e.name}</div>
+                <div className="text-[15px] font-semibold truncate" style={{ color: done ? '#047857' : L.text }}>{e.name}</div>
                 <div className="text-[12px]" style={{ color: L.sub }}>{done ? 'Concluído ✓' : e.muscle}</div>
                 <div className="text-[11px]" style={{ color: L.sub }}>{e.sets.length} séries · {e.targetReps} reps · {e.rest}s</div>
               </div>
-              <span style={{ color: done ? '#3B82F6' : '#CBD5E1' }}>{done ? '✓' : '›'}</span>
+              <span style={{ color: done ? '#16C784' : '#CBD5E1' }}>{done ? '✓' : '›'}</span>
             </button>
           )
         })}

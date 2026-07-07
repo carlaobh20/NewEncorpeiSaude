@@ -2,7 +2,7 @@ import { supabase } from './supabase'
 import { program } from './programSeed'
 
 export type DBExercise = { id: string; name: string; muscle: string; target_sets: number; target_reps: string; rest_sec: number; note?: string }
-export type DBRoutine = { id: string; key: string; name: string; focus: string; cardio_min: number; muscles: string[]; exercises: DBExercise[] }
+export type DBRoutine = { id: string; key: string; name: string; focus: string; cardio_min: number; day_of_week?: number | null; muscles: string[]; exercises: DBExercise[] }
 
 export async function fetchRoutines(userId: string): Promise<DBRoutine[]> {
   const { data: routines, error } = await supabase.from('routines').select('*').eq('user_id', userId).order('position')
@@ -12,7 +12,7 @@ export async function fetchRoutines(userId: string): Promise<DBRoutine[]> {
   const seen = new Set<string>()
   return routines
     .map((r) => ({
-      id: r.id, key: r.key, name: r.name, focus: r.focus, cardio_min: r.cardio_min, muscles: r.muscles || [],
+      id: r.id, key: r.key, name: r.name, focus: r.focus, cardio_min: r.cardio_min, day_of_week: r.day_of_week ?? null, muscles: r.muscles || [],
       exercises: (exs || []).filter((e) => e.routine_id === r.id),
     }))
     .filter((r) => (seen.has(r.key) ? false : (seen.add(r.key), true)))
