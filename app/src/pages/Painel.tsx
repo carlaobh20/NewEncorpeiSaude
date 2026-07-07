@@ -14,6 +14,7 @@ import { fetchAssessments, type Assessment } from '../lib/muscExtra'
 import { listConsultations, type Consultation } from '../lib/care'
 import CareChat from '../components/CareChat'
 import { canViewPatient } from '../lib/careLinks'
+import { listBP, listGlucose, listCardio, weekCardioStats, bpClass, glucoseClass, type BPRecord, type GlucoseRecord } from '../lib/vitals'
 
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
 const card: React.CSSProperties = { background: '#fff', borderRadius: 20, border: '1px solid #E4E9F1', boxShadow: '0 8px 24px rgba(2,6,23,0.06)' }
@@ -65,6 +66,9 @@ export default function Painel() {
   const [assess, setAssess] = useState<Assessment[]>([])
   const [consults, setConsults] = useState<Consultation[]>([])
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null)
+  const [bp, setBp] = useState<BPRecord | null>(null)
+  const [glu, setGlu] = useState<GlucoseRecord | null>(null)
+  const [cardioWk, setCardioWk] = useState<{ minutes: number; calories: number } | null>(null)
 
   const load = useCallback(() => {
     if (!user || !viewId || !supabaseReady) return
@@ -82,6 +86,9 @@ export default function Painel() {
     listExams(viewId).then(setExams).catch(() => {})
     fetchAssessments(viewId).then(setAssess).catch(() => {})
     listConsultations(viewId).then(setConsults).catch(() => {})
+    listBP(viewId, 1).then((l) => setBp(l[0] ?? null)).catch(() => {})
+    listGlucose(viewId, 1).then((l) => setGlu(l[0] ?? null)).catch(() => {})
+    listCardio(viewId).then((l) => setCardioWk(weekCardioStats(l))).catch(() => {})
     setUpdatedAt(new Date())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, viewId])
@@ -135,6 +142,13 @@ export default function Painel() {
           <Metric label="Adesão suplementos" value={supp ? `${supp.pct}%` : '—'} sub="últimos 7 dias" color={supp && supp.pct >= 80 ? '#0E9F6E' : '#D97706'} />
           <Metric label="Jejuns (20 últimos)" value={`${fastsDone.length}`} sub={fastsDone.length ? `mais longo: ${Math.max(...fastsDone.map((f) => (new Date(f.end_at!).getTime() - new Date(f.start_at).getTime()) / 3600000)).toFixed(0)}h` : ''} color="#A855F7" />
           <Metric label="Volume 30 dias" value={tstats ? `${(tstats.volumeTotal / 1000).toFixed(1)}t` : '—'} sub={tstats ? `${tstats.sessions} sessões` : ''} color="#0F172A" />
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3">
+          <Metric label="Pressão arterial" value={bp ? `${bp.systolic}/${bp.diastolic}` : '—'} sub={bp ? bpClass(bp.systolic, bp.diastolic).label : 'sem medições'} color={bp ? bpClass(bp.systolic, bp.diastolic).color : '#0F172A'} />
+          <Metric label="Glicemia" value={glu ? `${glu.value_mgdl}` : '—'} sub={glu ? `mg/dL · ${glucoseClass(glu.value_mgdl, glu.context).label}` : 'sem medições'} color={glu ? glucoseClass(glu.value_mgdl, glu.context).color : '#0F172A'} />
+          <Metric label="Cardio na semana" value={cardioWk ? `${cardioWk.minutes}min` : '—'} sub="meta OMS 150min" color="#0EA5E9" />
+          <Metric label="Cintura" value={lastAssess?.waist != null ? `${lastAssess.waist}cm` : '—'} sub="última avaliação" color="#A855F7" />
         </div>
 
         {/* gráficos + alertas */}

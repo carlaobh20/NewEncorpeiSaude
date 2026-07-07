@@ -5,6 +5,7 @@ import { supabaseReady } from '../lib/supabase'
 import { getWater } from '../lib/db'
 import { getSleep, todayNutrition, todayISO, listSupplements, takenToday } from '../lib/health'
 import { getActiveFast, type Fast } from '../lib/fasting'
+import { listBP, listCardio, weekCardioStats, type BPRecord } from '../lib/vitals'
 import { Chevron } from '../components/home/Icons'
 
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
@@ -29,6 +30,8 @@ export default function Corpo() {
   const [nutri, setNutri] = useState<{ calories: number; protein: number } | null>(null)
   const [fast, setFast] = useState<Fast | null>(null)
   const [supps, setSupps] = useState<{ total: number; taken: number } | null>(null)
+  const [bp, setBp] = useState<BPRecord | null>(null)
+  const [cardioMin, setCardioMin] = useState<number | null>(null)
   const [now, setNow] = useState(Date.now())
 
   useEffect(() => {
@@ -38,6 +41,8 @@ export default function Corpo() {
     getSleep(user.id, d).then(setSleepH).catch(() => {})
     todayNutrition(user.id, d).then(setNutri).catch(() => {})
     getActiveFast(user.id).then(setFast).catch(() => {})
+    listBP(user.id, 1).then((l) => setBp(l[0] ?? null)).catch(() => {})
+    listCardio(user.id).then((l) => setCardioMin(weekCardioStats(l).minutes)).catch(() => {})
     Promise.all([listSupplements(user.id), takenToday(user.id, d)])
       .then(([list, taken]) => setSupps({ total: list.length, taken: taken.size }))
       .catch(() => {})
@@ -81,6 +86,18 @@ export default function Corpo() {
       desc: 'Protocolo e adesão diária',
       value: supps && supps.total > 0 ? `${supps.taken}/${supps.total}` : '—',
       sub: supps && supps.total > 0 ? 'tomados hoje' : 'nenhum cadastrado',
+    },
+    {
+      key: 'vitais', emoji: '🫀', title: 'Vitais', to: '/corpo/vitais', accent: '#EF4444',
+      desc: 'Pressão arterial e glicemia',
+      value: bp ? `${bp.systolic}/${bp.diastolic}` : '—',
+      sub: bp ? 'última pressão' : 'sem medições',
+    },
+    {
+      key: 'cardio', emoji: '🏃', title: 'Cardio', to: '/corpo/cardio', accent: '#0EA5E9',
+      desc: 'Atividades aeróbicas · meta OMS 150min',
+      value: cardioMin != null && cardioMin > 0 ? `${cardioMin}min` : '—',
+      sub: 'esta semana',
     },
   ]
 
@@ -129,6 +146,8 @@ export default function Corpo() {
         </div>
 
         <button onClick={() => nav('/exames')} className="w-full mt-3 p-4 rounded-2xl flex items-center gap-3.5 text-left active:scale-[0.99] transition" style={{ background: 'linear-gradient(145deg,#FFFFFF,#F4F8FC)', borderRadius: 20, border: '1px solid rgba(6,182,212,0.18)', boxShadow: '0 8px 24px rgba(15,23,42,0.06)' }}><div className="w-12 h-12 rounded-2xl flex items-center justify-center text-[24px]" style={{ background: '#EF444414' }}>🧪</div><div className="flex-1"><div className="text-[15px] font-bold" style={{ color: '#0F172A' }}>Exames</div><div className="text-[11px]" style={{ color: '#64748B' }}>Biomarcadores, referências e evolução</div></div><span style={{ color: '#CBD5E1' }}>›</span></button>
+
+        <button onClick={() => nav('/musculacao/avaliacoes')} className="w-full mt-3 p-4 rounded-2xl flex items-center gap-3.5 text-left active:scale-[0.99] transition" style={{ background: 'linear-gradient(145deg,#FFFFFF,#F4F8FC)', borderRadius: 20, border: '1px solid rgba(6,182,212,0.18)', boxShadow: '0 8px 24px rgba(15,23,42,0.06)' }}><div className="w-12 h-12 rounded-2xl flex items-center justify-center text-[24px]" style={{ background: '#A855F714' }}>📏</div><div className="flex-1"><div className="text-[15px] font-bold" style={{ color: '#0F172A' }}>Medidas corporais</div><div className="text-[11px]" style={{ color: '#64748B' }}>Avaliação física completa com evolução</div></div><span style={{ color: '#CBD5E1' }}>›</span></button>
       </div>
     </div>
   )

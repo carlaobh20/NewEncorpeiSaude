@@ -36,6 +36,8 @@ import Exames from './pages/Exames'
 import Painel from './pages/Painel'
 import Consultas from './pages/Consultas'
 import Pro from './pages/Pro'
+import Vitais from './pages/Vitais'
+import Cardio from './pages/Cardio'
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -67,6 +69,8 @@ export default function App() {
         <Route path="/consultas" element={<Consultas />} />
         <Route path="/pro" element={<Pro />} />
         <Route path="/corpo/jejum" element={<Jejum />} />
+        <Route path="/corpo/vitais" element={<Vitais />} />
+        <Route path="/corpo/cardio" element={<Cardio />} />
         <Route path="/jejum" element={<Navigate to="/corpo/jejum" replace />} />
         <Route path="/corpo/sono" element={<Sono />} />
         <Route path="/corpo/suplementos" element={<Suplementos />} />
