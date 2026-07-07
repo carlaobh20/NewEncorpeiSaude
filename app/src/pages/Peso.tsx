@@ -20,7 +20,7 @@ const fmt = (iso: string) => format(new Date(iso), 'dd/MM', { locale: ptBR })
 function Modal({ title, children, onClose }: { title: string; children: React.ReactNode; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ background: 'rgba(15,23,42,0.45)' }} onClick={onClose}>
-      <div className="w-full max-w-md bg-white rounded-t-[24px] sm:rounded-[24px] p-5" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))' }} onClick={(e) => e.stopPropagation()}>
+      <div className="w-full max-w-md rounded-t-[28px] sm:rounded-[28px] p-5" style={{ paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))', background: 'rgba(255,255,255,0.82)', backdropFilter: 'blur(24px) saturate(180%)', WebkitBackdropFilter: 'blur(24px) saturate(180%)', border: '1px solid rgba(255,255,255,0.7)', boxShadow: '0 -10px 40px rgba(15,23,42,0.18)' }} onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-4"><h3 className="font-bold" style={{ color: ink }}>{title}</h3><button onClick={onClose} className="text-slate-400 text-xl">✕</button></div>
         {children}
       </div>
