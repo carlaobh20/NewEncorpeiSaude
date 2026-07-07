@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './lib/auth'
 import { supabaseReady } from './lib/supabase'
@@ -11,6 +12,7 @@ import Perfil from './pages/Perfil'
 import Insights from './pages/Insights'
 import PlanoCompleto from './pages/PlanoCompleto'
 import Login from './pages/Login'
+import Landing from './pages/Landing'
 import Musculacao from './pages/Musculacao'
 import TreinoExecucao from './pages/TreinoExecucao'
 import NovoTreino from './pages/NovoTreino'
@@ -37,6 +39,7 @@ import Pro from './pages/Pro'
 
 export default function App() {
   const { user, loading } = useAuth()
+  const [showLogin, setShowLogin] = useState(false)
     const shell = (c: React.ReactNode) => (
     <div className="min-h-screen" style={{ background: '#F6F8FC', fontFamily: '-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif' }}>{c}</div>
   )
@@ -47,7 +50,7 @@ export default function App() {
     </div>
   )
 
-  if (supabaseReady && !user) return shell(<Login />)
+  if (supabaseReady && !user) return shell(showLogin ? <Login /> : <Landing onStart={() => setShowLogin(true)} />)
 
   return shell(
     <>
