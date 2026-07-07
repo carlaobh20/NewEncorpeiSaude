@@ -21,7 +21,7 @@ export default function Fotos() {
   }
   return (
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
-      <div className="max-w-[440px] mx-auto px-4 pb-24">
+      <div className="max-w-[440px] md:max-w-2xl mx-auto px-4 pb-24">
         <ScreenHeader title="Fotos de evolução" />
         <input ref={inputRef} type="file" accept="image/*" onChange={onFile} className="hidden" />
         <button onClick={() => inputRef.current?.click()} className="w-full py-3 rounded-2xl font-semibold text-white mb-3" style={{ background: T.green }}>+ Adicionar foto</button>

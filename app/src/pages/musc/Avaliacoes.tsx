@@ -66,7 +66,7 @@ export default function Avaliacoes() {
 
   return (
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
-      <div className="max-w-[440px] mx-auto px-4 pb-24">
+      <div className="max-w-[440px] md:max-w-2xl mx-auto px-4 pb-24">
         <ScreenHeader title="Avaliações" />
 
         <div style={card} className="p-5 mb-3">

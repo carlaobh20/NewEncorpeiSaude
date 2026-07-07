@@ -24,7 +24,7 @@ export default function Progressao() {
 
   return (
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
-      <div className="max-w-[440px] mx-auto px-4 pb-28">
+      <div className="max-w-[440px] md:max-w-2xl mx-auto px-4 pb-28">
         <ScreenHeader title="Progressão" />
         <p className="text-[13px] mb-3 px-1" style={{ color: T.sub }}>Recorde (PR), última carga e sugestão. Toque pra ver o histórico.</p>
         <div className="rounded-2xl p-4 mb-4 text-[12px] leading-relaxed" style={{ background: '#0F172A', color: '#E2E8F0' }}>

@@ -10,7 +10,7 @@ const cards = [
 
 export default function Insights() {
   return (
-    <div className="max-w-md mx-auto px-4 pb-28">
+    <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-28">
       <ScreenHeader title="Insights" />
       <p className="text-slate-500 text-sm mt-1 mb-4 px-1">O que a IA percebeu na sua evolução.</p>
       <div className="space-y-3">

@@ -15,7 +15,7 @@ export default function Coach() {
     setInput('')
   }
   return (
-    <div className="max-w-md mx-auto px-4 pb-28 flex flex-col min-h-screen">
+    <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-28 flex flex-col min-h-screen">
       <ScreenHeader title="IA Coach" />
       <div className="flex items-center gap-3 py-3">
         <div className="relative w-12 h-12">

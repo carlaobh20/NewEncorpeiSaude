@@ -27,7 +27,7 @@ export default function Musculacao() {
   return (
     <MuscProvider>
       <div style={{ background: '#F6F8FC' }} className="min-h-screen">
-        <div className="max-w-[400px] mx-auto px-4 pb-28">
+        <div className="max-w-[400px] md:max-w-2xl mx-auto px-4 pb-28">
           <WorkoutHeader />
           <div className="space-y-3">
             <WorkoutCard />

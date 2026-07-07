@@ -17,7 +17,7 @@ export default function Perfil() {
   const nav = useNavigate()
   const { user, signOut } = useAuth()
   return (
-    <div className="max-w-md mx-auto px-4 pb-28">
+    <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-28">
       <ScreenHeader title="Perfil" />
       <div className="flex items-center gap-4 py-4">
         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-sky-400 flex items-center justify-center text-white text-2xl font-bold">C</div>

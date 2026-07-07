@@ -63,7 +63,7 @@ export default function ExerciciosLib() {
 
   return (
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
-      <div className="max-w-[440px] mx-auto px-4 pb-24">
+      <div className="max-w-[440px] md:max-w-2xl mx-auto px-4 pb-24">
         <ScreenHeader title="Exercícios" />
 
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar exercício…"

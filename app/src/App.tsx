@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './lib/auth'
 import { supabaseReady } from './lib/supabase'
 import BottomBar from './components/home/BottomBar'
+import Sidebar from './components/Sidebar'
 import Home from './pages/Home'
 import ModuleScreen from './pages/ModuleScreen'
 import Registrar from './pages/Registrar'
@@ -56,6 +57,8 @@ export default function App() {
 
   return shell(
     <>
+      <div className="hidden md:block"><Sidebar /></div>
+      <div className="md:pl-[248px]">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/corpo/nutricao" element={<Alimentacao />} />
@@ -98,6 +101,7 @@ export default function App() {
         <Route path="/musculacao/treino/:key" element={<TreinoExecucao />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </div>
       <BottomBar />
     </>
   )

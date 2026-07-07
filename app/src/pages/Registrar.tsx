@@ -20,7 +20,7 @@ const grid = [
 export default function Registrar() {
   const nav = useNavigate()
   return (
-    <div className="max-w-md mx-auto px-4 pb-28">
+    <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-28">
       <ScreenHeader title="Registrar agora" />
       <p className="text-slate-500 text-sm mt-1 mb-5 px-1">O que você quer registrar? Um toque e pronto.</p>
       <div className="grid grid-cols-2 gap-3">

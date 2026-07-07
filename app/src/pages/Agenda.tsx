@@ -143,7 +143,7 @@ export default function Agenda() {
 
   return (
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
-      <div className="max-w-md mx-auto px-4 pt-6 pb-32">
+      <div className="max-w-md md:max-w-2xl mx-auto px-4 pt-6 pb-32">
         <header className="flex items-center justify-between">
           <h1 className="text-[26px] font-bold tracking-tight" style={{ color: T.text }}>Agenda</h1>
           <button onClick={() => setOpen(true)} className="text-[13px] font-bold px-3.5 py-1.5 rounded-full text-white active:scale-95 transition" style={{ background: T.teal }}>+ Novo</button>

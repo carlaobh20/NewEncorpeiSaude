@@ -56,7 +56,7 @@ export default function BottomBar() {
     <>
       {/* ── Menu do + ── */}
       {menu && (
-        <div className="fixed inset-0 z-40" onClick={() => setMenu(false)} style={{ background: 'rgba(15,23,42,0.45)', backdropFilter: 'blur(4px)' }}>
+        <div className="fixed inset-0 z-40 md:hidden" onClick={() => setMenu(false)} style={{ background: 'rgba(15,23,42,0.45)', backdropFilter: 'blur(4px)' }}>
           <div className="absolute inset-x-0 bottom-0" onClick={(e) => e.stopPropagation()}
             style={{ paddingBottom: 'calc(96px + env(safe-area-inset-bottom))' }}>
             <div className="max-w-md mx-auto px-4">
@@ -78,7 +78,7 @@ export default function BottomBar() {
         </div>
       )}
 
-      <div className="fixed bottom-0 inset-x-0 z-50 pointer-events-none">
+      <div className="fixed bottom-0 inset-x-0 z-50 pointer-events-none md:hidden">
         <div className="max-w-md mx-auto px-4 pointer-events-auto" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
           <div className="relative flex items-center justify-around px-2 mt-3 rounded-[28px] h-16" style={glass}>
             <Tab it={items[0]} /><Tab it={items[1]} />

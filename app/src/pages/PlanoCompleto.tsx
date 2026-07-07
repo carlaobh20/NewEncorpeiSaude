@@ -15,7 +15,7 @@ export default function PlanoCompleto() {
   }))
   const done = plan.filter((p) => p.status === 'done').length
   return (
-    <div className="max-w-md mx-auto px-4 pb-28">
+    <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-28">
       <ScreenHeader title="Plano de hoje" />
       <div className="py-2 px-1">
         <div className="text-slate-500 text-sm">{done} de {plan.length} concluídos</div>

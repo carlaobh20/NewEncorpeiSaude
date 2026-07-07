@@ -32,7 +32,7 @@ export default function Historico() {
 
   return (
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
-      <div className="max-w-[440px] mx-auto px-4 pb-24">
+      <div className="max-w-[440px] md:max-w-2xl mx-auto px-4 pb-24">
         <ScreenHeader title="Histórico" />
         {rows === null ? <p className="text-center py-8 text-sm" style={{ color: T.sub }}>Carregando…</p>
           : rows.length === 0 ? <p className="text-center py-10 text-sm" style={{ color: T.sub }}>Nenhum treino registrado ainda.</p>

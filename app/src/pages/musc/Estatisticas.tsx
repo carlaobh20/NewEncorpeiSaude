@@ -19,7 +19,7 @@ export default function Estatisticas() {
   const max = Math.max(...last10.map((s) => s.volume), 1)
   return (
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
-      <div className="max-w-[440px] mx-auto px-4 pb-24">
+      <div className="max-w-[440px] md:max-w-2xl mx-auto px-4 pb-24">
         <ScreenHeader title="Estatísticas" />
         <button onClick={() => nav('/musculacao/progressao')} className="w-full mb-3 py-3 rounded-2xl font-semibold text-white" style={{ background: '#16C784' }}>Ver progressão de carga (PR) →</button>
         <div className="grid grid-cols-2 gap-3 mb-3">

@@ -57,7 +57,7 @@ export default function Vitais() {
 
   return (
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
-      <div className="max-w-md mx-auto px-4 pb-32">
+      <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-32">
         <ScreenHeader title="Vitais" />
 
         <div className="grid grid-cols-2 gap-2">

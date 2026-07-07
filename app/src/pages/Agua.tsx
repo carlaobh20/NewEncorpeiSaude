@@ -54,7 +54,7 @@ export default function Agua() {
 
   return (
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
-      <div className="max-w-md mx-auto px-4 pb-28">
+      <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-28">
         <ScreenHeader title="Água" />
 
         {/* ── Anel de progresso ── */}

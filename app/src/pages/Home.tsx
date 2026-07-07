@@ -69,7 +69,7 @@ export default function Home() {
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 pt-6 pb-28">
+    <div className="max-w-md md:max-w-5xl mx-auto px-4 md:px-8 pt-6 md:pt-8 pb-28 md:pb-12">
       <header className="flex items-center justify-between">
         <button onClick={() => nav('/')} className="flex items-center gap-1.5">
           <span style={{ fontFamily: 'Georgia,serif' }} className="text-emerald-500 text-2xl lowercase leading-none">e</span>
@@ -86,8 +86,13 @@ export default function Home() {
         <p className="text-slate-400 mt-0.5">{weekday()}</p>
       </div>
 
-      <div className="mt-5 space-y-5">
-        {sectionOrder.map((k) => <div key={k}>{render[k]}</div>)}
+      <div className="mt-5 space-y-5 md:space-y-0 md:grid md:grid-cols-[1.15fr_0.85fr] md:gap-5 md:items-start">
+        <div className="space-y-5">
+          {sectionOrder.filter((k) => ['score', 'quick', 'plan'].includes(k)).map((k) => <div key={k}>{render[k]}</div>)}
+        </div>
+        <div className="space-y-5">
+          {sectionOrder.filter((k) => ['timeline', 'coach'].includes(k)).map((k) => <div key={k}>{render[k]}</div>)}
+        </div>
       </div>
 
       <Confetti fire={fire} />

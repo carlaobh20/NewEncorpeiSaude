@@ -103,7 +103,7 @@ export default function Corpo() {
 
   return (
     <div style={{ background: '#F6F8FC', minHeight: '100vh' }}>
-      <div className="max-w-md mx-auto px-4 pt-6 pb-28">
+      <div className="max-w-md md:max-w-4xl mx-auto px-4 md:px-8 pt-6 md:pt-8 pb-28 md:pb-12">
         <header className="flex items-center justify-between">
           <h1 className="text-[26px] font-bold tracking-tight" style={{ color: T.text }}>Corpo</h1>
           <button onClick={() => nav('/m/peso')} className="text-[12px] font-semibold px-3 py-1.5 rounded-full active:scale-95 transition" style={{ color: T.teal, background: 'rgba(18,201,166,0.12)' }}>⚖️ Peso</button>
@@ -128,7 +128,7 @@ export default function Corpo() {
           </button>
         )}
 
-        <div className="mt-4 space-y-3">
+        <div className="mt-4 space-y-3 md:space-y-0 md:grid md:grid-cols-2 md:gap-3">
           {modules.map((mod) => (
             <button key={mod.key} onClick={() => nav(mod.to)} style={card} className="w-full p-4 flex items-center gap-3.5 text-left active:scale-[0.99] transition">
               <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-[24px] flex-shrink-0" style={{ background: `${mod.accent}14` }}>{mod.emoji}</div>

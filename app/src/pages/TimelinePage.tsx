@@ -5,7 +5,7 @@ import { tones, timeline } from '../lib/homeData'
 
 export default function TimelinePage() {
   return (
-    <div className="max-w-md mx-auto px-4 pb-28">
+    <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-28">
       <ScreenHeader title="Timeline" />
       <p className="text-slate-500 text-sm mt-1 mb-4 px-1">Tudo que aconteceu hoje, em ordem.</p>
       <Card className="p-2">
