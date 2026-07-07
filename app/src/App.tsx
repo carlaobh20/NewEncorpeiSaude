@@ -30,6 +30,9 @@ import Agenda from './pages/Agenda'
 import Corpo from './pages/Corpo'
 import Agua from './pages/Agua'
 import Sono from './pages/Sono'
+import Exames from './pages/Exames'
+import Painel from './pages/Painel'
+import Consultas from './pages/Consultas'
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -55,6 +58,9 @@ export default function App() {
         <Route path="/m/agua" element={<Navigate to="/corpo/agua" replace />} />
         <Route path="/m/peso" element={<Peso />} />
         <Route path="/corpo" element={<Corpo />} />
+        <Route path="/exames" element={<Exames />} />
+        <Route path="/painel" element={<Painel />} />
+        <Route path="/consultas" element={<Consultas />} />
         <Route path="/corpo/jejum" element={<Jejum />} />
         <Route path="/jejum" element={<Navigate to="/corpo/jejum" replace />} />
         <Route path="/corpo/sono" element={<Sono />} />

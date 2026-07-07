@@ -128,7 +128,7 @@ export default function Corpo() {
           ))}
         </div>
 
-        <p className="text-center text-[11px] mt-6" style={{ color: '#94A3B8' }}>Exames chegam em breve nesta aba.</p>
+        <button onClick={() => nav('/exames')} className="w-full mt-3 p-4 rounded-2xl flex items-center gap-3.5 text-left active:scale-[0.99] transition" style={{ background: 'linear-gradient(145deg,#FFFFFF,#F4F8FC)', borderRadius: 20, border: '1px solid rgba(6,182,212,0.18)', boxShadow: '0 8px 24px rgba(15,23,42,0.06)' }}><div className="w-12 h-12 rounded-2xl flex items-center justify-center text-[24px]" style={{ background: '#EF444414' }}>🧪</div><div className="flex-1"><div className="text-[15px] font-bold" style={{ color: '#0F172A' }}>Exames</div><div className="text-[11px]" style={{ color: '#64748B' }}>Biomarcadores, referências e evolução</div></div><span style={{ color: '#CBD5E1' }}>›</span></button>
       </div>
     </div>
   )
