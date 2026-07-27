@@ -3,40 +3,41 @@ import { T } from '../lib/theme'
 
 const IMG = {
   hero: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1600&q=80',
-  professional: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
+  care: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1200&q=80',
 }
 
-/* ── Conteúdo real do produto — nada aqui é aspiracional ─────────────
-   Cada item corresponde a uma tela que existe hoje no Encorpei.        */
-const PATIENT_FEATURES = [
-  'Peso e evolução', 'Água', 'Sono', 'Alimentação', 'Treino', 'Jejum',
-  'Suplementos', 'Como estou me sentindo (sintomas)', 'Exames', 'Consultas & Chat', 'Meu plano de cuidado',
+/* ── Conteúdo real do produto, na ordem que importa pro paciente ──────
+   Primeiro o que ele registra sozinho; depois, o que é opcional.        */
+const FEATURES = [
+  { emoji: '⚖️', title: 'Peso', desc: 'Registre e veja sua evolução ao longo do tempo, sem planilha.' },
+  { emoji: '💧', title: 'Água', desc: 'Meta do dia e histórico, um toque por registro.' },
+  { emoji: '🌙', title: 'Sono', desc: 'Horários e qualidade, pra entender seu padrão real.' },
+  { emoji: '🍽️', title: 'Alimentação', desc: 'O que você comeu, no seu ritmo — sem julgamento.' },
+  { emoji: '🏋️', title: 'Treino', desc: 'Seus treinos da semana, organizados num só lugar.' },
+  { emoji: '⏱️', title: 'Jejum', desc: 'Acompanhe o protocolo que você está seguindo.' },
+  { emoji: '💊', title: 'Suplementos', desc: 'Lembrete por horário, sem esquecer a dose.' },
+  { emoji: '💬', title: 'Como estou me sentindo', desc: 'Registre sintomas do dia em poucos toques.' },
+  { emoji: '🧪', title: 'Exames', desc: 'Guarde seus resultados e veja a evolução dos marcadores.' },
 ]
-const PRO_FEATURES = [
-  'Lista de pacientes vinculados, com aviso de quantos alertas cada um tem',
-  'Alertas por severidade — amarelo e vermelho — configurados por você, não pelo app',
-  'Painel clínico por paciente: vitais, sintomas, exames e adesão ao plano dos últimos 7 dias',
-  'Histórico com data e hora de cada visto/tratado — nada se perde',
+
+const SHARE_POINTS = [
+  'Você decide quem vê seus dados — e pode tirar o acesso quando quiser',
+  'Ele nunca vê mais do que você autorizou no convite',
+  'Vocês combinam juntos o que conta como alerta antes de qualquer coisa acontecer',
 ]
 
 const STEPS = [
-  { t: 'Ative seu papel', d: 'Médico, personal ou nutricionista — no mesmo login, sem cadastro separado.' },
-  { t: 'Convide o paciente', d: 'Ele aceita o vínculo e dá consentimento explícito, conforme a LGPD.' },
-  { t: 'Monte o plano e as faixas', d: 'Você decide o que ele registra e o que conta como alerta — o app só compara.' },
-  { t: 'Receba o alerta na hora', d: 'Sem esperar a próxima consulta, sem depender de print de WhatsApp.' },
-]
-
-const ROLES = [
-  { emoji: '🩺', title: 'Médico', desc: 'Acompanha vitais e sintomas entre consultas, com faixas clínicas que você mesmo define por paciente.' },
-  { emoji: '💪', title: 'Personal trainer', desc: 'Vê peso, treino e adesão do aluno num painel só — sem planilha, sem depender do aluno mandar print.' },
-  { emoji: '🥗', title: 'Nutricionista', desc: 'Acompanha alimentação, água e evolução de peso, com o plano de cuidado do paciente sempre visível.' },
+  { t: 'Comece a registrar', d: 'Peso, água, sono, treino — o que fizer sentido pra você, no seu tempo.' },
+  { t: 'Convide quem cuida de você, se quiser', d: 'Médico, personal ou nutricionista, com um código simples.' },
+  { t: 'Combinem o plano juntos', d: 'Ele sugere o que acompanhar e o que vira alerta; a decisão final é combinada.' },
+  { t: 'Siga sua rotina', d: 'Ele é avisado automaticamente se algo sair do combinado — você não precisa mandar print.' },
 ]
 
 const FAQ = [
-  { q: 'O paciente paga alguma coisa?', a: 'Não. O acesso do paciente é gratuito. Quem assina é o profissional.' },
-  { q: 'Preciso entender de tecnologia para usar?', a: 'Não. Você ativa seu papel, gera um convite e o paciente aceita pelo celular dele. Não tem etapa técnica.' },
-  { q: 'O Encorpei diagnostica ou detecta emergências?', a: 'Não. Ele nunca interpreta um dado — só compara o registro do paciente com a faixa que você configurou e avisa quando sai dela. A decisão clínica é sempre sua. Em emergência, a orientação dentro do app é ligar 192 (SAMU).' },
-  { q: 'Os dados do paciente são protegidos?', a: 'Sim. O vínculo só existe com consentimento explícito do paciente, revogável a qualquer momento, e todo acesso fica registrado.' },
+  { q: 'Preciso ter médico, personal ou nutricionista pra usar?', a: 'Não. Você pode registrar sozinho, do seu jeito, e convidar alguém depois — ou nunca convidar ninguém.' },
+  { q: 'É pago?', a: 'Não. O acesso do paciente é sempre gratuito.' },
+  { q: 'Meus dados ficam visíveis pra qualquer profissional?', a: 'Não. Só quem você convidar, e só enquanto você autorizar. Você revoga o acesso quando quiser.' },
+  { q: 'O app substitui consulta médica ou detecta emergência?', a: 'Não. Ele organiza o que você registra; a decisão de saúde continua sendo do profissional. Em qualquer emergência, ligue 192 (SAMU).' },
 ]
 
 function Btn({ children, onClick, ghost = false }: { children: React.ReactNode; onClick?: () => void; ghost?: boolean }) {
@@ -71,25 +72,25 @@ export default function Landing({ onStart }: { onStart: () => void }) {
         </div>
       </nav>
 
-      {/* HERO */}
+      {/* HERO — fala com quem vai usar o app no dia a dia: o paciente */}
       <header>
         <Section className="pt-14 md:pt-20 pb-10 grid md:grid-cols-2 gap-10 items-center">
           <div>
             <span className="inline-block text-[12px] font-bold px-3 py-1.5 rounded-full mb-5" style={{ background: 'rgba(18,201,138,0.12)', color: T.tealDark }}>
-              Para médico, personal trainer e nutricionista
+              Sua saúde, registrada num só lugar
             </span>
             <h1 className="text-[34px] md:text-[46px] font-bold leading-[1.1] tracking-tight" style={{ color: T.text }}>
-              O que seu paciente faz entre as consultas, você vê no mesmo dia.
+              Seu corpo, acompanhado de verdade — todos os dias, não só na consulta.
             </h1>
             <p className="text-[16px] mt-5 leading-relaxed max-w-md" style={{ color: T.sub }}>
-              Peso, sono, água, treino, alimentação e sintomas — registrados por ele, com alerta automático quando algo sai da faixa que <b style={{ color: T.text }}>você</b> define.
+              Peso, sono, água, treino, alimentação e como você está se sentindo — tudo num só app, <b style={{ color: T.text }}>grátis</b>. Se quiser, compartilhe com quem cuida de você.
             </p>
             <div className="flex flex-wrap gap-3 mt-8">
-              <Btn onClick={onStart}>Criar minha conta grátis</Btn>
+              <Btn onClick={onStart}>Começar agora — é grátis</Btn>
               <Btn onClick={onStart} ghost>Já tenho conta</Btn>
             </div>
             <div className="flex flex-wrap gap-2 mt-8">
-              {['Peso', 'Sono', 'Água', 'Treino', 'Sintomas', 'Exames', 'Alertas em tempo real'].map((t) => (
+              {['Peso', 'Sono', 'Água', 'Treino', 'Alimentação', 'Sintomas', 'Exames'].map((t) => (
                 <span key={t} className="text-[11px] font-semibold px-3 py-1.5 rounded-full" style={{ background: '#fff', border: `1px solid ${T.line}`, color: T.sub }}>{t}</span>
               ))}
             </div>
@@ -97,25 +98,74 @@ export default function Landing({ onStart }: { onStart: () => void }) {
 
           <div className="relative">
             <div className="rounded-[28px] overflow-hidden" style={{ boxShadow: '0 30px 80px -20px rgba(15,23,42,0.3)' }}>
-              <img src={IMG.hero} alt="Paciente registrando dados de saúde" className="w-full h-[380px] md:h-[460px] object-cover" loading="eager" />
+              <img src={IMG.hero} alt="Pessoa cuidando da própria saúde" className="w-full h-[380px] md:h-[460px] object-cover" loading="eager" />
             </div>
-            {/* mockup honesto: exemplo real do formato de alerta usado no painel do profissional */}
-            <div className="absolute -bottom-6 -left-3 md:-left-6 rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(14px)', boxShadow: '0 20px 50px rgba(15,23,42,0.16)', border: `1px solid ${T.line}`, width: 236 }}>
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ color: T.rose, background: 'rgba(220,38,38,0.1)' }}>VERMELHO</span>
-                <span className="text-[10px]" style={{ color: T.mute }}>agora</span>
+            {/* mockup honesto: exemplo do retorno imediato ao registrar algo */}
+            <div className="absolute -bottom-6 -left-3 md:-left-6 rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(14px)', boxShadow: '0 20px 50px rgba(15,23,42,0.16)', border: `1px solid ${T.line}`, width: 216 }}>
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[12px]" style={{ background: T.tealDark }}>✓</span>
+                <span className="text-[13px] font-semibold" style={{ color: T.text }}>Água registrada</span>
               </div>
-              <div className="text-[13px] font-medium" style={{ color: T.text }}>Pressão arterial: 186/96</div>
-              <div className="text-[11px] mt-0.5" style={{ color: T.sub }}>exemplo de alerta no painel</div>
+              <div className="text-[11px] mt-1.5" style={{ color: T.sub }}>exemplo de registro no app</div>
             </div>
           </div>
         </Section>
       </header>
 
-      {/* COMO FUNCIONA */}
+      {/* O QUE VOCÊ REGISTRA — seção principal, focada no paciente */}
+      <Section className="py-16">
+        <h2 className="text-[26px] md:text-[34px] font-bold tracking-tight text-center" style={{ color: T.text }}>Tudo que o seu corpo precisa, num só app</h2>
+        <p className="text-center text-[14px] mt-2 max-w-lg mx-auto" style={{ color: T.sub }}>Sem planilha, sem cinco aplicativos diferentes — e sem depender de ninguém pra começar.</p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
+          {FEATURES.map((f) => (
+            <div key={f.title} className="rounded-2xl p-5" style={{ background: '#fff', border: `1px solid ${T.line}` }}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-[20px] mb-3" style={{ background: T.chip }}>{f.emoji}</div>
+              <div className="text-[15px] font-bold" style={{ color: T.text }}>{f.title}</div>
+              <p className="text-[13px] mt-1 leading-relaxed" style={{ color: T.sub }}>{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* COMPARTILHAR, SE QUISER — opcional, controlado pelo paciente */}
+      <section style={{ background: T.text }} className="py-16 mt-6">
+        <Section className="grid md:grid-cols-2 gap-10 items-center">
+          <div>
+            <span className="text-[12px] font-bold px-3 py-1.5 rounded-full" style={{ background: 'rgba(94,234,212,0.15)', color: '#5EEAD4' }}>
+              Opcional, sempre no seu controle
+            </span>
+            <h3 className="text-[24px] md:text-[30px] font-bold mt-4 tracking-tight text-white leading-tight">
+              Se quiser, sua equipe de saúde acompanha junto.
+            </h3>
+            <p className="text-[14px] mt-3 leading-relaxed" style={{ color: '#94A3B8' }}>
+              Convide seu médico, personal trainer ou nutricionista quando fizer sentido. Ele monta um plano com você e só recebe um aviso se algo sair da faixa que vocês combinaram — o resto continua só seu.
+            </p>
+            <div className="mt-6 space-y-2.5">
+              {SHARE_POINTS.map((t) => (
+                <div key={t} className="flex items-start gap-2.5">
+                  <span className="mt-0.5 text-[14px]" style={{ color: '#5EEAD4' }}>🔒</span>
+                  <span className="text-[13px] leading-snug" style={{ color: '#CBD5E1' }}>{t}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-2 mt-6">
+              {[['🩺', 'Médico'], ['💪', 'Personal'], ['🥗', 'Nutricionista']].map(([e, l]) => (
+                <span key={l} className="text-[12px] font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5" style={{ background: 'rgba(255,255,255,0.08)', color: '#E2E8F0' }}>
+                  <span>{e}</span>{l}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-[28px] overflow-hidden" style={{ boxShadow: '0 30px 70px rgba(0,0,0,0.4)' }}>
+            <img src={IMG.care} alt="Profissional de saúde acompanhando o paciente" className="w-full h-[320px] object-cover" loading="lazy" />
+          </div>
+        </Section>
+      </section>
+
+      {/* COMO FUNCIONA — do ponto de vista de quem usa todo dia */}
       <Section className="py-16">
         <h2 className="text-[26px] md:text-[32px] font-bold tracking-tight text-center" style={{ color: T.text }}>Como funciona</h2>
-        <p className="text-center text-[14px] mt-2 max-w-lg mx-auto" style={{ color: T.sub }}>Quatro passos, do convite ao alerta — sem etapa técnica para você configurar.</p>
+        <p className="text-center text-[14px] mt-2 max-w-lg mx-auto" style={{ color: T.sub }}>Você começa sozinho. O resto é opcional, no seu tempo.</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
           {STEPS.map((s, i) => (
             <div key={s.t} className="rounded-2xl p-5" style={{ background: '#fff', border: `1px solid ${T.line}` }}>
@@ -127,81 +177,8 @@ export default function Landing({ onStart }: { onStart: () => void }) {
         </div>
       </Section>
 
-      {/* APP DO PACIENTE x PAINEL DO PROFISSIONAL */}
-      <Section className="py-10 grid md:grid-cols-2 gap-6">
-        <div className="rounded-[28px] p-7" style={{ background: '#fff', border: `1px solid ${T.line}` }}>
-          <span className="text-[11px] font-bold px-3 py-1.5 rounded-full" style={{ background: T.chip, color: T.sub }}>App do paciente</span>
-          <h3 className="text-[20px] font-bold mt-4" style={{ color: T.text }}>Tudo que ele já faz, num toque</h3>
-          <ul className="mt-4 space-y-2.5">
-            {PATIENT_FEATURES.map((f) => (
-              <li key={f} className="flex items-start gap-2.5 text-[13px]" style={{ color: T.sub }}>
-                <span className="mt-0.5" style={{ color: T.tealDark }}>✓</span>{f}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="rounded-[28px] p-7" style={{ background: T.text }}>
-          <span className="text-[11px] font-bold px-3 py-1.5 rounded-full" style={{ background: 'rgba(94,234,212,0.15)', color: '#5EEAD4' }}>Painel do profissional</span>
-          <h3 className="text-[20px] font-bold mt-4 text-white">O que importa, sem esperar a consulta</h3>
-          <ul className="mt-4 space-y-2.5">
-            {PRO_FEATURES.map((f) => (
-              <li key={f} className="flex items-start gap-2.5 text-[13px] leading-relaxed" style={{ color: '#CBD5E1' }}>
-                <span className="mt-0.5" style={{ color: '#5EEAD4' }}>✓</span>{f}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Section>
-
-      {/* PAPÉIS */}
-      <Section className="py-16">
-        <h2 className="text-[26px] md:text-[32px] font-bold tracking-tight text-center" style={{ color: T.text }}>Um app, três formas de cuidar</h2>
-        <p className="text-center text-[14px] mt-2 max-w-lg mx-auto" style={{ color: T.sub }}>Você escolhe seu papel ao ativar a conta — o painel se adapta ao que você acompanha.</p>
-        <div className="grid sm:grid-cols-3 gap-4 mt-10">
-          {ROLES.map((r) => (
-            <div key={r.title} className="rounded-2xl p-6" style={{ background: '#fff', border: `1px solid ${T.line}` }}>
-              <div className="text-[28px] mb-3">{r.emoji}</div>
-              <div className="text-[16px] font-bold" style={{ color: T.text }}>{r.title}</div>
-              <p className="text-[13px] mt-1.5 leading-relaxed" style={{ color: T.sub }}>{r.desc}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* SEGURANÇA / LGPD */}
-      <section style={{ background: T.text }} className="py-16 mt-6">
-        <Section className="grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <span className="text-[12px] font-bold px-3 py-1.5 rounded-full" style={{ background: 'rgba(94,234,212,0.15)', color: '#5EEAD4' }}>
-              Segurança e limites, com clareza
-            </span>
-            <h3 className="text-[24px] md:text-[30px] font-bold mt-4 tracking-tight text-white leading-tight">
-              O app compara. Quem decide é você.
-            </h3>
-            <p className="text-[14px] mt-3 leading-relaxed" style={{ color: '#94A3B8' }}>
-              O Encorpei nunca interpreta um dado clínico — só verifica se o que o paciente registrou está dentro da faixa que você configurou. Em qualquer emergência, a orientação dentro do app é ligar 192 (SAMU).
-            </p>
-            <div className="mt-6 space-y-2.5">
-              {[
-                'Vínculo só existe com consentimento explícito do paciente',
-                'Consentimento revogável a qualquer momento, pelo próprio paciente',
-                'Todo acesso e ação fica registrado, com data e hora',
-              ].map((t) => (
-                <div key={t} className="flex items-start gap-2.5">
-                  <span className="mt-0.5 text-[14px]" style={{ color: '#5EEAD4' }}>🔒</span>
-                  <span className="text-[13px] leading-snug" style={{ color: '#CBD5E1' }}>{t}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="rounded-[28px] overflow-hidden" style={{ boxShadow: '0 30px 70px rgba(0,0,0,0.4)' }}>
-            <img src={IMG.professional} alt="Profissional de saúde consultando dados do paciente" className="w-full h-[320px] object-cover" loading="lazy" />
-          </div>
-        </Section>
-      </section>
-
       {/* FAQ */}
-      <Section className="py-16 max-w-3xl">
+      <Section className="py-10 max-w-3xl">
         <h2 className="text-[26px] md:text-[32px] font-bold tracking-tight text-center" style={{ color: T.text }}>Perguntas frequentes</h2>
         <div className="mt-8 space-y-2">
           {FAQ.map((f, i) => {
@@ -222,9 +199,9 @@ export default function Landing({ onStart }: { onStart: () => void }) {
       {/* CTA FINAL */}
       <Section className="py-16 text-center">
         <div className="rounded-[28px] px-6 py-14 md:py-16" style={{ background: 'linear-gradient(135deg, #0F172A, #0E4F42)' }}>
-          <h3 className="text-[26px] md:text-[34px] font-bold tracking-tight text-white leading-tight">Comece a acompanhar em tempo real hoje.</h3>
+          <h3 className="text-[26px] md:text-[34px] font-bold tracking-tight text-white leading-tight">Comece a cuidar do seu corpo hoje.</h3>
           <p className="text-[14px] mt-3 max-w-md mx-auto" style={{ color: 'rgba(255,255,255,0.8)' }}>
-            Grátis para o paciente. Ative seu papel de profissional e convide o primeiro paciente em minutos.
+            Grátis, sem precisar de médico pra começar. Convide quem cuida de você quando quiser.
           </p>
           <div className="mt-7">
             <Btn onClick={onStart}>Criar minha conta grátis</Btn>
@@ -238,7 +215,7 @@ export default function Landing({ onStart }: { onStart: () => void }) {
           <span style={{ fontFamily: 'Georgia,serif' }} className="text-emerald-600 text-2xl lowercase leading-none">e</span>
           <span className="font-semibold tracking-tight" style={{ color: T.text }}>encorpei saúde</span>
         </div>
-        <p className="text-[12px]" style={{ color: T.mute }}>© {new Date().getFullYear()} Encorpei · Cuidado contínuo entre profissional e paciente · LGPD</p>
+        <p className="text-[12px]" style={{ color: T.mute }}>© {new Date().getFullYear()} Encorpei · Cuidado contínuo do seu jeito · LGPD</p>
       </footer>
     </div>
   )
