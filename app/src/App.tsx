@@ -36,7 +36,6 @@ import Sono from './pages/Sono'
 import Exames from './pages/Exames'
 import Painel from './pages/Painel'
 import Consultas from './pages/Consultas'
-import Pro from './pages/Pro'
 import Vitais from './pages/Vitais'
 import Cardio from './pages/Cardio'
 import Sintomas from './pages/Sintomas'
@@ -90,7 +89,7 @@ export default function App() {
         <Route path="/exames" element={<Exames />} />
         <Route path="/painel" element={<Painel />} />
         <Route path="/consultas" element={<Consultas />} />
-        <Route path="/pro" element={<Pro />} />
+        <Route path="/pro" element={<Navigate to="/medico" replace />} />
         <Route path="/corpo/jejum" element={<Jejum />} />
         <Route path="/corpo/vitais" element={<Vitais />} />
         <Route path="/corpo/cardio" element={<Cardio />} />
