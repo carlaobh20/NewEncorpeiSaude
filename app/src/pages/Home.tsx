@@ -4,15 +4,17 @@ import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
 import { getProfileName, getWater } from '../lib/db'
 import { getSleep, todayNutrition, todayISO } from '../lib/health'
-import { Bell } from '../components/home/Icons'
-import { HealthScoreCard, QuickActions, PlanToday, Timeline, CoachCard } from '../components/home/Sections'
-import Confetti from '../components/Confetti'
-import {
-  profile, dayMetrics, quickActions, initialPlan, timeline, coach, sectionOrder, type PlanItem,
-} from '../lib/homeData'
+import { TodayCard, QuickActionsSlim, PlanTeaser, CoachTeaser, type TodayMetric } from '../components/home/Sections'
 
-const metricRoute: Record<string, string> = { water: 'agua', workout: 'treino', sleep: 'sono', cal: 'calorias', protein: 'proteina' }
-const actionRoute: Record<string, string> = { peso: '/m/peso', treino: '/musculacao', refeicao: '/m/alimentacao', agua: '/m/agua', sono: '/m/sono', mais: '/registrar' }
+const actionRoute: Record<string, string> = { peso: '/m/peso', treino: '/musculacao', refeicao: '/corpo/nutricao', agua: '/corpo/agua', sono: '/corpo/sono', mais: '/registrar' }
+const quickActions = [
+  { key: 'peso', label: 'Peso', icon: 'scale' },
+  { key: 'treino', label: 'Treino', icon: 'dumbbell' },
+  { key: 'refeicao', label: 'Refeição', icon: 'fork' },
+  { key: 'agua', label: 'Água', icon: 'water' },
+  { key: 'sono', label: 'Sono', icon: 'moon' },
+  { key: 'mais', label: 'Mais', icon: 'grid' },
+]
 
 const weekday = () => {
   const d = new Date()
@@ -25,12 +27,14 @@ const greet = () => { const h = new Date().getHours(); return h < 12 ? 'Bom dia'
 export default function Home() {
   const nav = useNavigate()
   const { user } = useAuth()
-  const [name, setName] = useState(profile.name)
+  const [name, setName] = useState('você')
   useEffect(() => {
-    if (supabaseReady && user) {
-      getProfileName(user.id).then((n) => setName(n || user.email?.split('@')[0] || 'você'))
-    }
+    if (supabaseReady && user) getProfileName(user.id).then((n) => setName(n || user.email?.split('@')[0] || 'você'))
   }, [user])
+
+  // Só estado real vindo do banco. Sem valor ainda -> mostra "—", nunca um
+  // número inventado (era esse o problema do "Health Score" e da timeline
+  // fixa: pareciam dados de verdade e não eram).
   const [waterMl, setWaterMl] = useState<number | null>(null)
   const [sleepH, setSleepH] = useState<number | null>(null)
   const [nutri, setNutri] = useState<{ calories: number; protein: number } | null>(null)
@@ -41,61 +45,37 @@ export default function Home() {
     getSleep(user.id, d).then(setSleepH).catch(() => {})
     todayNutrition(user.id, d).then(setNutri).catch(() => {})
   }, [user])
-  const metrics = dayMetrics.map((m) => {
-    if (m.key === 'water' && waterMl != null) return { ...m, value: (waterMl / 1000).toFixed(1), goal: '3L' }
-    if (m.key === 'sleep' && sleepH != null) return { ...m, value: sleepH ? `${sleepH}h` : '—' }
-    if (m.key === 'cal' && nutri) return { ...m, value: String(nutri.calories), goal: '2.200' }
-    if (m.key === 'protein' && nutri) return { ...m, value: String(nutri.protein), goal: '150g' }
-    return m
-  })
-  const [plan, setPlan] = useState<PlanItem[]>(initialPlan)
-  const [fire, setFire] = useState(0)
 
-  const togglePlan = (id: string) =>
-    setPlan((p) => p.map((it) => {
-      if (it.id !== id) return it
-      const nowDone = it.status !== 'done'
-      if (nowDone) setFire((f) => f + 1)
-      return { ...it, status: nowDone ? 'done' : (it.progress ? 'progress' : 'todo'), sub: nowDone ? 'Concluído agora' : it.sub }
-    }))
-
-  const render: Record<string, JSX.Element> = {
-    score: <HealthScoreCard score={profile.score} delta={profile.scoreDelta} metrics={metrics}
-      onMetric={(k) => nav(k === 'workout' ? '/musculacao' : `/m/${metricRoute[k] ?? 'peso'}`)} onInsights={() => nav('/insights')} />,
-    quick: <QuickActions actions={quickActions} onPick={(k) => nav(actionRoute[k] ?? '/registrar')} />,
-    plan: <PlanToday items={plan} onToggle={togglePlan} onSeeAll={() => nav('/plano')} />,
-    timeline: <Timeline events={timeline} onSeeAll={() => nav('/timeline')} />,
-    coach: <CoachCard greeting={coach.greeting} message={coach.message} goal={coach.goal} onConversar={() => nav('/coach')} />,
-  }
+  const metrics: TodayMetric[] = [
+    { key: 'agua', label: 'Água', icon: 'water', value: waterMl != null ? `${(waterMl / 1000).toFixed(1)}L` : '—' },
+    { key: 'sono', label: 'Sono', icon: 'moon', value: sleepH ? `${sleepH}h` : '—' },
+    { key: 'refeicao', label: 'Calorias', icon: 'flame', value: nutri ? String(nutri.calories) : '—' },
+    { key: 'refeicao', label: 'Proteína', icon: 'protein', value: nutri ? `${nutri.protein}g` : '—' },
+  ]
 
   return (
-    <div className="max-w-md md:max-w-5xl mx-auto px-4 md:px-8 pt-6 md:pt-8 pb-28 md:pb-12">
+    <div className="max-w-md md:max-w-3xl mx-auto px-4 pt-6 pb-28 md:pb-12">
       <header className="flex items-center justify-between">
         <button onClick={() => nav('/')} className="flex items-center gap-1.5">
-          <span style={{ fontFamily: 'Georgia,serif' }} className="text-emerald-500 text-2xl lowercase leading-none">e</span>
-          <span className="font-semibold text-slate-900 text-lg tracking-tight">encorpei</span>
+          <span style={{ fontFamily: 'Georgia,serif' }} className="text-emerald-600 text-xl lowercase leading-none">e</span>
+          <span className="font-semibold text-slate-900 text-[15px] tracking-tight">encorpei</span>
         </button>
-        <div className="flex items-center gap-3">
-          <button onClick={() => nav('/insights')} className="relative text-slate-500 active:scale-90 transition"><Bell className="w-6 h-6" /><span className="absolute top-0 right-0 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-[#F6F8FC]" /></button>
-          <button onClick={() => nav('/perfil')} className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-sky-400 flex items-center justify-center text-white font-semibold text-sm active:scale-90 transition">C</button>
-        </div>
+        <button onClick={() => nav('/perfil')} className="w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold text-[13px] active:scale-90 transition" style={{ background: '#0E9F6E' }}>
+          {(name || 'E').charAt(0).toUpperCase()}
+        </button>
       </header>
 
-      <div className="mt-5">
-        <h1 className="text-[26px] md:text-[38px] font-bold text-slate-900 tracking-tight">{greet()}, {name}! <span className="align-middle">👋</span></h1>
-        <p className="text-slate-400 mt-0.5 md:text-[15px]">{weekday()}</p>
+      <div className="mt-4">
+        <h1 className="text-[21px] font-bold text-slate-900 tracking-tight">{greet()}, {name}</h1>
+        <p className="text-slate-400 text-[13px] mt-0.5">{weekday()}</p>
       </div>
 
-      <div className="mt-5 space-y-5 md:space-y-0 md:grid md:grid-cols-[1.15fr_0.85fr] md:gap-5 md:items-start">
-        <div className="space-y-5">
-          {sectionOrder.filter((k) => ['score', 'quick', 'plan'].includes(k)).map((k) => <div key={k}>{render[k]}</div>)}
-        </div>
-        <div className="space-y-5">
-          {sectionOrder.filter((k) => ['timeline', 'coach'].includes(k)).map((k) => <div key={k}>{render[k]}</div>)}
-        </div>
+      <div className="mt-4 space-y-3">
+        <TodayCard metrics={metrics} onMetric={(k) => nav(actionRoute[k] ?? '/registrar')} />
+        <QuickActionsSlim actions={quickActions} onPick={(k) => nav(actionRoute[k] ?? '/registrar')} />
+        <PlanTeaser onOpen={() => nav('/meu-plano')} />
+        <CoachTeaser onOpen={() => nav('/coach')} />
       </div>
-
-      <Confetti fire={fire} />
     </div>
   )
 }
