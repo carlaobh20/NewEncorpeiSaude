@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import ScreenHeader from '../components/ScreenHeader'
 import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
-import { getMyRole, setMyRole, type Role } from '../lib/roles'
+import { getMyRole, setMyRole, ROLE_LABEL, type Role } from '../lib/roles'
 import { listMyPatients, claimInvite, type LinkedPatient } from '../lib/careLinks'
 import { listProfessionalAlerts, type Alert } from '../lib/monitoring'
 
@@ -28,10 +28,10 @@ export default function Medico() {
   }, [user])
   useEffect(load, [load])
 
-  async function activate() {
+  async function activate(r: Role) {
     if (!user || busy) return
     setBusy(true); setMsg(null)
-    try { await setMyRole(user.id, 'medico'); load() }
+    try { await setMyRole(user.id, r); load() }
     catch { setMsg('Não foi possível ativar. Fale com o suporte.') }
     finally { setBusy(false) }
   }
@@ -53,20 +53,27 @@ export default function Medico() {
 
   return (
     <div className="max-w-md mx-auto px-4 pb-28">
-      <ScreenHeader title="Área do médico" />
+      <ScreenHeader title="Área do profissional" />
       <div className="space-y-4 mt-2">
 
-        {role !== null && role !== 'medico' && (
+        {role !== null && role === 'paciente' && (
           <div style={card} className="p-4">
-            <div className="text-[13px] font-semibold" style={{ color: T.text }}>Ativar modo médico</div>
+            <div className="text-[13px] font-semibold" style={{ color: T.text }}>Ativar modo profissional</div>
             <p className="text-[12px] mt-1" style={{ color: T.sub }}>
-              Seu perfil ainda está como {role}. Ao ativar, você passa a entrar direto nesta área e a acompanhar pacientes vinculados a você.
+              Escolha como você atende. Ao ativar, você passa a entrar direto nesta área e a acompanhar os pacientes vinculados a você.
             </p>
-            <button onClick={activate} disabled={busy}
-              className="mt-3 w-full rounded-2xl py-2.5 text-[13px] font-semibold text-white active:scale-95 disabled:opacity-50"
-              style={{ background: T.teal }}>Sou médico — ativar</button>
+            <div className="grid grid-cols-3 gap-2 mt-3">
+              {(['medico', 'personal', 'nutricionista'] as Role[]).map((r) => (
+                <button key={r} onClick={() => activate(r)} disabled={busy}
+                  className="rounded-2xl py-2.5 text-[12px] font-semibold text-white active:scale-95 disabled:opacity-50"
+                  style={{ background: T.teal }}>{ROLE_LABEL[r]}</button>
+              ))}
+            </div>
             {msg && <p className="text-[12px] mt-2" style={{ color: T.sub }}>{msg}</p>}
           </div>
+        )}
+        {role !== null && role !== 'paciente' && (
+          <p className="text-[11px]" style={{ color: T.sub }}>Você está atendendo como <b>{ROLE_LABEL[role]}</b>.</p>
         )}
 
         <div className="grid grid-cols-3 gap-2">
@@ -123,7 +130,7 @@ export default function Medico() {
         </div>
 
         <p className="text-[11px] leading-snug" style={{ color: T.sub }}>
-          Este painel organiza registros feitos pelo próprio paciente e alertas baseados nas faixas que você definiu.
+          Área única para médico, personal e nutricionista. Este painel organiza registros feitos pelo próprio paciente e alertas baseados nas faixas que você definiu.
           Ele não interpreta dados nem substitui avaliação clínica. Em emergência, oriente 192 (SAMU).
         </p>
       </div>
