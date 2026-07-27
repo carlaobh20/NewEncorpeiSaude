@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { HomeI, Plus } from './Icons'
+import { T } from '../../lib/theme'
 
 const Dumbbell = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M4 9v6M20 9v6M6.5 12h11" /></svg>
@@ -22,10 +23,11 @@ const glass: React.CSSProperties = {
 
 const MENU = [
   { emoji: '⚡', label: 'Registrar rápido', sub: 'Peso, refeição, água, sono…', to: '/registrar' },
+  { emoji: '💬', label: 'Como estou me sentindo', sub: 'Sintomas de hoje', to: '/sintomas' },
+  { emoji: '📋', label: 'Meu plano de cuidado', sub: 'O que seu profissional pediu', to: '/meu-plano' },
   { emoji: '🧪', label: 'Exames', sub: 'Biomarcadores e evolução laboratorial', to: '/exames' },
-  { emoji: '🩺', label: 'Painel Médico', sub: 'Visão completa para o profissional', to: '/painel' },
   { emoji: '📅', label: 'Consultas & Chat', sub: 'Agende e fale com médico ou personal', to: '/consultas' },
-  { emoji: '👥', label: 'Área do Profissional', sub: 'Para médico/personal: seus pacientes', to: '/pro' },
+  { emoji: '🩺', label: 'Área do profissional', sub: 'Para médico, personal ou nutricionista', to: '/medico' },
 ]
 
 export default function BottomBar() {
@@ -60,16 +62,16 @@ export default function BottomBar() {
           <div className="absolute inset-x-0 bottom-0" onClick={(e) => e.stopPropagation()}
             style={{ paddingBottom: 'calc(96px + env(safe-area-inset-bottom))' }}>
             <div className="max-w-md mx-auto px-4">
-              <div className="rounded-[28px] p-2.5 space-y-1.5" style={{ background: '#fff', boxShadow: '0 -10px 40px rgba(15,23,42,0.25)' }}>
+              <div className="rounded-[20px] p-2 space-y-0.5" style={{ background: '#fff', border: `1px solid ${T.line}`, boxShadow: '0 -8px 28px rgba(15,23,42,0.14)' }}>
                 {MENU.map((m) => (
                   <button key={m.to} onClick={() => { setMenu(false); nav(m.to) }}
-                    className="w-full flex items-center gap-3.5 p-3 rounded-2xl text-left active:scale-[0.98] transition hover:bg-slate-50">
-                    <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-[22px]" style={{ background: '#F1F5F9' }}>{m.emoji}</span>
-                    <span className="flex-1">
-                      <span className="block text-[15px] font-bold" style={{ color: '#0F172A' }}>{m.label}</span>
-                      <span className="block text-[11px]" style={{ color: '#64748B' }}>{m.sub}</span>
+                    className="w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl text-left active:scale-[0.98] transition hover:bg-slate-50">
+                    <span className="w-9 h-9 rounded-xl flex items-center justify-center text-[17px]" style={{ background: T.chip }}>{m.emoji}</span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-[13px] font-semibold truncate" style={{ color: T.text }}>{m.label}</span>
+                      <span className="block text-[11px] truncate" style={{ color: T.sub }}>{m.sub}</span>
                     </span>
-                    <span style={{ color: '#CBD5E1' }}>›</span>
+                    <span style={{ color: T.mute }}>›</span>
                   </button>
                 ))}
               </div>
