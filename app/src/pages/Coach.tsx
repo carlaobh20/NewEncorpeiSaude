@@ -2,7 +2,7 @@ import { useState } from 'react'
 import ScreenHeader from '../components/ScreenHeader'
 import { coach } from '../lib/homeData'
 
-const suggestions = ['Por que meu score caiu?', 'Monte meu treino de hoje', 'Como melhorar meu sono?']
+const suggestions = ['Monte meu treino de hoje', 'Como melhorar meu sono?', 'O que devo comer hoje?']
 
 export default function Coach() {
   const [msgs, setMsgs] = useState<{ me: boolean; text: string }[]>([
