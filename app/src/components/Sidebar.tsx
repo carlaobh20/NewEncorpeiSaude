@@ -17,6 +17,8 @@ const IcFlask = (p: P) => S(p, <><path d="M10 3v6l-5.2 8.7A2 2 0 0 0 6.5 21h11a2
 const IcChat = (p: P) => S(p, <path d="M21 12a8 8 0 0 1-8 8H4l2.3-2.8A8 8 0 1 1 21 12Z" />)
 const IcChart = (p: P) => S(p, <><path d="M4 20V6M4 20h16" /><path d="M8 16v-4M12 16V8M16 16v-6" /></>)
 const IcSteth = (p: P) => S(p, <><path d="M5 3v6a5 5 0 0 0 10 0V3" /><path d="M10 14v2a5 5 0 0 0 10 0v-1" /><circle cx="20" cy="12" r="2" /></>)
+const IcHeart = (p: P) => S(p, <path d="M12 20s-7-4.4-9.5-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.5 5c-2.5 4.6-9.5 9-9.5 9Z" />)
+const IcClipboard = (p: P) => S(p, <><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M8 10h8M8 14h8M8 18h5" /></>)
 const IcPlus = (p: P) => S(p, <path d="M12 5v14M5 12h14" />)
 
 type NavItem = { to: string; label: string; Icon: (p: P) => JSX.Element; exact?: boolean }
@@ -30,9 +32,11 @@ const MAIN: NavItem[] = [
   { to: '/exames', label: 'Exames', Icon: IcFlask },
 ]
 const CARE: NavItem[] = [
+  { to: '/sintomas', label: 'Como estou me sentindo', Icon: IcHeart },
+  { to: '/meu-plano', label: 'Meu plano de cuidado', Icon: IcClipboard },
   { to: '/consultas', label: 'Consultas & Chat', Icon: IcChat },
   { to: '/painel', label: 'Meu Painel', Icon: IcChart },
-  { to: '/pro', label: 'Área do Profissional', Icon: IcSteth },
+  { to: '/medico', label: 'Área do profissional', Icon: IcSteth },
 ]
 
 export default function Sidebar() {
