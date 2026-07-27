@@ -43,6 +43,22 @@ import Sintomas from './pages/Sintomas'
 import MeuPlano from './pages/MeuPlano'
 import ProPlano from './pages/ProPlano'
 import ProAlertas from './pages/ProAlertas'
+import Medico from './pages/Medico'
+import MedicoPaciente from './pages/MedicoPaciente'
+import { getMyRole } from './lib/roles'
+import { useEffect } from 'react'
+
+function RoleHome() {
+  const { user } = useAuth()
+  const [role, setRole] = useState<string | null>(null)
+  useEffect(() => {
+    if (user && supabaseReady) getMyRole(user.id).then(setRole).catch(() => setRole('paciente'))
+    else setRole('paciente')
+  }, [user])
+  if (role === null) return null
+  if (role && role !== 'paciente') return <Navigate to="/medico" replace />
+  return <Home />
+}
 
 export default function App() {
   const { user, loading } = useAuth()
@@ -64,7 +80,7 @@ export default function App() {
       <div className="hidden md:block"><Sidebar /></div>
       <div className="md:pl-[248px]">
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<RoleHome />} />
         <Route path="/corpo/nutricao" element={<Alimentacao />} />
         <Route path="/corpo/agua" element={<Agua />} />
         <Route path="/m/alimentacao" element={<Navigate to="/corpo/nutricao" replace />} />
@@ -107,6 +123,8 @@ export default function App() {
         <Route path="/meu-plano" element={<MeuPlano />} />
         <Route path="/pro/plano" element={<ProPlano />} />
         <Route path="/pro/alertas" element={<ProAlertas />} />
+        <Route path="/medico" element={<Medico />} />
+        <Route path="/medico/paciente" element={<MedicoPaciente />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       </div>
