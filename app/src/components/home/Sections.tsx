@@ -9,7 +9,7 @@ function Ic({ name, className }: { name: string; className?: string }) {
 
 export function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-white rounded-[28px] border border-[#EDF2F7] shadow-[0_20px_50px_rgba(2,6,23,0.06),0_2px_8px_rgba(2,6,23,0.04)] ${className}`}>
+    <div className={`bg-white rounded-2xl border border-[#ECEEF3] shadow-[0_1px_2px_rgba(15,23,42,0.04),0_1px_1px_rgba(15,23,42,0.03)] ${className}`}>
       {children}
     </div>
   )
@@ -144,6 +144,76 @@ export function Timeline({ events, onSeeAll }: { events: TimelineEvent[]; onSeeA
         ))}
       </div>
     </Card>
+  )
+}
+
+/* ── Novo conjunto minimalista (só dados reais, sem gradiente/confete) ── */
+
+export type TodayMetric = { key: string; label: string; value: string; icon: string }
+
+/** Card "Hoje": só mostra o que veio do banco. Sem valor mostra "—", nunca inventa número. */
+export function TodayCard({ metrics, onMetric }: { metrics: TodayMetric[]; onMetric: (k: string) => void }) {
+  return (
+    <Card className="p-4">
+      <div className="text-[11px] font-semibold uppercase tracking-wider mb-3" style={{ color: '#94A3B8' }}>Hoje</div>
+      <div className="grid grid-cols-4 gap-1">
+        {metrics.map((m) => (
+          <button key={m.key} onClick={() => onMetric(m.key)} className="flex flex-col items-center gap-1 py-1 rounded-xl active:scale-95 transition">
+            <span style={{ color: '#0E9F6E' }}><Ic name={m.icon} className="w-4 h-4" /></span>
+            <div className="text-[9px] leading-none text-center" style={{ color: '#94A3B8' }}>{m.label}</div>
+            <div className="text-[12px] font-semibold leading-none text-center" style={{ color: '#0F172A' }}>{m.value}</div>
+          </button>
+        ))}
+      </div>
+    </Card>
+  )
+}
+
+export function QuickActionsSlim({ actions, onPick }: { actions: { key: string; label: string; icon: string }[]; onPick: (k: string) => void }) {
+  return (
+    <section>
+      <h3 className="text-[13px] font-semibold px-1 mb-2" style={{ color: '#0F172A' }}>Registrar</h3>
+      <div className="grid grid-cols-6 gap-2">
+        {actions.map((a) => (
+          <button key={a.key} onClick={() => onPick(a.key)} className="flex flex-col items-center gap-1 active:scale-90 transition">
+            <span className="w-full aspect-square rounded-xl flex items-center justify-center" style={{ background: '#F1F5F9', color: '#0E9F6E' }}>
+              <Ic name={a.icon} className="w-[18px] h-[18px]" />
+            </span>
+            <span className="text-[10px] font-medium text-center leading-tight" style={{ color: '#475569' }}>{a.label}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+/** Leva para o plano REAL (persistido no Supabase via Sprint 2), não o checklist fake antigo. */
+export function PlanTeaser({ onOpen }: { onOpen: () => void }) {
+  return (
+    <button onClick={onOpen} className="w-full text-left">
+      <Card className="p-4 flex items-center justify-between">
+        <div>
+          <div className="text-[13px] font-semibold" style={{ color: '#0F172A' }}>Meu plano de cuidado</div>
+          <div className="text-[11px] mt-0.5" style={{ color: '#64748B' }}>O que seu profissional pediu para você registrar</div>
+        </div>
+        <span style={{ color: '#CBD5E1' }}><Chevron className="w-4 h-4" /></span>
+      </Card>
+    </button>
+  )
+}
+
+export function CoachTeaser({ onOpen }: { onOpen: () => void }) {
+  return (
+    <button onClick={onOpen} className="w-full text-left">
+      <Card className="p-4 flex items-center gap-3">
+        <span className="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold shrink-0" style={{ background: '#0E9F6E' }}>C</span>
+        <div className="flex-1 min-w-0">
+          <div className="text-[13px] font-semibold" style={{ color: '#0F172A' }}>Fale com seu Coach</div>
+          <div className="text-[11px] truncate" style={{ color: '#64748B' }}>Tire dúvidas sobre treino, sono e alimentação</div>
+        </div>
+        <span className="shrink-0" style={{ color: '#CBD5E1' }}><Chevron className="w-4 h-4" /></span>
+      </Card>
+    </button>
   )
 }
 
