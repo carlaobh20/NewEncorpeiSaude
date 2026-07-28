@@ -82,6 +82,12 @@ export default function Landing({ onStart }: { onStart: () => void }) {
           className="w-full h-auto block"
           loading="eager"
         />
+        <img
+          src="/hero-dashboard.jpg"
+          alt="Painel do profissional de saúde — visão geral dos pacientes, alertas e evolução em tempo real"
+          className="w-full h-auto block"
+          loading="eager"
+        />
         <div className="flex flex-wrap justify-center gap-3 py-7 px-5" style={{ background: '#fff', borderBottom: `1px solid ${T.line}` }}>
           <Btn onClick={onStart}>Começar agora — é grátis</Btn>
           <Btn onClick={onStart} ghost>Já tenho conta</Btn>
