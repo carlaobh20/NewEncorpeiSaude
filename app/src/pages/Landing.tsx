@@ -79,7 +79,7 @@ export default function Landing({ onStart }: { onStart: () => void }) {
         <img
           src="/hero-encorpei.jpg"
           alt="Encorpei — acompanhamento em tempo real que leva você a outro nível de vida. Dados. Consistência. Estratégia. Resultados que transformam."
-          className="w-full h-[260px] sm:h-[360px] md:h-[520px] lg:h-[620px] object-cover block"
+          className="w-full h-auto block"
           loading="eager"
         />
         <div className="flex flex-wrap justify-center gap-3 py-7 px-5" style={{ background: '#fff', borderBottom: `1px solid ${T.line}` }}>
