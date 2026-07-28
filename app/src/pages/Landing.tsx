@@ -40,10 +40,12 @@ const FAQ = [
   { q: 'O app substitui consulta médica ou detecta emergência?', a: 'Não. Ele organiza o que você registra; a decisão de saúde continua sendo do profissional. Em qualquer emergência, ligue 192 (SAMU).' },
 ]
 
-function Btn({ children, onClick, ghost = false }: { children: React.ReactNode; onClick?: () => void; ghost?: boolean }) {
+function Btn({ children, onClick, ghost = false, compact = false }: { children: React.ReactNode; onClick?: () => void; ghost?: boolean; compact?: boolean }) {
   return (
     <button onClick={onClick}
-      className="px-7 py-3.5 rounded-2xl font-bold text-[15px] active:scale-[0.98] transition"
+      className={compact
+        ? 'px-5 py-2.5 text-[13px] sm:px-7 sm:py-3.5 sm:text-[15px] rounded-2xl font-bold active:scale-[0.98] transition'
+        : 'px-7 py-3.5 text-[15px] rounded-2xl font-bold active:scale-[0.98] transition'}
       style={ghost
         ? { background: '#fff', color: T.text, border: `1px solid ${T.line}` }
         : { background: T.tealDark, color: '#fff', boxShadow: '0 14px 30px -10px rgba(14,159,110,0.5)' }}>
@@ -88,9 +90,8 @@ export default function Landing({ onStart }: { onStart: () => void }) {
           className="w-full h-auto block"
           loading="eager"
         />
-        <div className="flex flex-wrap justify-center gap-3 py-7 px-5" style={{ background: '#fff', borderBottom: `1px solid ${T.line}` }}>
-          <Btn onClick={onStart}>Começar agora — é grátis</Btn>
-          <Btn onClick={onStart} ghost>Já tenho conta</Btn>
+        <div className="flex justify-center py-5 sm:py-7 px-5" style={{ background: '#fff', borderBottom: `1px solid ${T.line}` }}>
+          <Btn onClick={onStart} compact>Criar minha conta</Btn>
         </div>
       </header>
 
@@ -98,12 +99,12 @@ export default function Landing({ onStart }: { onStart: () => void }) {
       <Section className="py-16">
         <h2 className="text-[26px] md:text-[34px] font-bold tracking-tight text-center" style={{ color: T.text }}>Tudo que o seu corpo precisa, num só app</h2>
         <p className="text-center text-[14px] mt-2 max-w-lg mx-auto" style={{ color: T.sub }}>Sem planilha, sem cinco aplicativos diferentes — e sem depender de ninguém pra começar.</p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 mt-8">
           {FEATURES.map((f) => (
-            <div key={f.title} className="rounded-2xl p-5" style={{ background: '#fff', border: `1px solid ${T.line}` }}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-[20px] mb-3" style={{ background: T.chip }}>{f.emoji}</div>
-              <div className="text-[15px] font-bold" style={{ color: T.text }}>{f.title}</div>
-              <p className="text-[13px] mt-1 leading-relaxed" style={{ color: T.sub }}>{f.desc}</p>
+            <div key={f.title} className="rounded-xl p-3 sm:p-4" style={{ background: '#fff', border: `1px solid ${T.line}` }}>
+              <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-[14px] sm:text-[18px] mb-2" style={{ background: T.chip }}>{f.emoji}</div>
+              <div className="text-[12.5px] sm:text-[14px] font-bold" style={{ color: T.text }}>{f.title}</div>
+              <p className="text-[11px] sm:text-[12.5px] mt-1 leading-snug" style={{ color: T.sub }}>{f.desc}</p>
             </div>
           ))}
         </div>
