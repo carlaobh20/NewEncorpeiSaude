@@ -2,7 +2,13 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// BASE_PATH permite publicar o mesmo build em subpastas diferentes no
+// GitHub Pages (ex.: "/" para main, "/dev/" para a branch dev), sem mexer
+// no restante do app.
+const basePath = process.env.BASE_PATH || '/'
+
 export default defineConfig({
+  base: basePath,
   plugins: [
     react(),
     VitePWA({

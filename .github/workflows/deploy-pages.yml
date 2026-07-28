@@ -1,0 +1,46 @@
+name: Deploy Pages preview (main + dev)
+
+on:
+  push:
+    branches: [main, dev]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        working-directory: app
+        run: npm install
+
+      - name: Build (main -> raiz, dev -> /dev/)
+        working-directory: app
+        env:
+          VITE_SUPABASE_URL: https://lcwtiswemmslcibjitny.supabase.co
+          VITE_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxjd3Rpc3dlbW1zbGNpYmppdG55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwOTAxMDQsImV4cCI6MjA5ODY2NjEwNH0.TcI43EU2PL7KoPcpoTbfnqJ1XswE1UkBUGUXzzCrILs
+          BASE_PATH: ${{ github.ref_name == 'main' && '/' || format('/{0}/', github.ref_name) }}
+        run: npm run build
+
+      - name: SPA fallback (rotas do react-router funcionam em refresh/link direto)
+        working-directory: app
+        run: cp dist/index.html dist/404.html
+
+      - name: Deploy to gh-pages (main -> raiz, dev -> /dev/)
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: app/dist
+          destination_dir: ${{ github.ref_name == 'main' && '.' || github.ref_name }}
+          keep_files: true
