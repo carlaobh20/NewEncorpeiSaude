@@ -71,6 +71,7 @@ export const PLAN_ITEMS: Record<string, { label: string; route: string; device?:
   sintomas: { label: 'Contar como está se sentindo', route: '/sintomas' },
   agua: { label: 'Registrar a água', route: '/corpo/agua' },
   sono: { label: 'Registrar o sono', route: '/corpo/sono' },
+  medicamentos: { label: 'Tomar os medicamentos', route: '/corpo/suplementos' },
 }
 export const FREQ_LABEL: Record<string, string> = {
   diario: 'Todo dia',
@@ -115,6 +116,12 @@ export async function removePlanItem(id: string) {
 }
 
 /* ── Regras de alerta ── */
+/** Métricas de regra clínica (o profissional escolhe operador + limite).
+ *  Não inclui 'adesao_*' de propósito: alerta de adesão é disparado
+ *  automaticamente por fn_check_adherence (sem operador/limite) e o valor
+ *  'adesao_x' não é aceito pelo check da tabela alert_rules -- oferecer
+ *  isso no seletor de regra do profissional (ProPlano.tsx) quebraria ao
+ *  salvar. O texto do alerta de adesão vem de alertLabel() via PLAN_ITEMS. */
 export const METRICS: Record<string, string> = {
   pa_sistolica: 'Pressão sistólica (máxima)',
   pa_diastolica: 'Pressão diastólica (mínima)',
@@ -122,12 +129,6 @@ export const METRICS: Record<string, string> = {
   glicemia: 'Glicemia (mg/dL)',
   peso_ganho_kg_72h: 'Ganho de peso em 72h (kg)',
   sintoma: 'Intensidade de sintoma (0–10)',
-  adesao_peso: 'Adesão · peso',
-  adesao_pressao: 'Adesão · pressão',
-  adesao_glicemia: 'Adesão · glicemia',
-  adesao_sintomas: 'Adesão · sintomas',
-  adesao_agua: 'Adesão · água',
-  adesao_sono: 'Adesão · sono',
 }
 
 export type AlertRule = {

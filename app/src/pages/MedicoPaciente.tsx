@@ -10,6 +10,9 @@ import {
   listSymptoms, symptomLabel, myPlanItems, listDevices, setAlertStatus, subscribeProfessionalAlerts, alertLabel,
   PLAN_ITEMS, FREQ_LABEL, type PlanItem, type Alert, type SymptomLog,
 } from '../lib/monitoring'
+import {
+  listPatientMedications, addMedicationForPatient, medicationWeekStats, medicationsTakenToday, type Medication,
+} from '../lib/health'
 
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
 const card: React.CSSProperties = { background: '#fff', borderRadius: 20, border: '1px solid #E4E9F1', boxShadow: '0 8px 24px rgba(2,6,23,0.06)' }
@@ -50,6 +53,12 @@ export default function MedicoPaciente() {
   const [exams, setExams] = useState<Exam[]>([])
   const [consults, setConsults] = useState<Consultation[]>([])
   const [busy, setBusy] = useState<string | null>(null)
+  const [meds, setMeds] = useState<Medication[]>([])
+  const [medsToday, setMedsToday] = useState<Set<string>>(new Set())
+  const [medsWeek, setMedsWeek] = useState<{ pct: number; takenCount: number } | null>(null)
+  const [medForm, setMedForm] = useState({ name: '', dose: '' })
+  const [medOpen, setMedOpen] = useState(false)
+  const [medBusy, setMedBusy] = useState(false)
 
   const load = useCallback(async () => {
     if (!user || !pid || !supabaseReady) return
@@ -69,8 +78,23 @@ export default function MedicoPaciente() {
     listDevices(pid).then(setDevices).catch(() => setDevices([]))
     listExams(pid).then(setExams).catch(() => setExams([]))
     listConsultations(pid).then(setConsults).catch(() => setConsults([]))
+    listPatientMedications(pid).then((ms) => {
+      setMeds(ms)
+      const ids = ms.map((m) => m.id)
+      medicationsTakenToday(pid, ids).then(setMedsToday).catch(() => setMedsToday(new Set()))
+      medicationWeekStats(pid, ids).then(setMedsWeek).catch(() => setMedsWeek(null))
+    }).catch(() => setMeds([]))
   }, [user, pid])
   useEffect(() => { load() }, [load])
+
+  async function prescreverMedicamento() {
+    if (!pid || !medForm.name.trim() || medBusy) return
+    setMedBusy(true)
+    try {
+      await addMedicationForPatient(pid, { name: medForm.name.trim(), dose: medForm.dose || undefined })
+      setMedForm({ name: '', dose: '' }); setMedOpen(false); await load()
+    } finally { setMedBusy(false) }
+  }
 
   useEffect(() => {
     if (!user || !supabaseReady) return
@@ -217,6 +241,54 @@ export default function MedicoPaciente() {
               </div>
             )
           })}
+        </Section>
+
+        <Section title="Medicamentos" action={
+          medsWeek && meds.length > 0 ? (
+            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full" style={{ color: medsWeek.pct >= 80 ? '#0E9F6E' : '#D97706', background: medsWeek.pct >= 80 ? 'rgba(18,201,138,0.12)' : 'rgba(217,119,6,0.12)' }}>
+              Adesão 7d: {medsWeek.pct}%
+            </span>
+          ) : undefined
+        }>
+          {meds.length === 0 && <p className="text-[12px]" style={{ color: T.sub }}>Nenhum medicamento prescrito ainda.</p>}
+          {meds.map((m) => {
+            const ok = medsToday.has(m.id)
+            return (
+              <div key={m.id} className="flex items-center justify-between py-2" style={{ borderTop: '1px solid #F1F5F9' }}>
+                <div>
+                  <div className="text-[13px] font-medium" style={{ color: T.text }}>{m.name}</div>
+                  {m.dose && <div className="text-[11px]" style={{ color: T.sub }}>{m.dose}</div>}
+                </div>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full"
+                  style={ok ? { color: '#0E9F6E', background: 'rgba(18,201,138,0.12)' } : { color: T.sub, background: '#F1F5F9' }}>
+                  {ok ? 'Tomou hoje' : 'Ainda não hoje'}
+                </span>
+              </div>
+            )
+          })}
+
+          {!medOpen ? (
+            <button onClick={() => setMedOpen(true)} className="w-full mt-3 py-2.5 rounded-xl text-[12px] font-semibold active:scale-95"
+              style={{ background: 'rgba(18,201,166,0.10)', color: '#0E9F6E' }}>
+              + Prescrever medicamento
+            </button>
+          ) : (
+            <div className="mt-3 pt-3" style={{ borderTop: '1px solid #F1F5F9' }}>
+              <input value={medForm.name} onChange={(e) => setMedForm({ ...medForm, name: e.target.value })} placeholder="Nome (ex: Losartana)"
+                className="w-full bg-white border rounded-xl px-3 py-2 mb-2 text-[13px] outline-none focus:border-emerald-400" style={{ borderColor: '#EDF2F7', color: T.text }} />
+              <input value={medForm.dose} onChange={(e) => setMedForm({ ...medForm, dose: e.target.value })} placeholder="Dose (ex: 50mg, 1x ao dia)"
+                className="w-full bg-white border rounded-xl px-3 py-2 mb-2 text-[13px] outline-none focus:border-emerald-400" style={{ borderColor: '#EDF2F7', color: T.text }} />
+              <div className="flex gap-2">
+                <button onClick={() => setMedOpen(false)} className="flex-1 py-2 rounded-xl text-[12px] font-semibold" style={{ background: '#F1F5F9', color: T.sub }}>Cancelar</button>
+                <button onClick={prescreverMedicamento} disabled={medBusy} className="flex-1 py-2 rounded-xl font-bold text-white text-[12px] disabled:opacity-50" style={{ background: T.teal }}>
+                  {medBusy ? 'Salvando…' : 'Prescrever'}
+                </button>
+              </div>
+            </div>
+          )}
+          <p className="text-[10px] mt-2 leading-snug" style={{ color: T.sub }}>
+            O paciente marca no app dele quando toma cada dose. Se ele ficar sem marcar por ~48h e o item "Tomar os medicamentos" estiver no plano dele, você recebe um alerta de adesão.
+          </p>
         </Section>
 
         <Section title="Exames" action={

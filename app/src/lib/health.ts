@@ -62,6 +62,44 @@ export async function takenToday(userId: string, date: string): Promise<Set<stri
   const { data } = await supabase.from('supplement_logs').select('supplement_id,taken').eq('user_id', userId).eq('date', date)
   return new Set((data || []).filter((r) => r.taken).map((r) => r.supplement_id))
 }
+
+// ---- Medicamentos (lado do profissional) ----
+// Medicamento é um `supplements` com type='medicamento' -- mesma tabela que o
+// paciente já usa em Suplementos.tsx, só filtrado. O profissional só enxerga
+// (RLS: is_linked_professional) e só pode inserir tipo medicamento (não suplemento).
+export type Medication = { id: string; name: string; dose?: string; time_label?: string }
+
+export async function listPatientMedications(patientId: string): Promise<Medication[]> {
+  const { data } = await supabase.from('supplements').select('id,name,dose,time_label')
+    .eq('user_id', patientId).eq('type', 'medicamento').order('created_at')
+  return (data as Medication[]) || []
+}
+
+export async function addMedicationForPatient(patientId: string, m: { name: string; dose?: string; time_label?: string }) {
+  const { error } = await supabase.from('supplements')
+    .insert({ user_id: patientId, type: 'medicamento', name: m.name, dose: m.dose || null, time_label: m.time_label || 'Manhã' })
+  if (error) throw error
+}
+
+/** Adesão de 7 dias só dos medicamentos (não mistura com suplementos do paciente). */
+export async function medicationWeekStats(patientId: string, medicationIds: string[]): Promise<{ pct: number; takenCount: number }> {
+  if (!medicationIds.length) return { pct: 0, takenCount: 0 }
+  const from = new Date(Date.now() - 6 * 86400000).toISOString().slice(0, 10)
+  const { data } = await supabase.from('supplement_logs').select('date,taken,supplement_id')
+    .eq('user_id', patientId).in('supplement_id', medicationIds).gte('date', from).eq('taken', true)
+  const takenCount = (data || []).length
+  const possible = medicationIds.length * 7
+  return { takenCount, pct: possible > 0 ? Math.min(100, Math.round((takenCount / possible) * 100)) : 0 }
+}
+
+/** Doses de hoje já marcadas como tomadas para esses medicamentos. */
+export async function medicationsTakenToday(patientId: string, medicationIds: string[]): Promise<Set<string>> {
+  if (!medicationIds.length) return new Set()
+  const today = new Date().toISOString().slice(0, 10)
+  const { data } = await supabase.from('supplement_logs').select('supplement_id,taken')
+    .eq('user_id', patientId).eq('date', today).in('supplement_id', medicationIds).eq('taken', true)
+  return new Set((data || []).map((r) => r.supplement_id))
+}
 export async function toggleTaken(userId: string, supplementId: string, date: string, taken: boolean) {
   const { error } = await supabase.from('supplement_logs').upsert({ user_id: userId, supplement_id: supplementId, date, taken }, { onConflict: 'supplement_id,date' }); if (error) throw error
 }
