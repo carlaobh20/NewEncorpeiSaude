@@ -7,7 +7,7 @@ import { canViewPatient, listMyPatients } from '../lib/careLinks'
 import { listBP, listGlucose, bpClass, glucoseClass, type BPRecord, type GlucoseRecord } from '../lib/vitals'
 import { listExams, resultStatus, listConsultations, type Exam, type Consultation } from '../lib/care'
 import {
-  listSymptoms, symptomLabel, myPlanItems, listDevices, setAlertStatus,
+  listSymptoms, symptomLabel, myPlanItems, listDevices, setAlertStatus, subscribeProfessionalAlerts,
   PLAN_ITEMS, FREQ_LABEL, METRICS, type PlanItem, type Alert, type SymptomLog,
 } from '../lib/monitoring'
 
@@ -71,6 +71,11 @@ export default function MedicoPaciente() {
     listConsultations(pid).then(setConsults).catch(() => setConsults([]))
   }, [user, pid])
   useEffect(() => { load() }, [load])
+
+  useEffect(() => {
+    if (!user || !supabaseReady) return
+    return subscribeProfessionalAlerts(user.id, load)
+  }, [user, load])
 
   async function act(a: Alert, status: 'visto' | 'tratado') {
     if (!user || busy) return

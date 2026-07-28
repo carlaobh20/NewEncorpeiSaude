@@ -194,3 +194,14 @@ export async function listMyAlerts(patientId: string): Promise<Alert[]> {
     .order('created_at', { ascending: false }).limit(20)
   return (data as Alert[]) || []
 }
+
+/** Assina alertas em tempo real para o profissional (novo alerta ou mudança
+ *  de status). Chama onChange sem argumentos — quem assina decide como
+ *  recarregar (lista, contadores etc.). Retorna função de cleanup. */
+export function subscribeProfessionalAlerts(professionalId: string, onChange: () => void): () => void {
+  const ch = supabase.channel(`alerts-pro-${professionalId}`)
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'alerts', filter: `professional_id=eq.${professionalId}` },
+      () => onChange())
+    .subscribe()
+  return () => { supabase.removeChannel(ch) }
+}

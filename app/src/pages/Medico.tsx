@@ -5,7 +5,7 @@ import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
 import { getMyRole, setMyRole, ROLE_LABEL, type Role } from '../lib/roles'
 import { listMyPatients, claimInvite, type LinkedPatient } from '../lib/careLinks'
-import { listProfessionalAlerts, type Alert } from '../lib/monitoring'
+import { listProfessionalAlerts, subscribeProfessionalAlerts, type Alert } from '../lib/monitoring'
 
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
 const card: React.CSSProperties = { background: '#fff', borderRadius: 20, border: '1px solid #E4E9F1', boxShadow: '0 8px 24px rgba(2,6,23,0.06)' }
@@ -27,6 +27,11 @@ export default function Medico() {
     listProfessionalAlerts(user.id, true).then(setAlerts).catch(() => setAlerts([]))
   }, [user])
   useEffect(load, [load])
+
+  useEffect(() => {
+    if (!user || !supabaseReady) return
+    return subscribeProfessionalAlerts(user.id, load)
+  }, [user, load])
 
   async function activate(r: Role) {
     if (!user || busy) return

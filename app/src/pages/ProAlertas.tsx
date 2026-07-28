@@ -4,7 +4,7 @@ import ScreenHeader from '../components/ScreenHeader'
 import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
 import { listMyPatients, type LinkedPatient } from '../lib/careLinks'
-import { listProfessionalAlerts, setAlertStatus, METRICS, symptomLabel, type Alert } from '../lib/monitoring'
+import { listProfessionalAlerts, setAlertStatus, subscribeProfessionalAlerts, METRICS, symptomLabel, type Alert } from '../lib/monitoring'
 
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
 const card: React.CSSProperties = { background: '#fff', borderRadius: 20, border: '1px solid #E4E9F1', boxShadow: '0 8px 24px rgba(2,6,23,0.06)' }
@@ -34,6 +34,11 @@ export default function ProAlertas() {
     listMyPatients(user.id).then(setPatients).catch(() => setPatients([]))
   }, [user, onlyOpen])
   useEffect(load, [load])
+
+  useEffect(() => {
+    if (!user || !supabaseReady) return
+    return subscribeProfessionalAlerts(user.id, load)
+  }, [user, load])
 
   const nameOf = (id: string) => patients.find((p) => p.patient_id === id)?.name || 'Paciente'
 
