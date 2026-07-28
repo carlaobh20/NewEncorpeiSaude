@@ -56,6 +56,31 @@ export default function Medico() {
   const yellow = alerts.filter((a) => a.severity === 'amarelo').length
   const openByPatient = (id: string) => alerts.filter((a) => a.patient_id === id && a.status !== 'tratado').length
 
+  /* Triagem: não é IA prevendo nada, é ordenação direta pelos alertas em
+   * aberto que você já definiu (mesma faixa/regra de sempre). 3 níveis:
+   * alto (tem vermelho aberto) > médio (tem amarelo/adesão aberto) > sem alerta.
+   * Existe pra você não precisar rolar a lista toda procurando quem precisa
+   * de atenção primeiro quando tiver muitos pacientes vinculados. */
+  const tierOf = (id: string): 0 | 1 | 2 => {
+    const mine = alerts.filter((a) => a.patient_id === id && a.status !== 'tratado')
+    if (mine.some((a) => a.severity === 'vermelho')) return 0
+    if (mine.length > 0) return 1
+    return 2
+  }
+  const lastAlertAt = (id: string) => {
+    const mine = alerts.filter((a) => a.patient_id === id)
+    return mine.length ? Math.max(...mine.map((a) => new Date(a.created_at).getTime())) : 0
+  }
+  const sortedPatients = [...patients].sort((a, b) => {
+    const t = tierOf(a.patient_id) - tierOf(b.patient_id)
+    if (t !== 0) return t
+    return lastAlertAt(b.patient_id) - lastAlertAt(a.patient_id)
+  })
+  const TIER_STYLE = {
+    0: { color: '#DC2626', bg: 'rgba(220,38,38,0.10)', label: 'Urgente' },
+    1: { color: '#D97706', bg: 'rgba(217,119,6,0.12)', label: 'Atenção' },
+  } as const
+
   return (
     <div className="max-w-md mx-auto px-4 pb-28">
       <ScreenHeader title="Área do profissional" />
@@ -103,8 +128,10 @@ export default function Medico() {
               Nenhum paciente vinculado. Peça ao paciente para gerar um convite no app dele (Perfil → Compartilhar com profissional) e cole o código abaixo.
             </p>
           )}
-          {patients.map((p) => {
+          {sortedPatients.map((p) => {
             const n = openByPatient(p.patient_id)
+            const tier = tierOf(p.patient_id)
+            const sv = tier !== 2 ? TIER_STYLE[tier] : null
             return (
               <button key={p.patient_id} onClick={() => nav(`/medico/paciente?p=${p.patient_id}`)}
                 className="w-full flex items-center justify-between py-3 text-left active:scale-[0.99]"
@@ -114,9 +141,10 @@ export default function Medico() {
                   <div className="text-[11px]" style={{ color: T.sub }}>Vinculado em {new Date(p.since).toLocaleDateString('pt-BR')}</div>
                 </div>
                 <div className="flex items-center gap-2">
-                  {n > 0 && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full"
-                      style={{ color: '#DC2626', background: 'rgba(220,38,38,0.10)' }}>{n} alerta{n > 1 ? 's' : ''}</span>
+                  {sv && (
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ color: sv.color, background: sv.bg }}>
+                      {sv.label} · {n}
+                    </span>
                   )}
                   <span style={{ color: T.teal }}>›</span>
                 </div>
@@ -136,6 +164,7 @@ export default function Medico() {
 
         <p className="text-[11px] leading-snug" style={{ color: T.sub }}>
           Área única para médico, personal e nutricionista. Este painel organiza registros feitos pelo próprio paciente e alertas baseados nas faixas que você definiu.
+          A lista acima ordena quem tem alerta em aberto primeiro — não é previsão, é ordenação direta pelos alertas que já existem.
           Ele não interpreta dados nem substitui avaliação clínica. Em emergência, oriente 192 (SAMU).
         </p>
       </div>
