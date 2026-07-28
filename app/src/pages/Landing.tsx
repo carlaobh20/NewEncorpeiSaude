@@ -72,44 +72,20 @@ export default function Landing({ onStart }: { onStart: () => void }) {
         </div>
       </nav>
 
-      {/* HERO — fala com quem vai usar o app no dia a dia: o paciente */}
-      <header>
-        <Section className="pt-14 md:pt-20 pb-10 grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <span className="inline-block text-[12px] font-bold px-3 py-1.5 rounded-full mb-5" style={{ background: 'rgba(18,201,138,0.12)', color: T.tealDark }}>
-              Sua saúde, registrada num só lugar
-            </span>
-            <h1 className="text-[34px] md:text-[46px] font-bold leading-[1.1] tracking-tight" style={{ color: T.text }}>
-              Seu corpo, acompanhado de verdade — todos os dias, não só na consulta.
-            </h1>
-            <p className="text-[16px] mt-5 leading-relaxed max-w-md" style={{ color: T.sub }}>
-              Peso, sono, água, treino, alimentação e como você está se sentindo — tudo num só app, <b style={{ color: T.text }}>grátis</b>. Se quiser, compartilhe com quem cuida de você.
-            </p>
-            <div className="flex flex-wrap gap-3 mt-8">
-              <Btn onClick={onStart}>Começar agora — é grátis</Btn>
-              <Btn onClick={onStart} ghost>Já tenho conta</Btn>
-            </div>
-            <div className="flex flex-wrap gap-2 mt-8">
-              {['Peso', 'Sono', 'Água', 'Treino', 'Alimentação', 'Sintomas', 'Exames'].map((t) => (
-                <span key={t} className="text-[11px] font-semibold px-3 py-1.5 rounded-full" style={{ background: '#fff', border: `1px solid ${T.line}`, color: T.sub }}>{t}</span>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="rounded-[28px] overflow-hidden" style={{ boxShadow: '0 30px 80px -20px rgba(15,23,42,0.3)' }}>
-              <img src={IMG.hero} alt="Pessoa cuidando da própria saúde" className="w-full h-[380px] md:h-[460px] object-cover" loading="eager" />
-            </div>
-            {/* mockup honesto: exemplo do retorno imediato ao registrar algo */}
-            <div className="absolute -bottom-6 -left-3 md:-left-6 rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.96)', backdropFilter: 'blur(14px)', boxShadow: '0 20px 50px rgba(15,23,42,0.16)', border: `1px solid ${T.line}`, width: 216 }}>
-              <div className="flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[12px]" style={{ background: T.tealDark }}>✓</span>
-                <span className="text-[13px] font-semibold" style={{ color: T.text }}>Água registrada</span>
-              </div>
-              <div className="text-[11px] mt-1.5" style={{ color: T.sub }}>exemplo de registro no app</div>
-            </div>
-          </div>
-        </Section>
+      {/* HERO — banner full-bleed com a imagem da marca (já traz título/subtítulo embutidos).
+          Substitui o hero anterior (H1 + foto de exercício); os botões de ação continuam
+          por baixo, porque são funcionais (disparam onStart), não texto de marketing. */}
+      <header className="w-full">
+        <img
+          src="/hero-encorpei.jpg"
+          alt="Encorpei — acompanhamento em tempo real que leva você a outro nível de vida. Dados. Consistência. Estratégia. Resultados que transformam."
+          className="w-full h-[260px] sm:h-[360px] md:h-[520px] lg:h-[620px] object-cover block"
+          loading="eager"
+        />
+        <div className="flex flex-wrap justify-center gap-3 py-7 px-5" style={{ background: '#fff', borderBottom: `1px solid ${T.line}` }}>
+          <Btn onClick={onStart}>Começar agora — é grátis</Btn>
+          <Btn onClick={onStart} ghost>Já tenho conta</Btn>
+        </div>
       </header>
 
       {/* O QUE VOCÊ REGISTRA — seção principal, focada no paciente */}
