@@ -117,8 +117,11 @@ export default function Landing({ onStart }: { onStart: () => void }) {
               Opcional, sempre no seu controle
             </span>
             <h3 className="text-[24px] md:text-[30px] font-bold mt-4 tracking-tight text-white leading-tight">
-              Se quiser, sua equipe de saúde acompanha junto.
+              Onde você estiver, a qualquer hora, o acompanhamento é pensado na sua saúde.
             </h3>
+            <p className="text-[16px] font-bold mt-3" style={{ color: '#5EEAD4' }}>
+              Venha fazer parte do time Encorpei.
+            </p>
             <p className="text-[14px] mt-3 leading-relaxed" style={{ color: '#94A3B8' }}>
               Convide seu médico, personal trainer ou nutricionista quando fizer sentido. Ele monta um plano com você e só recebe um aviso se algo sair da faixa que vocês combinaram — o resto continua só seu.
             </p>
@@ -139,7 +142,7 @@ export default function Landing({ onStart }: { onStart: () => void }) {
             </div>
           </div>
           <div className="rounded-[28px] overflow-hidden" style={{ boxShadow: '0 30px 70px rgba(0,0,0,0.4)' }}>
-            <img src={IMG.care} alt="Profissional de saúde acompanhando o paciente" className="w-full h-[320px] object-cover" loading="lazy" />
+            <img src="/care-team.jpg" alt="Time de profissionais de saúde da Encorpei — cardiologista, nutricionista, endocrinologista e personal trainer" className="w-full h-auto block" loading="lazy" />
           </div>
         </Section>
       </section>
