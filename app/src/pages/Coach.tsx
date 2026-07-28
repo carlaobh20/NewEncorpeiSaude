@@ -1,12 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ScreenHeader from '../components/ScreenHeader'
-import { coach } from '../lib/homeData'
+import { useAuth } from '../lib/auth'
+import { supabaseReady } from '../lib/supabase'
+import { getProfileName } from '../lib/db'
 
 const suggestions = ['Monte meu treino de hoje', 'Como melhorar meu sono?', 'O que devo comer hoje?']
 
+/** Antes disso, a saudação e a mensagem inicial vinham fixas de homeData.ts
+ *  ("Bom dia, Carlos! Sua recuperação ainda está abaixo do ideal...") --
+ *  hardcoded pra um usuário específico chamado Carlos, mostrado igual pra
+ *  qualquer pessoa logada, parecendo uma análise real que nunca existiu.
+ *  Trocado por uma saudação com o nome de quem está logado (mesmo padrão
+ *  já usado em Home.tsx) e uma mensagem que já avisa que a IA ainda não
+ *  está plugada -- consistente com a resposta automática abaixo, que já
+ *  fazia esse aviso. */
 export default function Coach() {
+  const { user } = useAuth()
+  const [name, setName] = useState('')
+  useEffect(() => {
+    if (supabaseReady && user) getProfileName(user.id).then((n) => setName(n || user.email?.split('@')[0] || ''))
+  }, [user])
+
+  const greeting = name ? `Oi, ${name}!` : 'Oi!'
   const [msgs, setMsgs] = useState<{ me: boolean; text: string }[]>([
-    { me: false, text: `${coach.greeting} ${coach.message}` },
+    { me: false, text: `${greeting} Ainda não tenho IA plugada nos seus dados -- quando responder aqui, uso o que você já registrou de sono, treino e exames. Por enquanto, essas sugestões abaixo te levam direto pra tela certa.` },
   ])
   const [input, setInput] = useState('')
   const send = (text: string) => {
@@ -24,7 +41,7 @@ export default function Coach() {
         </div>
         <div>
           <div className="font-semibold text-slate-900">Seu Coach</div>
-          <div className="text-xs text-emerald-600">online · foca em recuperação hoje</div>
+          <div className="text-xs" style={{ color: '#94A3B8' }}>ainda não é IA de verdade -- veja o aviso abaixo</div>
         </div>
       </div>
       <div className="flex-1 space-y-3 py-2">

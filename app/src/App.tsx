@@ -7,11 +7,8 @@ import Sidebar from './components/Sidebar'
 import Home from './pages/Home'
 import ModuleScreen from './pages/ModuleScreen'
 import Registrar from './pages/Registrar'
-import TimelinePage from './pages/TimelinePage'
 import Coach from './pages/Coach'
 import Perfil from './pages/Perfil'
-import Insights from './pages/Insights'
-import PlanoCompleto from './pages/PlanoCompleto'
 import Login from './pages/Login'
 import Landing from './pages/Landing'
 import Musculacao from './pages/Musculacao'
@@ -102,13 +99,19 @@ export default function App() {
         <Route path="/agenda" element={<Agenda />} />
         <Route path="/m/:slug" element={<ModuleScreen />} />
         <Route path="/registrar" element={<Registrar />} />
-        <Route path="/timeline" element={<TimelinePage />} />
+        {/* /timeline e /insights: telas antigas com dado 100% inventado (linha do
+            tempo e "insights de IA" fixos, iguais pra qualquer pessoa), sem
+            link nenhum apontando pra elas em lugar nenhum do app -- só
+            existiam se alguém digitasse a URL. Removidas; redirecionam pro
+            que já existe de real. /plano era o checklist fake antigo,
+            substituído por /meu-plano (dados reais do Supabase) faz tempo,
+            mas a rota velha ainda funcionava. */}
+        <Route path="/timeline" element={<Navigate to="/" replace />} />
+        <Route path="/insights" element={<Navigate to="/painel" replace />} />
+        <Route path="/plano" element={<Navigate to="/meu-plano" replace />} />
         <Route path="/coach" element={<Coach />} />
         <Route path="/perfil" element={<Perfil />} />
-        <Route path="/insights" element={<Insights />} />
-        <Route path="/plano" element={<PlanoCompleto />} />
         <Route path="/musculacao" element={<Musculacao />} />
-        <Route path="/musculacao/lista" element={<ExerciciosLib />} />
         <Route path="/musculacao/historico" element={<Historico />} />
         <Route path="/musculacao/exercicios" element={<ExerciciosLib />} />
         <Route path="/musculacao/grupos" element={<Grupos />} />

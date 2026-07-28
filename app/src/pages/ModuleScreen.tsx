@@ -73,6 +73,34 @@ export default function ModuleScreen() {
     : isNutri ? meals.map((m) => ({ label: `${m.type} · ${m.name}`, value: cfg.slug === 'calorias' ? `${m.calories} kcal` : `${m.protein} g` }))
     : cfg.history
 
+  /* Antes disso, essa caixa mostrava um texto fixo (cfg.insight) chumbado
+   * no código -- tipo "Queda consistente de ~0.5 kg/semana", igual pra
+   * qualquer pessoa, sob o rótulo "Insight da IA". Isso é dado inventado
+   * embaixo de um selo que sugere análise real. Trocado por um cálculo
+   * simples em cima do que a pessoa realmente registrou; se não tem dado
+   * suficiente ainda, a caixa nem aparece -- não inventa nada no lugar. */
+  const realInsight = (() => {
+    if (isPeso && weights && weights.length >= 2) {
+      const first = weights[0].kg, last = weights[weights.length - 1].kg
+      const delta = +(last - first).toFixed(1)
+      if (delta === 0) return `Peso estável nos últimos ${weights.length} registros.`
+      return `${delta > 0 ? '+' : ''}${delta} kg desde o primeiro registro (${weights.length} registros no total).`
+    }
+    if (isWater && waterDays.length >= 2) {
+      const hit = waterDays.filter((w) => w.ml >= goalMl).length
+      return `Meta batida em ${hit} de ${waterDays.length} dias registrados.`
+    }
+    if (isSono && sleepDays.length >= 2) {
+      const avg = sleepDays.reduce((s, d) => s + d.hours, 0) / sleepDays.length
+      return `Média de ${avg.toFixed(1)}h nos últimos ${sleepDays.length} registros.`
+    }
+    if (isNutri && meals.length >= 1) {
+      const isCal = cfg.slug === 'calorias'
+      return isCal ? `${meals.length} refeição(ões) registrada(s) hoje.` : `Proteína de hoje vem de ${meals.length} refeição(ões) registrada(s).`
+    }
+    return null
+  })()
+
   return (
     <div className="max-w-md mx-auto px-4 pb-28">
       <ScreenHeader title={cfg.title} />
@@ -114,10 +142,12 @@ export default function ModuleScreen() {
         )}
       </Card>
 
-      <div className="mt-4 rounded-[22px] p-4 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
-        <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider"><svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" /></svg>Insight da IA</div>
-        <p className="text-sm text-slate-200 mt-1.5 leading-relaxed">{cfg.insight}</p>
-      </div>
+      {realInsight && (
+        <div className="mt-4 rounded-[22px] p-4 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+          <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider"><svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" /></svg>Resumo</div>
+          <p className="text-sm text-slate-200 mt-1.5 leading-relaxed">{realInsight}</p>
+        </div>
+      )}
 
       {flash && <div className="fixed top-4 left-1/2 -translate-x-1/2 z-30 bg-slate-900 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg">{flash}</div>}
     </div>
