@@ -26,15 +26,15 @@ const SHARE_POINTS = [
   'Vocês combinam juntos o que conta como alerta antes de qualquer coisa acontecer',
 ]
 
-const STEPS = [
-  { t: 'Comece a registrar', d: 'Peso, água, sono, treino — o que fizer sentido pra você, no seu tempo.' },
-  { t: 'Convide quem cuida de você, se quiser', d: 'Médico, personal ou nutricionista, com um código simples.' },
-  { t: 'Combinem o plano juntos', d: 'Ele sugere o que acompanhar e o que vira alerta; a decisão final é combinada.' },
-  { t: 'Siga sua rotina', d: 'Ele é avisado automaticamente se algo sair do combinado — você não precisa mandar print.' },
+const WAYS = [
+  { t: 'Você começa sozinho', d: 'Registre peso, água, sono, treino, alimentação e como está se sentindo, no seu ritmo. O app organiza tudo automaticamente e mostra sua evolução ao longo do tempo — sem planilha, sem precisar de médico pra começar.' },
+  { t: 'Você convida quem cuida de você', d: 'Quando fizer sentido, convide seu médico, personal trainer ou nutricionista com um código simples. Vocês combinam juntos o plano de acompanhamento e o que vira alerta — ele só vê o que você autorizar.' },
+  { t: 'Seu médico já usa o Encorpei e te convida', d: 'Se o profissional que cuida de você já acompanha outros pacientes pelo Encorpei, ele pode te convidar direto. O plano de monitoramento só entra em vigor depois que vocês dois combinam as regras juntos — a decisão nunca é só dele.' },
 ]
 
 const FAQ = [
-  { q: 'Preciso ter médico, personal ou nutricionista pra usar?', a: 'Não. Você pode registrar sozinho, do seu jeito, e convidar alguém depois — ou nunca convidar ninguém.' },
+  { q: 'Preciso ter médico, personal ou nutricionista pra usar?', a: 'Não. Você pode registrar sozinho, do seu jeito, e decidir depois se quer convidar alguém — ou nunca convidar ninguém.' },
+  { q: 'Quem manda o convite, eu ou o profissional?', a: 'Pode ser dos dois jeitos. Você pode convidar seu médico, personal ou nutricionista quando quiser; ou, se ele já usa o Encorpei com outros pacientes, ele pode te convidar direto. Nos dois casos, o plano de acompanhamento só começa a valer depois que vocês combinam juntos o que conta como alerta.' },
   { q: 'É pago?', a: 'Não. O acesso do paciente é sempre gratuito.' },
   { q: 'Meus dados ficam visíveis pra qualquer profissional?', a: 'Não. Só quem você convidar, e só enquanto você autorizar. Você revoga o acesso quando quiser.' },
   { q: 'O app substitui consulta médica ou detecta emergência?', a: 'Não. Ele organiza o que você registra; a decisão de saúde continua sendo do profissional. Em qualquer emergência, ligue 192 (SAMU).' },
@@ -148,12 +148,12 @@ export default function Landing({ onStart }: { onStart: () => void }) {
         </Section>
       </section>
 
-      {/* COMO FUNCIONA — do ponto de vista de quem usa todo dia */}
+      {/* COMO FUNCIONA — 3 jeitos de usar o Encorpei (não é um fluxo linear, são 3 entradas possíveis) */}
       <Section className="py-16">
-        <h2 className="text-[26px] md:text-[32px] font-bold tracking-tight text-center" style={{ color: T.text }}>Como funciona</h2>
-        <p className="text-center text-[14px] mt-2 max-w-lg mx-auto" style={{ color: T.sub }}>Você começa sozinho. O resto é opcional, no seu tempo.</p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
-          {STEPS.map((s, i) => (
+        <h2 className="text-[26px] md:text-[32px] font-bold tracking-tight text-center" style={{ color: T.text }}>Do seu jeito, no seu tempo</h2>
+        <p className="text-center text-[14px] mt-2 max-w-lg mx-auto" style={{ color: T.sub }}>Três caminhos, o mesmo cuidado — você escolhe o que faz sentido agora.</p>
+        <div className="grid sm:grid-cols-3 gap-4 mt-10">
+          {WAYS.map((s, i) => (
             <div key={s.t} className="rounded-2xl p-5" style={{ background: '#fff', border: `1px solid ${T.line}` }}>
               <div className="w-8 h-8 rounded-full flex items-center justify-center text-[13px] font-bold text-white mb-3" style={{ background: T.tealDark }}>{i + 1}</div>
               <div className="text-[14px] font-semibold" style={{ color: T.text }}>{s.t}</div>
