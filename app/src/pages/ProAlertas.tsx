@@ -4,7 +4,7 @@ import ScreenHeader from '../components/ScreenHeader'
 import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
 import { listMyPatients, type LinkedPatient } from '../lib/careLinks'
-import { listProfessionalAlerts, setAlertStatus, subscribeProfessionalAlerts, METRICS, symptomLabel, type Alert } from '../lib/monitoring'
+import { listProfessionalAlerts, setAlertStatus, subscribeProfessionalAlerts, alertLabel, type Alert } from '../lib/monitoring'
 
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
 const card: React.CSSProperties = { background: '#fff', borderRadius: 20, border: '1px solid #E4E9F1', boxShadow: '0 8px 24px rgba(2,6,23,0.06)' }
@@ -13,12 +13,6 @@ const SEV = {
   vermelho: { label: 'VERMELHO', color: '#DC2626', bg: 'rgba(220,38,38,0.10)', border: 'rgba(220,38,38,0.35)' },
   amarelo: { label: 'AMARELO', color: '#D97706', bg: 'rgba(217,119,6,0.12)', border: 'rgba(217,119,6,0.35)' },
 } as const
-
-function metricLine(a: Alert): string {
-  if (a.metric === 'sintoma') return `Sintoma registrado com força ${a.observed_value ?? '?'}/10`
-  const name = METRICS[a.metric] || a.metric
-  return `${name}: ${a.observed_value ?? '?'}`
-}
 
 export default function ProAlertas() {
   const { user } = useAuth()
@@ -88,7 +82,7 @@ export default function ProAlertas() {
               </div>
               <button onClick={() => nav(`/painel?p=${a.patient_id}`)} className="mt-2 text-left w-full">
                 <div className="text-[14px] font-semibold" style={{ color: T.text }}>{nameOf(a.patient_id)}</div>
-                <div className="text-[13px]" style={{ color: T.text }}>{metricLine(a)}</div>
+                <div className="text-[13px]" style={{ color: T.text }}>{alertLabel(a)}</div>
                 <div className="text-[11px] mt-0.5" style={{ color: T.teal }}>Abrir painel do paciente ›</div>
               </button>
               <div className="flex gap-2 mt-3">

@@ -122,6 +122,12 @@ export const METRICS: Record<string, string> = {
   glicemia: 'Glicemia (mg/dL)',
   peso_ganho_kg_72h: 'Ganho de peso em 72h (kg)',
   sintoma: 'Intensidade de sintoma (0–10)',
+  adesao_peso: 'Adesão · peso',
+  adesao_pressao: 'Adesão · pressão',
+  adesao_glicemia: 'Adesão · glicemia',
+  adesao_sintomas: 'Adesão · sintomas',
+  adesao_agua: 'Adesão · água',
+  adesao_sono: 'Adesão · sono',
 }
 
 export type AlertRule = {
@@ -189,6 +195,19 @@ export async function setAlertStatus(professionalId: string, id: string, status:
     .eq('id', id).eq('professional_id', professionalId)
   if (error) throw error
 }
+/** Texto amigável para um alerta: clínico (limiar), sintoma, ou adesão
+ *  (paciente parou de registrar um item diário do plano). */
+export function alertLabel(a: Alert): string {
+  if (a.metric === 'sintoma') return `Sintoma registrado com força ${a.observed_value ?? '?'}/10`
+  if (a.metric.startsWith('adesao_')) {
+    const item = a.metric.slice('adesao_'.length)
+    const label = PLAN_ITEMS[item]?.label || item
+    return `Sem registro recente: ${label}`
+  }
+  const name = METRICS[a.metric] || a.metric
+  return `${name}: ${a.observed_value ?? '?'}`
+}
+
 export async function listMyAlerts(patientId: string): Promise<Alert[]> {
   const { data } = await supabase.from('alerts').select('*').eq('patient_id', patientId)
     .order('created_at', { ascending: false }).limit(20)

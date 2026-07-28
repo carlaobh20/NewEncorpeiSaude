@@ -7,8 +7,8 @@ import { canViewPatient, listMyPatients } from '../lib/careLinks'
 import { listBP, listGlucose, bpClass, glucoseClass, type BPRecord, type GlucoseRecord } from '../lib/vitals'
 import { listExams, resultStatus, listConsultations, type Exam, type Consultation } from '../lib/care'
 import {
-  listSymptoms, symptomLabel, myPlanItems, listDevices, setAlertStatus, subscribeProfessionalAlerts,
-  PLAN_ITEMS, FREQ_LABEL, METRICS, type PlanItem, type Alert, type SymptomLog,
+  listSymptoms, symptomLabel, myPlanItems, listDevices, setAlertStatus, subscribeProfessionalAlerts, alertLabel,
+  PLAN_ITEMS, FREQ_LABEL, type PlanItem, type Alert, type SymptomLog,
 } from '../lib/monitoring'
 
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
@@ -141,7 +141,7 @@ export default function MedicoPaciente() {
                   </span>
                 </div>
                 <div className="text-[13px] mt-1" style={{ color: T.text }}>
-                  {a.metric === 'sintoma' ? `Sintoma com força ${a.observed_value ?? '?'}/10` : `${METRICS[a.metric] || a.metric}: ${a.observed_value ?? '?'}`}
+                  {alertLabel(a)}
                 </div>
                 {a.status !== 'tratado' && (
                   <div className="flex gap-2 mt-2">
