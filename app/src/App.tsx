@@ -40,6 +40,7 @@ import Vitais from './pages/Vitais'
 import Cardio from './pages/Cardio'
 import Sintomas from './pages/Sintomas'
 import MeuPlano from './pages/MeuPlano'
+import MeusAlertas from './pages/MeusAlertas'
 import ProPlano from './pages/ProPlano'
 import ProAlertas from './pages/ProAlertas'
 import Medico from './pages/Medico'
@@ -120,6 +121,7 @@ export default function App() {
         <Route path="/musculacao/treino/:key" element={<TreinoExecucao />} />
         <Route path="/sintomas" element={<Sintomas />} />
         <Route path="/meu-plano" element={<MeuPlano />} />
+        <Route path="/meus-alertas" element={<MeusAlertas />} />
         <Route path="/pro/plano" element={<ProPlano />} />
         <Route path="/pro/alertas" element={<ProAlertas />} />
         <Route path="/medico" element={<Medico />} />

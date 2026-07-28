@@ -25,6 +25,7 @@ const MENU = [
   { emoji: '⚡', label: 'Registrar rápido', sub: 'Peso, refeição, água, sono…', to: '/registrar' },
   { emoji: '💬', label: 'Como estou me sentindo', sub: 'Sintomas de hoje', to: '/sintomas' },
   { emoji: '📋', label: 'Meu plano de cuidado', sub: 'O que seu profissional pediu', to: '/meu-plano' },
+  { emoji: '🔔', label: 'Meus alertas', sub: 'Avisos que seu profissional recebeu sobre você', to: '/meus-alertas' },
   { emoji: '🧪', label: 'Exames', sub: 'Biomarcadores e evolução laboratorial', to: '/exames' },
   { emoji: '📅', label: 'Consultas & Chat', sub: 'Agende e fale com médico ou personal', to: '/consultas' },
   { emoji: '🩺', label: 'Área do profissional', sub: 'Para médico, personal ou nutricionista', to: '/medico' },
