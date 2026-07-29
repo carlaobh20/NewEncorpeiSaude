@@ -11,6 +11,16 @@ export const CATEGORIES: { k: AgendaCategory; label: string; emoji: string; colo
 ]
 export const catOf = (k: string) => CATEGORIES.find((c) => c.k === k) ?? CATEGORIES[3]
 
+/** Rotina é auto-organização do paciente (diferente do "Meu plano de
+ *  cuidado" prescrito pelo profissional em /meu-plano). Quando a categoria
+ *  do item tem uma tela real de registro, mostramos um atalho "Registrar"
+ *  que leva pra lá — em vez de só marcar um check genérico. */
+export const CATEGORY_ROUTE: Partial<Record<AgendaCategory, string>> = {
+  saude: '/corpo/suplementos',
+  treino: '/musculacao',
+  consulta: '/consultas',
+}
+
 export type Compromisso = {
   id: string
   title: string

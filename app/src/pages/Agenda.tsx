@@ -6,7 +6,7 @@ import {
   listCompromissos, addCompromisso, toggleCompromisso, deleteCompromisso,
   listRecorrentes, addRecorrente, deleteRecorrente,
   listConfirmacoes, confirmRecorrente, unconfirmRecorrente,
-  buildItems, CATEGORIES, catOf, type AgendaItem, type Recorrente,
+  buildItems, CATEGORIES, catOf, CATEGORY_ROUTE, type AgendaItem, type Recorrente,
 } from '../lib/agenda'
 import { listConsultations, type Consultation } from '../lib/care'
 
@@ -112,6 +112,7 @@ export default function Agenda() {
 
   const Item = ({ it }: { it: AgendaItem }) => {
     const cat = catOf(it.category)
+    const route = CATEGORY_ROUTE[it.category]
     return (
       <div className="flex items-center gap-3 px-3 py-2.5" style={{ borderTop: '1px solid rgba(15,23,42,0.05)' }}>
         <button onClick={() => toggle(it)} className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition active:scale-90"
@@ -126,6 +127,11 @@ export default function Agenda() {
             {it.time ?? 'sem hora'} · {cat.label}{it.notes ? ` · ${it.notes}` : ''}
           </div>
         </div>
+        {route && (
+          <button onClick={() => nav(route)} className="text-[11px] font-semibold px-2.5 py-1.5 rounded-full shrink-0" style={{ background: `${cat.color}18`, color: cat.color }}>
+            Registrar
+          </button>
+        )}
         <button onClick={() => remove(it)} className="text-[12px] px-1.5" style={{ color: '#CBD5E1' }} title={it.kind === 'recorrente' ? 'Encerrar série' : 'Excluir'}>✕</button>
       </div>
     )
@@ -304,21 +310,33 @@ export default function Agenda() {
               </>
             )}
 
-            {/* recorrentes ativos */}
-            {recorrentes.length > 0 && view !== 'mes' && (
+            {/* plano de rotina (recorrentes) */}
+            {view !== 'mes' && (
               <>
-                <h3 className="font-semibold mt-6 mb-2 px-1" style={{ color: T.text }}>🔁 Rotinas ativas</h3>
-                <div style={card} className="p-1.5">
-                  {recorrentes.map((r) => (
-                    <div key={r.id} className="flex items-center justify-between px-3 py-2.5" style={{ borderTop: '1px solid rgba(15,23,42,0.05)' }}>
-                      <div>
-                        <div className="text-[13px] font-semibold" style={{ color: T.text }}>{catOf(r.category).emoji} {r.title}</div>
-                        <div className="text-[11px]" style={{ color: T.sub }}>{r.days.sort().map((d) => DOW_FULL[d]).join(', ')}{r.time ? ` · ${r.time.slice(0, 5)}` : ''}</div>
-                      </div>
-                      <button onClick={async () => { if (user) { await deleteRecorrente(user.id, r.id).catch(() => {}); load() } }} className="text-[11px] font-semibold" style={{ color: '#DC2626' }}>encerrar</button>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between mt-6 mb-1 px-1">
+                  <h3 className="font-semibold" style={{ color: T.text }}>🔁 Meu plano de rotina</h3>
+                  <button onClick={() => nav('/meu-plano')} className="text-[11px] font-semibold" style={{ color: T.teal }}>ver plano prescrito ›</button>
                 </div>
+                <p className="text-[11px] px-1 mb-2" style={{ color: T.sub }}>
+                  A rotina é o que você organiza sozinho (hora de treinar, tomar remédio, suplemento, dia de consulta). É diferente do "plano de cuidado" que um médico, personal ou nutricionista prescreve pra você — os dois convivem.
+                </p>
+                {recorrentes.length === 0 ? (
+                  <div style={card} className="p-5 text-center">
+                    <p className="text-[12px]" style={{ color: T.sub }}>Nenhum item de rotina ainda. Toque em "+ Novo", escolha "🔁 Recorrente" e monte sua rotina — treino, remédio, suplemento, dia de médico etc.</p>
+                  </div>
+                ) : (
+                  <div style={card} className="p-1.5">
+                    {recorrentes.map((r) => (
+                      <div key={r.id} className="flex items-center justify-between px-3 py-2.5" style={{ borderTop: '1px solid rgba(15,23,42,0.05)' }}>
+                        <div>
+                          <div className="text-[13px] font-semibold" style={{ color: T.text }}>{catOf(r.category).emoji} {r.title}</div>
+                          <div className="text-[11px]" style={{ color: T.sub }}>{r.days.sort().map((d) => DOW_FULL[d]).join(', ')}{r.time ? ` · ${r.time.slice(0, 5)}` : ''}</div>
+                        </div>
+                        <button onClick={async () => { if (user) { await deleteRecorrente(user.id, r.id).catch(() => {}); load() } }} className="text-[11px] font-semibold" style={{ color: '#DC2626' }}>encerrar</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </>
             )}
           </>

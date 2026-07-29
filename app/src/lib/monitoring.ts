@@ -72,6 +72,7 @@ export const PLAN_ITEMS: Record<string, { label: string; route: string; device?:
   agua: { label: 'Registrar a água', route: '/corpo/agua' },
   sono: { label: 'Registrar o sono', route: '/corpo/sono' },
   medicamentos: { label: 'Tomar os medicamentos', route: '/corpo/suplementos' },
+  treino: { label: 'Registrar o treino', route: '/musculacao' },
 }
 export const FREQ_LABEL: Record<string, string> = {
   diario: 'Todo dia',
@@ -171,6 +172,21 @@ export const CARDIO_PRESET: Array<Pick<AlertRule, 'metric' | 'symptom' | 'operat
   { metric: 'sintoma', symptom: 'dor_no_peito', operator: '>=', threshold: 5, severity: 'vermelho' },
   { metric: 'glicemia', symptom: null, operator: '<', threshold: 70, severity: 'vermelho' },
 ]
+
+/** Marcadores/itens sugeridos por tipo de profissional ("cada especialidade
+ *  vê o que importa pra ela" — cardiologista ≠ personal ≠ nutricionista).
+ *  `alertPreset` só existe pra 'medico': definir faixa de alerta clínico é
+ *  julgamento médico — personal e nutricionista recebem sugestão de itens
+ *  de registro, mas não de regra de alerta de sinal vital. */
+export const ROLE_PRESETS: Record<'medico' | 'personal' | 'nutricionista', {
+  label: string
+  items: string[]
+  alertPreset?: Array<Pick<AlertRule, 'metric' | 'symptom' | 'operator' | 'threshold' | 'severity'>>
+}> = {
+  medico: { label: 'Modelo médico (cardiológico)', items: ['peso', 'pressao', 'glicemia', 'sintomas', 'medicamentos'], alertPreset: CARDIO_PRESET },
+  personal: { label: 'Modelo personal trainer', items: ['peso', 'treino', 'agua', 'sono'] },
+  nutricionista: { label: 'Modelo nutricionista', items: ['peso', 'agua', 'medicamentos', 'sintomas'] },
+}
 
 /* ── Alertas ── */
 export type Alert = {

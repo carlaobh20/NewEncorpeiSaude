@@ -4,10 +4,11 @@ import ScreenHeader from '../components/ScreenHeader'
 import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
 import { listMyPatients, type LinkedPatient } from '../lib/careLinks'
+import { getMyRole, ROLE_LABEL, type Role } from '../lib/roles'
 import {
   ensurePlan, listPlanItems, addPlanItem, removePlanItem,
   listRules, addRule, deactivateRule,
-  PLAN_ITEMS, FREQ_LABEL, METRICS, CARDIO_PRESET, symptomLabel, SYMPTOMS,
+  PLAN_ITEMS, FREQ_LABEL, METRICS, ROLE_PRESETS, symptomLabel, SYMPTOMS,
   type Plan, type PlanItem, type AlertRule,
 } from '../lib/monitoring'
 
@@ -28,6 +29,7 @@ export default function ProPlano() {
   const [items, setItems] = useState<PlanItem[]>([])
   const [rules, setRules] = useState<AlertRule[]>([])
   const [busy, setBusy] = useState(false)
+  const [proRole, setProRole] = useState<Role>('medico')
 
   const [newItem, setNewItem] = useState('peso')
   const [newFreq, setNewFreq] = useState('diario')
@@ -41,6 +43,7 @@ export default function ProPlano() {
   useEffect(() => {
     if (!user || !supabaseReady) return
     listMyPatients(user.id).then(setPatients).catch(() => setPatients([]))
+    getMyRole(user.id).then(setProRole).catch(() => {})
   }, [user])
 
   const loadPatient = useCallback(async () => {
@@ -68,13 +71,20 @@ export default function ProPlano() {
       await loadPatient()
     } finally { setBusy(false) }
   }
+  const rolePreset = proRole === 'personal' || proRole === 'nutricionista' ? ROLE_PRESETS[proRole] : ROLE_PRESETS.medico
+
   async function applyPreset() {
-    if (!user || !patientId || busy) return
+    if (!user || !patientId || !plan || busy) return
     setBusy(true)
     try {
-      for (const r of CARDIO_PRESET) {
-        const dup = rules.some((x) => x.metric === r.metric && x.operator === r.operator && Number(x.threshold) === r.threshold)
-        if (!dup) await addRule({ patient_id: patientId, professional_id: user.id, ...r })
+      for (const item of rolePreset.items) {
+        if (!items.some((i) => i.item === item)) await addPlanItem(plan.id, item, 'diario')
+      }
+      if (rolePreset.alertPreset) {
+        for (const r of rolePreset.alertPreset) {
+          const dup = rules.some((x) => x.metric === r.metric && x.operator === r.operator && Number(x.threshold) === r.threshold)
+          if (!dup) await addRule({ patient_id: patientId, professional_id: user.id, ...r })
+        }
       }
       await loadPatient()
     } finally { setBusy(false) }
@@ -111,9 +121,16 @@ export default function ProPlano() {
       <div className="space-y-4 mt-2">
 
         <div style={card} className="p-4">
-          <div className="text-[13px] font-semibold mb-1" style={{ color: T.text }}>O que o paciente deve registrar</div>
+          <div className="flex items-center justify-between mb-1">
+            <div className="text-[13px] font-semibold" style={{ color: T.text }}>O que o paciente deve registrar</div>
+            <button onClick={applyPreset} disabled={busy}
+              className="text-[11px] font-semibold px-2.5 py-1.5 rounded-full active:scale-95 disabled:opacity-50 shrink-0"
+              style={{ background: 'rgba(18,201,166,0.10)', color: '#0E9F6E' }}>
+              + {rolePreset.label}
+            </button>
+          </div>
           <p className="text-[11px] mb-3" style={{ color: T.sub }}>
-            Itens que exigem aparelho (pressão, glicemia) só aparecem para o paciente depois que ele confirmar que tem o aparelho e sabe usar.
+            Sugestão pronta pra quem atende como {ROLE_LABEL[proRole]}: toque no botão acima pra aplicar de uma vez os itens que costumam importar pra sua especialidade{rolePreset.alertPreset ? ' e as regras de alerta clínico de partida' : ''}. Itens que exigem aparelho (pressão, glicemia) só aparecem para o paciente depois que ele confirmar que tem o aparelho e sabe usar.
           </p>
           {items.map((i) => (
             <div key={i.id} className="flex items-center justify-between py-2.5" style={{ borderTop: '1px solid #F1F5F9' }}>
@@ -137,14 +154,7 @@ export default function ProPlano() {
         </div>
 
         <div style={card} className="p-4">
-          <div className="flex items-center justify-between mb-1">
-            <div className="text-[13px] font-semibold" style={{ color: T.text }}>Regras de alerta</div>
-            <button onClick={applyPreset} disabled={busy}
-              className="text-[11px] font-semibold px-2.5 py-1.5 rounded-full active:scale-95 disabled:opacity-50"
-              style={{ background: 'rgba(18,201,166,0.10)', color: '#0E9F6E' }}>
-              + Modelo cardiológico
-            </button>
-          </div>
+          <div className="text-[13px] font-semibold mb-1" style={{ color: T.text }}>Regras de alerta</div>
           <p className="text-[11px] mb-3" style={{ color: T.sub }}>
             Você define as faixas; o app apenas compara os registros do paciente com elas e te avisa. A avaliação clínica é sua. Os valores do modelo são ponto de partida — revise cada um.
           </p>
