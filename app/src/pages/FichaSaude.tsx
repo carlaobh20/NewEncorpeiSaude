@@ -45,7 +45,22 @@ export default function FichaSaude() {
         chronic_conditions: p.chronic_conditions, allergies: p.allergies, current_medications: p.current_medications,
         mobility: p.mobility, mobility_notes: p.mobility_notes,
       })
-      setFlash('Ficha salva! Seu médico ou profissional vinculado já consegue ver isso.'); setTimeout(() => setFlash(''), 2600)
+      // confere no banco de verdade (não confia só no estado local) —
+      // se a leitura de volta não bater com o que acabamos de mandar,
+      // é sinal de que algo bloqueou o salvamento sem dar erro explícito.
+      const confirmed = await getHealthProfile(user.id)
+      setP(confirmed)
+      if ((confirmed.chronic_conditions || '') !== (p.chronic_conditions || '') || (confirmed.mobility || '') !== (p.mobility || '')) {
+        setFlash('Salvou, mas o que voltou do banco é diferente do que você digitou. Avise o suporte com isso.')
+        setTimeout(() => setFlash(''), 4000)
+      } else {
+        setFlash('Ficha salva! Seu médico ou profissional vinculado já consegue ver isso.')
+        setTimeout(() => setFlash(''), 2600)
+      }
+    } catch (err: any) {
+      const msg = err?.message || String(err)
+      setFlash(`Não salvou. Erro: ${msg}`)
+      setTimeout(() => setFlash(''), 6000)
     } finally { setBusy(false) }
   }
 
@@ -53,7 +68,7 @@ export default function FichaSaude() {
     if (!user) return
     setUploadingPhoto(true)
     try { const url = await uploadProfilePhoto(user.id, file); setP((cur) => ({ ...cur, photo_url: url })) }
-    catch { setFlash('Não deu pra enviar a foto. Tente outra imagem.'); setTimeout(() => setFlash(''), 2200) }
+    catch (err: any) { setFlash(`Não deu pra enviar a foto. Erro: ${err?.message || err}`); setTimeout(() => setFlash(''), 5000) }
     finally { setUploadingPhoto(false) }
   }
 
@@ -143,7 +158,7 @@ export default function FichaSaude() {
         {busy ? 'Salvando…' : 'Salvar ficha'}
       </button>
 
-      {flash && <div className="fixed bottom-24 inset-x-0 flex justify-center z-40 px-6"><span className="px-4 py-2 rounded-full text-[13px] font-semibold text-white text-center" style={{ background: '#0F172A' }}>{flash}</span></div>}
+      {flash && <div className="fixed bottom-24 inset-x-0 flex justify-center z-40 px-6"><span className="px-4 py-2.5 rounded-2xl text-[13px] font-semibold text-white text-center max-w-sm" style={{ background: '#0F172A' }}>{flash}</span></div>}
     </div>
   )
 }
