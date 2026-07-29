@@ -42,6 +42,8 @@ import ProPlano from './pages/ProPlano'
 import ProAlertas from './pages/ProAlertas'
 import Medico from './pages/Medico'
 import MedicoPaciente from './pages/MedicoPaciente'
+import Telemedicina from './pages/Telemedicina'
+import TelemedicinaPro from './pages/TelemedicinaPro'
 import { getMyRole } from './lib/roles'
 import { useEffect } from 'react'
 
@@ -134,6 +136,8 @@ export default function App() {
         <Route path="/pro/alertas" element={<ProAlertas />} />
         <Route path="/medico" element={<Medico />} />
         <Route path="/medico/paciente" element={<MedicoPaciente />} />
+        <Route path="/telemedicina" element={<Telemedicina />} />
+        <Route path="/medico/telemedicina" element={<TelemedicinaPro />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       </div>

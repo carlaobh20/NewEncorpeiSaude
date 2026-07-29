@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ScreenHeader from '../components/ScreenHeader'
 import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
@@ -17,6 +18,7 @@ const TYPES = [
 const LABEL: Record<string, string> = Object.fromEntries(TYPES.map((t) => [t.k, t.l]))
 
 export default function Consultas() {
+  const nav = useNavigate()
   const { user } = useAuth()
   const [items, setItems] = useState<Consultation[] | null>(null)
   const [open, setOpen] = useState(false)
@@ -47,6 +49,14 @@ export default function Consultas() {
         <CareChat as="paciente" height={340} />
 
         <ShareCare />
+
+        <button onClick={() => nav('/telemedicina')} style={{ ...card, background: '#0F172A', border: 'none' }} className="w-full p-4 mt-3 flex items-center justify-between text-left active:scale-[0.99] transition">
+          <div>
+            <div className="text-[14px] font-bold text-white">🩺 Marcar com profissional Encorpei</div>
+            <div className="text-[11px]" style={{ color: '#94A3B8' }}>Escolha a especialidade e veja horários disponíveis</div>
+          </div>
+          <span style={{ color: '#5EEAD4' }}>›</span>
+        </button>
 
         <div className="flex items-center justify-between mt-5 mb-2 px-1">
           <h3 className="font-semibold" style={{ color: T.text }}>Agendadas</h3>

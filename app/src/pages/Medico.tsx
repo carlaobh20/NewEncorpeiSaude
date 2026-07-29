@@ -106,6 +106,14 @@ export default function Medico() {
           <p className="text-[11px]" style={{ color: T.sub }}>Você está atendendo como <b>{ROLE_LABEL[role]}</b>.</p>
         )}
 
+        <button onClick={() => nav('/medico/telemedicina')} style={card} className="w-full p-4 flex items-center justify-between text-left active:scale-[0.99] transition">
+          <div>
+            <div className="text-[13px] font-semibold" style={{ color: T.text }}>🩺 Telemedicina</div>
+            <div className="text-[11px]" style={{ color: T.sub }}>Configure sua agenda e receba pedidos de consulta</div>
+          </div>
+          <span style={{ color: T.teal }}>›</span>
+        </button>
+
         <div className="grid grid-cols-3 gap-2">
           <div style={card} className="p-3 text-center">
             <div className="text-[22px] font-bold" style={{ color: T.text }}>{patients.length}</div>
