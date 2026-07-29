@@ -96,6 +96,11 @@ export default function App() {
         <Route path="/corpo/suplementos" element={<Suplementos />} />
         <Route path="/suplementos" element={<Navigate to="/corpo/suplementos" replace />} />
         <Route path="/m/sono" element={<Navigate to="/corpo/sono" replace />} />
+        {/* /m/treino nunca teve link nenhum apontando pra ela (achado da
+            auditoria de 2026-07-28) e só mostrava dado 100% inventado.
+            Musculação já tem sistema de treino completo e real em
+            /musculacao/* — redireciona pra lá em vez de duplicar. */}
+        <Route path="/m/treino" element={<Navigate to="/musculacao" replace />} />
         <Route path="/agenda" element={<Agenda />} />
         <Route path="/m/:slug" element={<ModuleScreen />} />
         <Route path="/registrar" element={<Registrar />} />

@@ -134,13 +134,6 @@ export default function Landing({ onStart }: { onStart: () => void }) {
                 </div>
               ))}
             </div>
-            <div className="flex flex-wrap gap-2 mt-6">
-              {[['🩺', 'Médico'], ['💪', 'Personal'], ['🥗', 'Nutricionista']].map(([e, l]) => (
-                <span key={l} className="text-[12px] font-semibold px-3 py-1.5 rounded-full flex items-center gap-1.5" style={{ background: 'rgba(255,255,255,0.08)', color: '#E2E8F0' }}>
-                  <span>{e}</span>{l}
-                </span>
-              ))}
-            </div>
           </div>
           <div className="rounded-[28px] overflow-hidden" style={{ boxShadow: '0 30px 70px rgba(0,0,0,0.4)' }}>
             <img src="/care-team.jpg" alt="Time de profissionais de saúde da Encorpei — cardiologista, nutricionista, endocrinologista e personal trainer" className="w-full h-auto block" loading="lazy" />

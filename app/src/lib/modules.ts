@@ -1,4 +1,4 @@
-export type Slug = 'peso' | 'agua' | 'treino' | 'sono' | 'alimentacao' | 'calorias' | 'proteina'
+export type Slug = 'peso' | 'agua' | 'sono' | 'alimentacao' | 'calorias' | 'proteina'
 
 export type ModuleConfig = {
   slug: Slug
@@ -36,17 +36,6 @@ export const modules: Record<Slug, ModuleConfig> = {
       { label: '10:30', value: '500 ml' }, { label: '07:40', value: '500 ml' },
     ],
     insight: 'Você bate a meta em 4 de 7 dias. Beber 500 ml ao acordar fecharia a lacuna.',
-  },
-  treino: {
-    slug: 'treino', title: 'Treino', icon: 'dumbbell', tone: 'emerald', unit: '',
-    hero: '4', heroSub: 'treinos esta semana', goalLabel: 'Meta 4/semana · concluída ✓',
-    quickAdd: [{ label: 'Iniciar treino', value: 'start' }, { label: 'Registrar concluído', value: 'log' }],
-    history: [
-      { label: 'Hoje', value: 'Peito & Tríceps', sub: '52 min' },
-      { label: 'Ontem', value: 'Pernas', sub: '61 min' },
-      { label: '01/07', value: 'Costas & Bíceps', sub: '48 min' },
-    ],
-    insight: 'Volume de treino subiu 18% no mês. Recuperação é o gargalo — priorize sono.',
   },
   sono: {
     slug: 'sono', title: 'Sono', icon: 'moon', tone: 'violet', unit: 'h',
