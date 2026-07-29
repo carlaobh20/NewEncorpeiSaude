@@ -50,6 +50,7 @@ export default function Painel() {
     if (pParam && pParam !== user.id) canViewPatient(user.id, pParam).then((ok) => setViewId(ok ? pParam : user.id)).catch(() => setViewId(user.id))
     else setViewId(user.id)
   }, [user, pParam])
+  const isOwnView = !!user && (!viewId || viewId === user.id)
   const now = new Date()
 
   const [name, setName] = useState('')
@@ -118,12 +119,17 @@ export default function Painel() {
               <button onClick={() => nav(-1)} className="w-9 h-9 rounded-full flex items-center justify-center bg-white active:scale-95 transition" style={{ border: '1px solid #E4E9F1' }}>
                 <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke={T.text} strokeWidth={2} strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg>
               </button>
-              <h1 className="text-[24px] font-bold" style={{ color: T.text }}>🩺 Painel do Profissional</h1>
-              {pParam && <span className="text-[10px] font-bold px-2 py-1 rounded-full" style={{ background: "rgba(18,201,138,0.12)", color: "#0E9F6E" }}>acesso vinculado</span>}
+              {/* Antes o título era fixo "Painel do Profissional" mesmo quando o
+                  próprio paciente abria "Meu Painel" no menu — confundia quem
+                  clicou achando que tinha ido parar na tela errada. */}
+              <h1 className="text-[24px] font-bold" style={{ color: T.text }}>
+                {isOwnView ? '📊 Meu Painel' : `🩺 Painel — ${name}`}
+              </h1>
+              {!isOwnView && <span className="text-[10px] font-bold px-2 py-1 rounded-full" style={{ background: "rgba(18,201,138,0.12)", color: "#0E9F6E" }}>acesso vinculado</span>}
             </div>
             <p className="text-[13px] mt-1" style={{ color: T.sub }}>
-              Paciente: <b style={{ color: T.text }}>{name}</b>
-              {updatedAt && <> · dados de {updatedAt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</>}
+              {isOwnView ? <>Atualizado{updatedAt && <> às {updatedAt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</>}</>
+                : <>Paciente: <b style={{ color: T.text }}>{name}</b>{updatedAt && <> · dados de {updatedAt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</>}</>}
             </p>
           </div>
           <button onClick={load} className="px-4 py-2 rounded-2xl text-[13px] font-bold text-white active:scale-95 transition" style={{ background: T.teal }}>↻ Atualizar</button>
@@ -222,24 +228,31 @@ export default function Painel() {
           </div>
         </div>
 
-        {/* chat lado profissional */}
-        <div className="grid md:grid-cols-2 gap-3 mt-3 items-start">
-          <div>
-            <p className="text-[12px] font-bold mb-2 px-1" style={{ color: T.text }}>💬 Responder como profissional</p>
-            <CareChat as="profissional" userId={viewId ?? undefined} height={420} />
+        {/* Chat lado profissional — só faz sentido quando é o PROFISSIONAL vendo
+            um paciente vinculado. Antes isso aparecia igual quando o próprio
+            paciente abria "Meu Painel", e o chat mandaria a mensagem dele
+            marcada como se fosse do profissional (as="profissional") — bug
+            real, não só de rótulo. Paciente já tem chat de verdade em
+            /consultas (as="paciente"); aqui não precisa duplicar. */}
+        {!isOwnView && (
+          <div className="grid md:grid-cols-2 gap-3 mt-3 items-start">
+            <div>
+              <p className="text-[12px] font-bold mb-2 px-1" style={{ color: T.text }}>💬 Responder como profissional</p>
+              <CareChat as="profissional" userId={viewId ?? undefined} height={420} />
+            </div>
+            <div style={{ ...card, background: '#0F172A', border: 'none' }} className="p-5 text-white">
+              <div className="text-[14px] font-bold">ℹ️ Sobre este painel</div>
+              <p className="text-[12px] mt-2 leading-relaxed" style={{ color: '#CBD5E1' }}>
+                Visão consolidada e em tempo real de tudo que o paciente registra no app: peso, treinos, nutrição, água, sono, jejum, suplementos, exames e avaliações.
+                Abra este endereço no computador para a melhor experiência.
+              </p>
+              <p className="text-[12px] mt-2 leading-relaxed" style={{ color: '#94A3B8' }}>
+                O chat ao lado envia como <b style={{ color: '#5EEAD4' }}>profissional</b> — o paciente vê a mensagem na hora, no app dele (menu + → Consultas).
+                Login separado para o profissional com múltiplos pacientes é a próxima etapa.
+              </p>
+            </div>
           </div>
-          <div style={{ ...card, background: '#0F172A', border: 'none' }} className="p-5 text-white">
-            <div className="text-[14px] font-bold">ℹ️ Sobre este painel</div>
-            <p className="text-[12px] mt-2 leading-relaxed" style={{ color: '#CBD5E1' }}>
-              Visão consolidada e em tempo real de tudo que o paciente registra no app: peso, treinos, nutrição, água, sono, jejum, suplementos, exames e avaliações.
-              Abra este endereço no computador para a melhor experiência.
-            </p>
-            <p className="text-[12px] mt-2 leading-relaxed" style={{ color: '#94A3B8' }}>
-              O chat ao lado envia como <b style={{ color: '#5EEAD4' }}>profissional</b> — o paciente vê a mensagem na hora, no app dele (menu + → Consultas).
-              Login separado para o profissional com múltiplos pacientes é a próxima etapa.
-            </p>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   )

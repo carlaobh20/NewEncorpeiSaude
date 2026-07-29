@@ -25,7 +25,7 @@ export default function Perfil() {
   // Só rotas reais aqui. As duas últimas ainda não têm tela própria — melhor
   // dizer isso do que apontar para "/" e fingir que existe algo lá.
   const rows = [
-    { label: 'Profissionais vinculados', value: linked === null ? '…' : `${linked}`, to: '/consultas' },
+    { label: 'Profissionais vinculados (convite e chat)', value: linked === null ? '…' : `${linked}`, to: '/consultas' },
     { label: 'Peso e metas', value: 'Ver evolução', to: '/m/peso' },
     { label: 'Exames', value: exams === null ? '…' : `${exams} registrado${exams === 1 ? '' : 's'}`, to: '/exames' },
   ]
