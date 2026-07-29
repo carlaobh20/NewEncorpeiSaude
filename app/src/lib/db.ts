@@ -56,3 +56,44 @@ export async function setGoalWeight(userId: string, targetKg: number, goalDate?:
   const { error } = await supabase.from('profiles').upsert(payload, { onConflict: 'id' })
   if (error) throw error
 }
+
+/* ── Ficha de saúde (entrevista inicial) + foto de perfil ── */
+export type BiologicalSex = 'feminino' | 'masculino' | 'prefiro_nao_informar'
+export type Mobility = 'sem_limitacao' | 'bengala_andador' | 'cadeira_rodas' | 'outra'
+
+export type HealthProfile = {
+  name?: string | null
+  height_cm?: number | null
+  birth_date?: string | null
+  biological_sex?: BiologicalSex | null
+  chronic_conditions?: string | null
+  allergies?: string | null
+  current_medications?: string | null
+  mobility?: Mobility | null
+  mobility_notes?: string | null
+  photo_url?: string | null
+  interview_completed_at?: string | null
+}
+
+export async function getHealthProfile(userId: string): Promise<HealthProfile> {
+  const { data } = await supabase.from('profiles')
+    .select('name,height_cm,birth_date,biological_sex,chronic_conditions,allergies,current_medications,mobility,mobility_notes,photo_url,interview_completed_at')
+    .eq('id', userId).maybeSingle()
+  return data || {}
+}
+
+export async function saveHealthProfile(userId: string, p: Omit<HealthProfile, 'photo_url' | 'interview_completed_at'>) {
+  const { error } = await supabase.from('profiles')
+    .upsert({ id: userId, ...p, interview_completed_at: new Date().toISOString() }, { onConflict: 'id' })
+  if (error) throw error
+}
+
+export async function uploadProfilePhoto(userId: string, file: File): Promise<string> {
+  const path = `${userId}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_')}`
+  const up = await supabase.storage.from('profile-photos').upload(path, file, { upsert: true })
+  if (up.error) throw up.error
+  const { data: pub } = supabase.storage.from('profile-photos').getPublicUrl(path)
+  const { error } = await supabase.from('profiles').update({ photo_url: pub.publicUrl }).eq('id', userId)
+  if (error) throw error
+  return pub.publicUrl
+}

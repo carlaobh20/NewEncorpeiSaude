@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import ScreenHeader from '../components/ScreenHeader'
 import { useAuth } from '../lib/auth'
 import { supabaseReady } from '../lib/supabase'
-import { getProfileName } from '../lib/db'
+import { getProfileName, getHealthProfile } from '../lib/db'
 import { listMyLinks } from '../lib/careLinks'
 import { listExams } from '../lib/care'
 import { T, card } from '../lib/theme'
@@ -12,12 +12,14 @@ export default function Perfil() {
   const nav = useNavigate()
   const { user, signOut } = useAuth()
   const [name, setName] = useState('')
+  const [photoUrl, setPhotoUrl] = useState<string | null>(null)
   const [linked, setLinked] = useState<number | null>(null)
   const [exams, setExams] = useState<number | null>(null)
 
   useEffect(() => {
     if (!user || !supabaseReady) return
     getProfileName(user.id).then((n) => setName(n || user.email?.split('@')[0] || '')).catch(() => {})
+    getHealthProfile(user.id).then((p) => setPhotoUrl(p.photo_url || null)).catch(() => {})
     listMyLinks(user.id).then((l) => setLinked(l.filter((x) => x.status === 'active').length)).catch(() => setLinked(0))
     listExams(user.id).then((e) => setExams(e.length)).catch(() => setExams(0))
   }, [user])
@@ -25,6 +27,7 @@ export default function Perfil() {
   // Só rotas reais aqui. As duas últimas ainda não têm tela própria — melhor
   // dizer isso do que apontar para "/" e fingir que existe algo lá.
   const rows = [
+    { label: 'Minha ficha de saúde', value: 'Foto, doenças, mobilidade', to: '/ficha-saude' },
     { label: 'Profissionais vinculados (convite e chat)', value: linked === null ? '…' : `${linked}`, to: '/consultas' },
     { label: 'Peso e metas', value: 'Ver evolução', to: '/m/peso' },
     { label: 'Exames', value: exams === null ? '…' : `${exams} registrado${exams === 1 ? '' : 's'}`, to: '/exames' },
@@ -38,8 +41,10 @@ export default function Perfil() {
     <div className="max-w-md md:max-w-2xl mx-auto px-4 pb-28">
       <ScreenHeader title="Perfil" />
       <div className="flex items-center gap-3.5 py-4">
-        <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold"
-          style={{ background: T.tealDark }}>{(name || 'E').charAt(0).toUpperCase()}</div>
+        <div className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold overflow-hidden"
+          style={{ background: T.tealDark }}>
+          {photoUrl ? <img src={photoUrl} alt={name} className="w-full h-full object-cover" /> : (name || 'E').charAt(0).toUpperCase()}
+        </div>
         <div>
           <div className="text-[16px] font-bold" style={{ color: T.text }}>{name || 'Meu perfil'}</div>
           <div className="text-[13px]" style={{ color: T.sub }}>{user?.email}</div>

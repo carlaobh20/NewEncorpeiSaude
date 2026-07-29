@@ -44,6 +44,7 @@ import Medico from './pages/Medico'
 import MedicoPaciente from './pages/MedicoPaciente'
 import Telemedicina from './pages/Telemedicina'
 import TelemedicinaPro from './pages/TelemedicinaPro'
+import FichaSaude from './pages/FichaSaude'
 import { getMyRole } from './lib/roles'
 import { useEffect } from 'react'
 
@@ -138,6 +139,7 @@ export default function App() {
         <Route path="/medico/paciente" element={<MedicoPaciente />} />
         <Route path="/telemedicina" element={<Telemedicina />} />
         <Route path="/medico/telemedicina" element={<TelemedicinaPro />} />
+        <Route path="/ficha-saude" element={<FichaSaude />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       </div>

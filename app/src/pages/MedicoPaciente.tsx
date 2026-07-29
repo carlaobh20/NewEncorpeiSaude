@@ -13,6 +13,17 @@ import {
 import {
   listPatientMedications, addMedicationForPatient, medicationWeekStats, medicationsTakenToday, type Medication,
 } from '../lib/health'
+import { getHealthProfile, type HealthProfile } from '../lib/db'
+
+const SEX_LABEL: Record<string, string> = { feminino: 'Feminino', masculino: 'Masculino', prefiro_nao_informar: 'Não informado' }
+const MOBILITY_LABEL: Record<string, string> = { sem_limitacao: 'Sem limitação', bengala_andador: 'Usa bengala/andador', cadeira_rodas: 'Cadeira de rodas', outra: 'Outra' }
+function ageFrom(birthDate?: string | null): number | null {
+  if (!birthDate) return null
+  const b = new Date(birthDate); const now = new Date()
+  let age = now.getFullYear() - b.getFullYear()
+  if (now.getMonth() < b.getMonth() || (now.getMonth() === b.getMonth() && now.getDate() < b.getDate())) age--
+  return age
+}
 
 const T = { text: '#0F172A', sub: '#64748B', teal: '#12C9A6' }
 const card: React.CSSProperties = { background: '#fff', borderRadius: 20, border: '1px solid #E4E9F1', boxShadow: '0 8px 24px rgba(2,6,23,0.06)' }
@@ -59,6 +70,7 @@ export default function MedicoPaciente() {
   const [medForm, setMedForm] = useState({ name: '', dose: '' })
   const [medOpen, setMedOpen] = useState(false)
   const [medBusy, setMedBusy] = useState(false)
+  const [health, setHealth] = useState<HealthProfile | null>(null)
 
   const load = useCallback(async () => {
     if (!user || !pid || !supabaseReady) return
@@ -66,6 +78,7 @@ export default function MedicoPaciente() {
     setAllowed(ok)
     if (!ok) return
     listMyPatients(user.id).then((ps) => setName(ps.find((x) => x.patient_id === pid)?.name || 'Paciente')).catch(() => {})
+    getHealthProfile(pid).then(setHealth).catch(() => setHealth(null))
     const { data: al } = await supabase.from('alerts').select('*').eq('patient_id', pid).eq('professional_id', user.id)
       .order('created_at', { ascending: false }).limit(50)
     setAlerts((al as Alert[]) || [])
@@ -149,6 +162,45 @@ export default function MedicoPaciente() {
           <button onClick={() => nav(`/pro/plano?p=${pid}`)} className="flex-1 rounded-xl py-2 text-[12px] font-semibold active:scale-95"
             style={{ background: '#F1F5F9', color: T.text }}>Plano e regras</button>
         </div>
+
+        {health && (health.photo_url || health.chronic_conditions || health.allergies || health.current_medications || health.mobility || health.birth_date) && (
+          <Section title="Ficha de saúde">
+            <div className="flex items-center gap-3 pb-2">
+              <div className="w-14 h-14 rounded-full overflow-hidden flex items-center justify-center shrink-0" style={{ background: '#F1F5F9' }}>
+                {health.photo_url ? <img src={health.photo_url} alt={name} className="w-full h-full object-cover" /> : <span className="text-[20px]" style={{ color: T.sub }}>{name.charAt(0).toUpperCase()}</span>}
+              </div>
+              <div className="text-[12px]" style={{ color: T.sub }}>
+                {ageFrom(health.birth_date) !== null && <span>{ageFrom(health.birth_date)} anos</span>}
+                {health.biological_sex && <span>{ageFrom(health.birth_date) !== null ? ' · ' : ''}{SEX_LABEL[health.biological_sex] || health.biological_sex}</span>}
+                {health.height_cm && <span> · {health.height_cm} cm</span>}
+              </div>
+            </div>
+            {health.chronic_conditions && (
+              <div className="py-2" style={{ borderTop: '1px solid #F1F5F9' }}>
+                <div className="text-[11px] font-bold uppercase tracking-wide" style={{ color: T.sub }}>Doenças crônicas</div>
+                <div className="text-[13px] mt-0.5" style={{ color: T.text }}>{health.chronic_conditions}</div>
+              </div>
+            )}
+            {health.allergies && (
+              <div className="py-2" style={{ borderTop: '1px solid #F1F5F9' }}>
+                <div className="text-[11px] font-bold uppercase tracking-wide" style={{ color: '#DC2626' }}>Alergias</div>
+                <div className="text-[13px] mt-0.5" style={{ color: T.text }}>{health.allergies}</div>
+              </div>
+            )}
+            {health.current_medications && (
+              <div className="py-2" style={{ borderTop: '1px solid #F1F5F9' }}>
+                <div className="text-[11px] font-bold uppercase tracking-wide" style={{ color: T.sub }}>Medicações em uso</div>
+                <div className="text-[13px] mt-0.5" style={{ color: T.text }}>{health.current_medications}</div>
+              </div>
+            )}
+            {health.mobility && (
+              <div className="py-2" style={{ borderTop: '1px solid #F1F5F9' }}>
+                <div className="text-[11px] font-bold uppercase tracking-wide" style={{ color: T.sub }}>Mobilidade</div>
+                <div className="text-[13px] mt-0.5" style={{ color: T.text }}>{health.mobility === 'outra' && health.mobility_notes ? health.mobility_notes : MOBILITY_LABEL[health.mobility] || health.mobility}</div>
+              </div>
+            )}
+          </Section>
+        )}
 
         <Section title={`Alertas (${open.length} em aberto)`}>
           {alerts.length === 0 && <p className="text-[12px]" style={{ color: T.sub }}>Nenhum alerta. Defina regras em “Plano e regras”.</p>}
